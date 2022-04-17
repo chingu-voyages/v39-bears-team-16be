@@ -1,0 +1,33 @@
+{
+  "name": "bears-team-16be",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000v\u00003\u00009\u0000-\u0000b\u0000e\u0000a\u0000r\u0000s\u0000-\u0000t\u0000e\u0000a\u0000m\u0000-\u00001\u00006\u0000b\u0000e\u0000\r\u0000 \u0000#\u0000 \u0000M\u0000o\u0000n\u0000g\u0000o\u0000 \u0000+\u0000 \u0000E\u0000x\u0000p\u0000r\u0000e\u0000s\u0000s\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "nodemon index.js",
+    "heroku-postbuild": "npm run install-client && npm run build",
+    "server": "nodemon index.js",
+    "develop": "concurrently --kill-others-on-fail \"npm run server\"",
+    "start": "concurrently --kill-others-on-fail \"npm run server\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chingu-voyages/v39-bears-team-16be.git"
+  },
+  "author": "bears-team-16",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chingu-voyages/v39-bears-team-16be/issues"
+  },
+  "homepage": "https://github.com/chingu-voyages/v39-bears-team-16be#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "mongodb": "^4.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
