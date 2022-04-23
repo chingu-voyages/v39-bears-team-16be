@@ -1,18 +1,20 @@
 require("dotenv").config();
-const app = require("./server.js");
 const { MongoClient } = require("mongodb");
+const users = require("./dao/user.dao");
+const app = require("./server");
+
 const port = process.env.PORT || 8000;
-const UserModel = require("./models/users.model.js");
 
-const connect = async () => {
-  const client = new MongoClient(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+const client = new MongoClient(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
+const main = async () => {
   try {
     await client.connect();
-    await UserModel.injectDB(client);
+    await users.initialize(client);
+
     app.listen(port, () => {
       console.log(`listening on port ${port}`);
     });
@@ -21,4 +23,4 @@ const connect = async () => {
   }
 };
 
-connect().catch(console.error);
+main().catch(console.error);
