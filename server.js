@@ -10,17 +10,21 @@ const helmet = require("helmet");
 
 const app = express();
 
+console.log("server.js -- app initializied");
+
 app.use(helmet());
 
 app.use(compression());
 
 // for testing purpose only
+
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+console.log("server.js -- right before session");
 app.use(
   session({
     secret: process.env.SECRET,
@@ -37,7 +41,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
+console.log("server.js -- before router");
 app.use(router);
 
 module.exports = app;

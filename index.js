@@ -10,6 +10,8 @@ const client = new MongoClient(process.env.MONGODB_URI, {
   useUnifiedTopology: true,
 });
 
+console.log("index.js -- after new mongoclient");
+
 const main = async () => {
   try {
     await client.connect();
