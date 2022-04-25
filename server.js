@@ -12,9 +12,8 @@ const app = express();
 
 console.log("server.js -- app initializied");
 
-app.use(helmet());
-
-app.use(compression());
+// app.use(helmet());
+// app.use(compression());
 
 // for testing purpose only
 
