@@ -6,6 +6,11 @@ const { isAuth } = require("../middlewares/auth.middleware");
 const userController = require("../controllers/user.controller.js");
 const loginController = require("../controllers/login.controller");
 const passport = require("../middlewares/passport.middleware");
+
+router.get("/", (req, res) => {
+  res.render("index");
+})
+
 router.get("/login", (req, res) => {
   res.render("login");
 });
