@@ -6,7 +6,7 @@ const MongoStore = require("connect-mongo");
 const router = require("./routes/api.routes");
 const passport = require("./middlewares/passport.middleware");
 const compression = require('compression');
-const helmet = requite("helmet");
+const helmet = require("helmet");
 
 const app = express();
 
