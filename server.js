@@ -16,7 +16,6 @@ console.log("server.js -- app initializied");
 // app.use(compression());
 
 // for testing purpose only
-
 app.set("views", "./views");
 app.set("view engine", "ejs");
 
