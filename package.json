@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index.js -e ejs,js,css,html,jpg,png,scss"
+    "server": "node index.js"
   },
   "repository": {
     "type": "git",
