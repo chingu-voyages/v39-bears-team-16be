@@ -5,11 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "nodemon index.js",
-    "heroku-postbuild": "npm run install-client && npm run build",
-    "server": "nodemon index.js",
-    "develop": "concurrently --kill-others-on-fail \"npm run server\"",
-    "start": "concurrently --kill-others-on-fail \"npm run server\""
+    "server": "nodemon index.js -e ejs,js,css,html,jpg,png,scss"
   },
   "repository": {
     "type": "git",
@@ -22,12 +18,18 @@
   },
   "homepage": "https://github.com/chingu-voyages/v39-bears-team-16be#readme",
   "dependencies": {
+    "connect-mongo": "^4.6.0",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "mongodb": "^4.5.0"
+    "express-session": "^1.17.2",
+    "mongodb": "^4.5.0",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
+    "ejs": "^3.1.7",
     "nodemon": "^2.0.15"
   }
 }
