@@ -27,10 +27,10 @@ function UserDao() {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 }
 
-const userDao = new UserDao()
+const userDao = new UserDao();
 
 Object.freeze(userDao);
 
