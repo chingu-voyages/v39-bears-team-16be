@@ -31,6 +31,26 @@ function UserDao() {
       console.error(err);
     }
   };
+
+  this.updateUserPasswordByEmail = async function updateUserPasswordByEmail(email, hashedPassword, salt) {
+    const filter = {
+      email,
+    };
+
+    const updateDoc = {
+      $set: {
+        password: hashedPassword,
+        salt
+      },
+    };
+
+    try {
+      const result = await users.updateOne(filter, updateDoc);
+      return result;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 }
 
 const userDao = new UserDao();
