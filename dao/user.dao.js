@@ -2,10 +2,13 @@ let users;
 
 function UserDao() {
   this.initialize = async function initialize(client) {
-    if (users) return;
+    if (users) {
+      return;
+    }
 
     try {
       users = await client.db().collection("users");
+      return;
     } catch (err) {
       console.error(err);
     }
