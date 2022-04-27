@@ -9,8 +9,12 @@ function PasswordResetTokenDao() {
     try {
       passwordResetTokens = await client
         .db()
-        .collection("password_reset_tokens")        
-        .createIndex( { "createdAt": 1 }, { expireAfterSeconds: 3600 } );
+        .collection("password_reset_tokens");
+
+      passwordResetTokens.createIndex(
+        { createdAt: 1 },
+        { expireAfterSeconds: 300 }
+      );
     } catch (err) {
       console.error(err);
     }
@@ -25,11 +29,10 @@ function PasswordResetTokenDao() {
     }
   };
 
-  this.findToken = async function findToken(token, user_id) {
+  this.findTokenBy = async function findTokenBy(key, value) {
     try {
       const passwordResetToken = await passwordResetTokens.findOne({
-        token,
-        user_id,
+        [key]: value,
       });
       return passwordResetToken;
     } catch (err) {
@@ -37,9 +40,26 @@ function PasswordResetTokenDao() {
     }
   };
 
-  this.createToken = async function createToken() {
+  this.deleteTokenBy = async function deleteTokenBy(key, value) {
+    const query = {
+      [key]: value,
+    };
+    try {
+      const result = await passwordResetTokens.deleteOne(query);
+      return result;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  }
+  this.findToken = async function findToken(query) {
+    try {
+      const passwordResetToken = await passwordResetTokens.findOne(query);
+      return passwordResetToken;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 }
 
 const passwordResetTokenDao = new PasswordResetTokenDao();

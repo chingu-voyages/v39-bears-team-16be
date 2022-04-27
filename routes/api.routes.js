@@ -7,6 +7,7 @@ const { isAuth } = require("../middlewares/auth.middleware");
 const userController = require("../controllers/user.controller.js");
 const loginController = require("../controllers/login.controller");
 const forgotPasswordController = require("../controllers/forgot-password.controller");
+const resetPasswordController = require("../controllers/reset-password.controller");
 const passport = require("../middlewares/passport.middleware");
 
 router.get("/", (req, res) => {
@@ -49,5 +50,13 @@ router
     res.render("forgot-password");
   })
   .post(forgotPasswordRequest, forgotPasswordController.store);
+
+router
+  .route("/reset-password/:token")
+  .get((req, res) => {
+    const token = req.params.token;
+    res.render("reset-password", { token });
+  })
+  .post(resetPasswordController.store);
 
 module.exports = router;
