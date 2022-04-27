@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const users = require("./dao/user.dao");
+const passwordResetTokens = require("./dao/password-reset-token.dao");
 const app = require("./server");
 
 const port = process.env.PORT || 8000;
@@ -14,6 +15,7 @@ const main = async () => {
   try {
     await client.connect();
     await users.initialize(client);
+    await passwordResetTokens.initialize(client);
 
     app.listen(port, () => {
       console.log(`listening on port ${port}`);
