@@ -16,15 +16,16 @@ app.set("views", "./views");
 app.set("view engine", "ejs");
 
 app.use(helmet());
-if (process.env.NODE_ENV === "production") {
-  const corsOptions = {
-    origin: "https://100devstracker.netlify.app",
-    optionsSuccessStatus: 200,
-  };
-  app.use(cors(corsOptions));
-} else {
-  app.use(cors());
-}
+// if (process.env.NODE_ENV === "production") {
+//   const corsOptions = {
+//     origin: "https://100devstracker.netlify.app",
+//     optionsSuccessStatus: 200,
+//   };
+//   app.use(cors(corsOptions));
+// } else {
+//   app.use(cors());
+// }
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
