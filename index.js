@@ -2,10 +2,9 @@ require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const users = require("./dao/user.dao");
 const passwordResetTokens = require("./dao/password-reset-token.dao");
+
 const app = require("./server");
-
 const port = process.env.PORT || 8000;
-
 const client = new MongoClient(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
