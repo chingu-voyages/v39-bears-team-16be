@@ -8,7 +8,7 @@ const loginStoreRequest = require("../middlewares/requests/login-store.request")
 const forgotPasswordRequest = require("../middlewares/requests/forgot-password.request");
 const resetPasswordRequest = require("../middlewares/requests/reset-password.request");
 const passport = require("../middlewares/passport.middleware");
-const { isAuth } = require("../middlewares/auth.middleware");
+const { isAuth, isAdmin } = require("../middlewares/auth.middleware");
 
 const router = express.Router();
 
@@ -26,8 +26,14 @@ router
     loginController.store,
     passport.authenticate("local", {
       failureRedirect: "/login",
-      successRedirect: "/dashboard",
-    })
+    }),
+    (req, res, next) => {
+      if (req.user.isAdmin) {
+        res.redirect("/dashboard");
+      } else {
+        res.redirect("/classroom");
+      }
+    } 
   );
 
 router
@@ -42,7 +48,11 @@ router.post("/logout", (req, res, next) => {
   res.redirect("/login");
 });
 
-router.get("/dashboard", isAuth, (req, res) => {
+router.get("/classroom", isAuth, (req, res) => {
+  res.render("classroom");
+});
+
+router.get("/dashboard", isAdmin, (req, res) => {
   res.render("dashboard");
 });
 
@@ -62,3 +72,5 @@ router
   .post(resetPasswordRequest, resetPasswordController.store);
 
 module.exports = router;
+
+
