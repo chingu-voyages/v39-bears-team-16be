@@ -19,6 +19,7 @@
         <div class="col-4">
           <h1>Classroom</h1>
           <form action="/logout" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"></input>
             <button type="submit" class="btn btn-danger">Logout</button>
           </form>
         </div>
