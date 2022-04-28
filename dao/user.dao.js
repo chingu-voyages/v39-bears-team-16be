@@ -24,6 +24,10 @@ function UserDao() {
   };
 
   this.insertUser = async function insertUser(user) {
+    user = {
+      ...user,
+      isAdmin: false
+    }
     try {
       const result = await users.insertOne(user);
       return result;
