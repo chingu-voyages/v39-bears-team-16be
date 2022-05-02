@@ -8,7 +8,17 @@ const loginStoreRequest = require("../middlewares/requests/login-store.request")
 const forgotPasswordRequest = require("../middlewares/requests/forgot-password.request");
 const resetPasswordRequest = require("../middlewares/requests/reset-password.request");
 const passport = require("../middlewares/passport.middleware");
+
 const { isAuth, isAdmin } = require("../middlewares/auth.middleware");
+
+
+router.get("/", (req, res) => {
+  res.render("index");
+})
+
+router.get("/login", (req, res) => {
+  res.render("login");
+});
 
 const router = express.Router();
 

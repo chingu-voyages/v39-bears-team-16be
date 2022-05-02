@@ -8,8 +8,13 @@ const MongoStore = require("connect-mongo");
 
 const router = require("./routes/api.routes");
 const passport = require("./middlewares/passport.middleware");
+const compression = require('compression');
+const helmet = require("helmet");
 
 const app = express();
+
+app.use(helmet());
+app.use(compression());
 
 // for testing purpose only
 app.set("views", "./views");
