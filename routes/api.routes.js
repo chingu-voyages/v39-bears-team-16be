@@ -33,7 +33,7 @@ router
       } else {
         res.redirect("/classroom");
       }
-    } 
+    }
   );
 
 router
@@ -71,6 +71,8 @@ router
   })
   .post(resetPasswordRequest, resetPasswordController.store);
 
+router.route("/fetchCsrfToken").get((req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
 module.exports = router;
-
-
