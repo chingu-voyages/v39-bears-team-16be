@@ -7,9 +7,7 @@ function PasswordResetTokenDao() {
     }
 
     try {
-      passwordResetTokens = await client
-        .db()
-        .collection("password_reset_tokens");
+      passwordResetTokens = await client.db().collection("passwordResetTokens");
 
       passwordResetTokens.createIndex(
         { createdAt: 1 },
