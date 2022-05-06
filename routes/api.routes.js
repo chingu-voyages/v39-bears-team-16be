@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/user.controller.js");
 const loginController = require("../controllers/login.controller");
+const dashboardController = require("../controllers/admin/dashboard.controller");
 const forgotPasswordController = require("../controllers/forgot-password.controller");
 const resetPasswordController = require("../controllers/reset-password.controller");
 const userStoreRequest = require("../middlewares/requests/user-store.request");
@@ -52,9 +53,7 @@ router.get("/classroom", isAuth, (req, res) => {
   res.render("classroom");
 });
 
-router.get("/dashboard", isAdmin, (req, res) => {
-  res.render("dashboard");
-});
+router.get("/dashboard", isAdmin, dashboardController.index);
 
 router
   .route("/forgot-password")
