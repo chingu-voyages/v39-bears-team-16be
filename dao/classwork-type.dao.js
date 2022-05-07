@@ -15,8 +15,8 @@ function ClassworkTypeDao() {
 
   this.getTypes = async function getTypes() {
     try {
-      const types = await classworkTypes.find({});
-      return types.toArray();
+      const cursor = await classworkTypes.find({});
+      return cursor.toArray();
     } catch (err) {
       console.error(err);
     }

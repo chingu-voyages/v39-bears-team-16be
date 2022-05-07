@@ -1,10 +1,10 @@
-const classworkTypes = require("../../dao/classwork-type.dao");
+const classes = require("../../dao/class.dao");
 
 function DashboardController() {
   this.index = async function store(req, res, next) {
-    const types = await classworkTypes.getTypes();
-    console.log(types);
-    res.render("./admin/dashboard", {types});
+    const cohortId = req.params.cohortId;
+    const result = await classes.getClassesByCohort(cohortId);
+    res.render("./admin/dashboard", { classes : result });
   };
 }
 
