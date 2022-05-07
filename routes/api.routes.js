@@ -10,6 +10,7 @@ const forgotPasswordRequest = require("../middlewares/requests/forgot-password.r
 const resetPasswordRequest = require("../middlewares/requests/reset-password.request");
 const passport = require("../middlewares/passport.middleware");
 const { isAuth, isAdmin } = require("../middlewares/auth.middleware");
+const cohortController = require("../controllers/admin/cohort.controller.js");
 
 const router = express.Router();
 
@@ -30,7 +31,7 @@ router
     }),
     (req, res, next) => {
       if (req.user.isAdmin) {
-        res.redirect("/dashboard");
+        res.redirect("/admin");
       } else {
         res.redirect("/classroom");
       }
@@ -53,7 +54,9 @@ router.get("/classroom", isAuth, (req, res) => {
   res.render("classroom");
 });
 
-router.get("/dashboard", isAdmin, dashboardController.index);
+router.get("/admin", isAdmin, cohortController.index);
+
+router.get("/admin/:cohortId/dashboard", dashboardController.index);
 
 router
   .route("/forgot-password")
