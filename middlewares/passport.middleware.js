@@ -30,15 +30,13 @@ passport.serializeUser((user, cb) => {
   cb(null, user.email);
 });
 
-passport.deserializeUser((username, cb) => {
-  process.nextTick(async () => {
-    try {
-      const user = await users.findUserBy("email", username);
-      cb(null, user);
-    } catch (err) {
-      return cb(err);
-    }
-  });
+passport.deserializeUser(async (username, cb) => {
+  try {
+    const user = await users.findUserBy("email", username);
+    cb(null, user);
+  } catch (err) {
+    return cb(err);
+  }
 });
 
 module.exports = passport;
