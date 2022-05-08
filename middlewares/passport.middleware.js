@@ -27,18 +27,16 @@ passport.use(
 );
 
 passport.serializeUser((user, cb) => {
-  process.nextTick(() => {
-    cb(null, user.email);
-  });
+  cb(null, user.email);
 });
 
 passport.deserializeUser((username, cb) => {
   process.nextTick(async () => {
     try {
       const user = await users.findUserBy("email", username);
-      return cb(null, user);
+      cb(null, user);
     } catch (err) {
-      cb(err);
+      return cb(err);
     }
   });
 });
