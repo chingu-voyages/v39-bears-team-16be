@@ -49,7 +49,7 @@ function ForgotPasswordController() {
         from: "v39bearsteam16@gmail.com",
         to: email,
         subject: "Reset password link",
-        html: `<a>${url}</a>`,
+        html: `<a href=${url}>Click here to reset password</a>`,
       });
 
       res.send(`message sent ${message.messageId}`);
