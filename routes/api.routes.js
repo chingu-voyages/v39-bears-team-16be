@@ -31,8 +31,10 @@ router
     }),
     (req, res, next) => {
       if (req.user.isAdmin) {
+        console.log(req.user);
         res.redirect("/admin");
       } else {
+        console.log(req.user);
         res.redirect("/classroom");
       }
     }
