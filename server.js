@@ -57,12 +57,12 @@ app.use(helmet());
 app.use(compression());
 app.use(router);
 
-app.use(function (err, req, res, next) {
-  if (err.code !== "EBADCSRFTOKEN") return next(err);
+// app.use(function (err, req, res, next) {
+//   if (err.code !== "EBADCSRFTOKEN") return next(err);
 
-  // handle CSRF token errors here
-  res.status(403);
-  res.send("form tampered with");
-});
+//   // handle CSRF token errors here
+//   res.status(403);
+//   res.send("form tampered with");
+// });
 
 module.exports = app;
