@@ -20,9 +20,9 @@ router.get("/", (req, res) => {
 
 router
   .route("/login")
-  .get((req, res) => {
-    res.render("login");
-  })
+  // .get((req, res) => {
+  //   res.render("login");
+  // })
   .post(
     loginStoreRequest,
     loginController.store,
@@ -42,9 +42,9 @@ router
 
 router
   .route("/register")
-  .get((req, res) => {
-    res.render("register");
-  })
+  // .get((req, res) => {
+  //   res.render("register");
+  // })
   .post(userStoreRequest, userController.store);
 
 router.post("/logout", (req, res, next) => {
@@ -52,27 +52,27 @@ router.post("/logout", (req, res, next) => {
   res.redirect("/login");
 });
 
-router.get("/classroom", isAuth, (req, res) => {
-  res.render("classroom");
-});
+// router.get("/classroom", isAuth, (req, res) => {
+//   res.render("classroom");
+// });
 
-router.get("/admin", isAdmin, cohortController.index);
+// router.get("/admin", isAdmin, cohortController.index);
 
-router.get("/admin/:cohortId/dashboard", dashboardController.index);
+// router.get("/admin/:cohortId/dashboard", dashboardController.index);
 
 router
   .route("/forgot-password")
-  .get((req, res) => {
-    res.render("forgot-password");
-  })
+  // .get((req, res) => {
+  //   res.render("forgot-password");
+  // })
   .post(forgotPasswordRequest, forgotPasswordController.store);
 
 router
   .route("/reset-password/:token")
-  .get((req, res) => {
-    const token = req.params.token;
-    res.render("reset-password", { token });
-  })
+  // .get((req, res) => {
+  //   const token = req.params.token;
+  //   res.render("reset-password", { token });
+  // })
   .post(resetPasswordRequest, resetPasswordController.store);
 
 router.route("/fetchCsrfToken").get((req, res) => {
