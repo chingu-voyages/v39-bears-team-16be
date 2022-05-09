@@ -48,24 +48,22 @@ app.use(passport.session());
 
 app.use(csrf());
 
-// app.use((req, res, next) => {
-//   res.locals.csrfToken = req.csrfToken();
-//   res.locals.user = req.user;
-//   next();
-// });
+app.use((req, res, next) => {
+  // res.locals.csrfToken = req.csrfToken();
+  res.locals.user = req.user;
+  next();
+});
 
 app.use(helmet());
 app.use(compression());
 app.use(router);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(function (err, req, res, next) {
-    if (err.code !== "EBADCSRFTOKEN") return next(err);
+app.use(function (err, req, res, next) {
+  if (err.code !== "EBADCSRFTOKEN") return next(err);
 
-    // handle CSRF token errors here
-    res.status(403);
-    res.send("form tampered with");
-  });
-}
+  // handle CSRF token errors here
+  res.status(403);
+  res.send("form tampered with");
+});
 
 module.exports = app;
