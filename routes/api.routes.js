@@ -31,10 +31,8 @@ router
     }),
     (req, res, next) => {
       if (req.user.isAdmin) {
-        console.log(req.user);
         res.redirect("/admin");
       } else {
-        console.log(req.user);
         res.redirect("/classroom");
       }
     }
@@ -76,7 +74,7 @@ router
   .post(resetPasswordRequest, resetPasswordController.store);
 
 router.route("/fetchCsrfToken").get((req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
+  res.json({ csrfToken: res.locals.csrfToken });
 });
 
 module.exports = router;
