@@ -45,11 +45,10 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(csrf());
 
 app.use((req, res, next) => {
-  // res.locals.csrfToken = req.csrfToken();
+  res.locals.csrfToken = req.csrfToken();
   res.locals.user = req.user;
   next();
 });
