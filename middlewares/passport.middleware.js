@@ -35,7 +35,7 @@ passport.deserializeUser(async (username, cb) => {
     const user = await users.findUserBy("email", username);
     cb(null, user);
   } catch (err) {
-    return cb(err);
+    cb(err);
   }
 });
 
