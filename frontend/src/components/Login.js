@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const Login = () => {
@@ -22,7 +22,7 @@ const Login = () => {
       url: "http://localhost:5000/login",
       data: {
         email,
-        password,
+        password
       },
       withCredentials: true
     })
@@ -33,6 +33,19 @@ const Login = () => {
         console.error(err);
       });
   };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/fetchCsrfToken", { withCredentials: true })
+      .then((response) => {
+        const token = response.data.csrfToken;
+        console.log(token);
+        axios.defaults.headers.post['X-CSRF-Token'] = token;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <div>

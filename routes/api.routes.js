@@ -28,8 +28,9 @@ router
 router
   .route("/student/dashboard")
   .get(isAuth, studentDashboardController.store);
+
 router.route("/fetchCsrfToken").get((req, res) => {
-  res.json({ csrfToken: res.locals.csrfToken });
+  res.json({ csrfToken: req.csrfToken() });
 });
 
 module.exports = router;
