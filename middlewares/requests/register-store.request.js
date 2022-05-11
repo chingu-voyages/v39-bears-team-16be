@@ -1,7 +1,7 @@
-const { body } = require("express-validator");
+const { body, validationResult } = require("express-validator");
 const users = require("../../dao/user.dao");
 
-const userStoreRequest = [
+const registerStoreRequest = [
   body("name")
     .isAlpha("en-US", { ignore: ["-", "_"] })
     .isLength({ min: 1, max: 255 })
@@ -17,7 +17,7 @@ const userStoreRequest = [
       if (user) return Promise.reject("E-mail already in use");
     }),
   body("password").isAlphanumeric().isLength({ min: 1, max: 255 }).trim(),
-  (req, res, next) => {
+  function (req, res, next) {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -25,7 +25,7 @@ const userStoreRequest = [
     }
 
     next();
-  },
+  }
 ];
 
-module.exports = userStoreRequest;
+module.exports = registerStoreRequest;

@@ -1,9 +1,7 @@
 function StudentDashboardController() {
-  this.store = (function() {
-    return [
-      
-    ]
-  }())
+  this.store = function store(req, res) {
+    res.status(200).send({ message: "Authorized" });
+  };
 }
 
 const studentDashboardController = new StudentDashboardController();

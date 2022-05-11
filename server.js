@@ -12,7 +12,10 @@ const passport = require("./middlewares/passport.middleware");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: /^http:\/\/localhost:3000/,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -27,7 +30,7 @@ app.use(
     cookie: {
       // 1 hour
       maxAge: 1000 * 60 * 60 * 1,
-      httpOnly: true
+      // httpOnly: true,
     },
   })
 );

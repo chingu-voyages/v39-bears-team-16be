@@ -2,11 +2,14 @@ const express = require("express");
 
 const resetPasswordRequest = require("../middlewares/requests/reset-password.request");
 // requests
-const userStoreRequest = require("../middlewares/requests/user-store.request");
+const registerStoreRequest = require("../middlewares/requests/register-store.request");
 const loginStoreRequest = require("../middlewares/requests/login-store.request");
+//middlewares
+const { isAuth } = require("../middlewares/auth.middleware");
 // controllers
-const userController = require("../controllers/user.controller.js");
+const registerController = require("../controllers/register.controller.js");
 const loginController = require("../controllers/login.controller");
+const logoutController = require("../controllers/logout.controller");
 const forgotPasswordController = require("../controllers/forgot-password.controller");
 const resetPasswordController = require("../controllers/reset-password.controller");
 // student controllers
@@ -14,17 +17,17 @@ const studentDashboardController = require("../controllers/student/dashboard.con
 
 const router = express.Router();
 
-router.route("/register").post(userStoreRequest, userController.store);
+router.route("/register").post(registerStoreRequest, registerController.store);
 router.route("/login").post(loginStoreRequest, loginController.store);
-router.post("/logout", (req, res) => {
-  req.logout();
-});
+router.route("/logout").post(logoutController.store);
 
 router.route("/forgot-password").post(forgotPasswordController.store);
 router
   .route("/reset-password/:token")
   .post(resetPasswordRequest, resetPasswordController.store);
-router.route("/student/dashboard").get(studentDashboardController.store);
+router
+  .route("/student/dashboard")
+  .get(isAuth, studentDashboardController.store);
 router.route("/fetchCsrfToken").get((req, res) => {
   res.json({ csrfToken: res.locals.csrfToken });
 });
