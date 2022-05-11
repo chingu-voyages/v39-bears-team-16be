@@ -27,6 +27,7 @@ app.use(
     cookie: {
       // 1 hour
       maxAge: 1000 * 60 * 60 * 1,
+      httpOnly: true
     },
   })
 );
@@ -38,7 +39,6 @@ app.use(router);
 
 // error handler
 app.use(function (err, req, res, next) {
-  // render the error page
   res.status(err.status || 500);
 });
 
