@@ -1,7 +1,7 @@
 const users = require("../dao/user.dao");
 const { hashPassword } = require("../utilities/password.util");
 
-function UserController() {
+function RegisterController() {
   this.store = async function store(req, res, next) {
     const name = req.body.name;
     const email = req.body.email;
@@ -25,8 +25,8 @@ function UserController() {
   };
 }
 
-const userController = new UserController();
+const registerController = new RegisterController();
 
-Object.freeze(userController);
+Object.freeze(registerController);
 
-module.exports = userController;
+module.exports = registerController;

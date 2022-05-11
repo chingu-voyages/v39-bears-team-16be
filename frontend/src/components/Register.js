@@ -17,6 +17,7 @@ const Register = () => {
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
+    console.log("submitted")
     const { name, email, password } = formData;
     axios({
       method: "post",
@@ -26,6 +27,7 @@ const Register = () => {
         email,
         password,
       },
+      withCredentials: true
     })
       .then((response) => {
         console.log(response);
