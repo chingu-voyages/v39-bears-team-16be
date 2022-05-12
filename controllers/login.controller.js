@@ -3,15 +3,18 @@ const passport = require("../middlewares/passport.middleware");
 function LoginController() {
   this.store = function store(req, res, next) {
     passport.authenticate("local", (err, user, info) => {
-      if (err) throw err;
-      if (!user) res.send("No User Exists");
-      else {
-        req.logIn(user, (err) => {
-          if (err) throw err;
-          res.send("Successfully Authenticated");
-          console.log(req.user);
-        });
+      if (err) {
+        return next(err);
       }
+      if (!user) {
+        return res.send(info.message);
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          return next(err);
+        } 
+        res.send("Successfully authenticated.");
+      });
     })(req, res, next);
   };
 }
