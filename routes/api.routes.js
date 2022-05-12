@@ -4,6 +4,7 @@ const resetPasswordRequest = require("../middlewares/requests/reset-password.req
 // requests
 const registerStoreRequest = require("../middlewares/requests/register-store.request");
 const loginStoreRequest = require("../middlewares/requests/login-store.request");
+const forgotPasswordRequest = require("../middlewares/requests/forgot-password.request");
 //middlewares
 const { isAuth, isAdmin } = require("../middlewares/auth.middleware");
 // controllers
@@ -23,15 +24,17 @@ router.route("/register").post(registerStoreRequest, registerController.store);
 router.route("/login").post(loginStoreRequest, loginController.store);
 router.route("/logout").post(logoutController.store);
 
-router.route("/forgot-password").post(forgotPasswordController.store);
 router
-  .route("/reset-password/:token")
+  .route("/forgot-password")
+  .post(forgotPasswordRequest, forgotPasswordController.store);
+
+router
+  .route("/reset-password")
   .post(resetPasswordRequest, resetPasswordController.store);
 
 router.route("/admin/cohorts").get(isAdmin, adminCohortController.index);
 
 router.route("/student/cohorts").get(isAuth, studentCohortController.index);
-
 
 router.route("/fetchCsrfToken").get((req, res) => {
   res.json({ csrfToken: req.csrfToken() });

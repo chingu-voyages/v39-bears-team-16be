@@ -38,7 +38,7 @@ function ResetPasswordController() {
         res.set(400).send({ msg: "fail to update." });
       }
 
-      res.redirect(`${process.env.BASE_URL}/login`);
+      res.redirect(`http://localhost:3000/login`);
     } catch (err) {
       console.error(err);
     }
