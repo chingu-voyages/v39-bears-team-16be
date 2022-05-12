@@ -26,8 +26,13 @@ function UserDao() {
   this.insertUser = async function insertUser(user) {
     user = {
       ...user,
-      isAdmin: false
-    }
+      isAdmin: false,
+      createdAt: new Date(),
+      photo:
+        "https://images.unsplash.com/photo-1623584973952-182bcb43b8ad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=480&q=80",
+      loginCount: 0,
+    };
+
     try {
       const result = await users.insertOne(user);
       return result;
@@ -36,7 +41,11 @@ function UserDao() {
     }
   };
 
-  this.updateUserPasswordByEmail = async function updateUserPasswordByEmail(email, hashedPassword, salt) {
+  this.updateUserPasswordByEmail = async function updateUserPasswordByEmail(
+    email,
+    hashedPassword,
+    salt
+  ) {
     const filter = {
       email,
     };
@@ -44,13 +53,25 @@ function UserDao() {
     const updateDoc = {
       $set: {
         password: hashedPassword,
-        salt
+        salt,
       },
     };
 
     try {
       const result = await users.updateOne(filter, updateDoc);
       return result;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  this.attemptLogin = async function attemptLogin(email) {
+    try {
+      const result = await users.findOneAndUpdate(
+        { email },
+        { $inc: { loginCount: 1 } }
+      );
+      return result.value;
     } catch (err) {
       console.error(err);
     }

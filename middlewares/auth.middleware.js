@@ -4,7 +4,7 @@ const isAuth = (req, res, next) => {
   } else {
     res
       .status(401)
-      .json({ msg: "You are not authorized to view this resource." });
+      .send({ msg: "You are not authorized to view this resource." });
   }
 };
 
@@ -14,7 +14,7 @@ const isAdmin = (req, res, next) => {
   } else {
     res
       .status(401)
-      .json({ msg: "You do not have admin permissions." });
+      .send({ msg: "You do not have admin permissions." });
   }
 };
 
