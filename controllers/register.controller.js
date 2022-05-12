@@ -18,7 +18,7 @@ function RegisterController() {
 
     try {
       await users.insertUser(user);
-      res.status(200).send({ success: true, message: "user has been created" });
+      res.status(200).send({ success: true, message: "A user has been created." });
     } catch (err) {
       next(err);
     }

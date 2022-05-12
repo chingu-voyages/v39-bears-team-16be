@@ -1,5 +1,5 @@
 function StudentDashboardController() {
-  this.store = function store(req, res) {
+  this.index = function index(req, res, next) {
     res.status(200).send({ message: "Authorized" });
   };
 }
