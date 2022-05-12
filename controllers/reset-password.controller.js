@@ -38,9 +38,9 @@ function ResetPasswordController() {
         res.set(400).send({ msg: "fail to update." });
       }
 
-      res.redirect(`http://localhost:3000/login`);
+      res.status(200).send({ message: "Password has been reset." })
     } catch (err) {
-      console.error(err);
+      return next(err);
     }
   };
 }
