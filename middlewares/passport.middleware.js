@@ -9,7 +9,6 @@ passport.use(
     async (username, password, cb) => {
       try {
         const user = await users.attemptLogin(username);
-        console.log(user);
         if (!user) {
           return cb(null, false, {
             message: "Incorrect username or password.",

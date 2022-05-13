@@ -15,13 +15,16 @@ const forgotPasswordController = require("../controllers/forgot-password.control
 const resetPasswordController = require("../controllers/reset-password.controller");
 // admin ctonrollers
 const adminCohortController = require("../controllers/admin/admin-cohort.controller");
+const adminClassController = require("../controllers/admin/admin-class.controller");
 // student controllers
 const studentCohortController = require("../controllers/student/student-cohort.controller");
 
 const router = express.Router();
 
 router.route("/register").post(registerStoreRequest, registerController.store);
+
 router.route("/login").post(loginStoreRequest, loginController.store);
+
 router.route("/logout").post(logoutController.store);
 
 router
@@ -31,9 +34,12 @@ router
 router
   .route("/reset-password")
   .post(resetPasswordRequest, resetPasswordController.store);
-
+// admin
 router.route("/admin/cohorts").get(isAdmin, adminCohortController.index);
-
+router
+  .route("/admin/cohorts/:cohortId/class")
+  .get(isAdmin, adminClassController.index);
+// student
 router.route("/student/cohorts").get(isAuth, studentCohortController.index);
 
 router.route("/fetchCsrfToken").get((req, res) => {
