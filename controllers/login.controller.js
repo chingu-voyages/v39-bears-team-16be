@@ -7,13 +7,15 @@ function LoginController() {
         return next(err);
       }
       if (!user) {
-        return res.status(401).send(info.message);
+        res.status(401).send({ error: { message: info.message } });
       }
       req.logIn(user, (err) => {
         if (err) {
           return next(err);
-        } 
-        res.status(200).send("Successfully authenticated.");
+        }
+        res
+          .status(200)
+          .send({ data: { message: "Successfully authenticated." } });
       });
     })(req, res, next);
   };
