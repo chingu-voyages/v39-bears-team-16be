@@ -13,9 +13,7 @@ function LoginController() {
         if (err) {
           return next(err);
         }
-        res
-          .status(200)
-          .send({ data: { message: "Successfully authenticated." } });
+        res.status(200).send({ message: "Successfully authenticated." });
       });
     })(req, res, next);
   };
