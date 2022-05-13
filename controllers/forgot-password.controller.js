@@ -39,7 +39,7 @@ function ForgotPasswordController() {
         );
       }
       // set the url
-      const url = `http://localhost:3000/reset-password/${passwordResetToken.token}`;
+      const url = `${process.env.FRONTEND_URL}/reset-password/${passwordResetToken.token}`;
       // send email
       const message = await transporter.sendMail({
         from: "v39bearsteam16@gmail.com",
