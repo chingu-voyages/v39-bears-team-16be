@@ -18,6 +18,7 @@ app.use(
     origin: [
       /^http:\/\/localhost:3000/,
       /^https:\/\/bears-team-16be.herokuapp.com/,
+      /^https:\/\/deploy-preview-55--100devstracker.netlify.app/
     ],
     credentials: true,
   })
