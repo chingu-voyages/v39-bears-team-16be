@@ -7,7 +7,7 @@ function LoginController() {
         return next(err);
       }
       if (!user) {
-        res.status(401).send({ error: { message: info.message } });
+        res.status(401).send({ errors: [{ msg: info.message }] });
       }
       req.logIn(user, (err) => {
         if (err) {

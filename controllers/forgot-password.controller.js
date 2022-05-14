@@ -16,7 +16,7 @@ function ForgotPasswordController() {
       const user = await users.findUserBy("email", email);
 
       if (!user) {
-        return res.status(400).send("email not found.");
+        return res.status(400).send({ errors: [{ msg: "Email not found" }] });
       }
       // check if token already existed
       let passwordResetToken = await passwordResetTokens.findTokenBy(
