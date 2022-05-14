@@ -17,7 +17,9 @@ function ResetPasswordController() {
       });
 
       if (!resetPasswordToken) {
-        return res.status(400).send({ err: "token is not valid." });
+        return res
+          .status(400)
+          .send({ errors: [{ msg: "Token is not valid" }] });
       }
       // generating hashed password and salt
       const { hashedPassword, salt } = hashPassword(password);
@@ -38,7 +40,7 @@ function ResetPasswordController() {
         res.set(400).send({ msg: "fail to update." });
       }
 
-      res.status(200).send({ message: "Password has been reset." })
+      res.status(200).send({ message: "Password has been reset." });
     } catch (err) {
       return next(err);
     }
