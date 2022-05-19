@@ -16,9 +16,10 @@ const app = express();
 app.use(
   cors({
     origin: [
-      /^http:\/\/localhost:3000/,
-      /^https:\/\/bears-team-16be.herokuapp.com/,
-      /^https:\/\/deploy-preview-55--100devstracker.netlify.app/
+      "http://localhost:3000",
+      "http://127.0.0.1:3000",
+      "https://deploy-preview-55--100devstracker.netlify.app",
+      "https://api.twitter.com",
     ],
     credentials: true,
   })

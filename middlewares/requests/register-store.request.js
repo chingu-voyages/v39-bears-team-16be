@@ -14,7 +14,9 @@ const registerStoreRequest = [
     .normalizeEmail({ gmail_remove_dots: false })
     .custom(async (value) => {
       const user = await users.findUserBy("email", value);
-      if (user) return Promise.reject("E-mail already in use");
+      if (user) {
+        return Promise.reject("E-mail already in use");
+      } 
     }),
   body("password").isAlphanumeric().isLength({ min: 1, max: 255 }).trim(),
   function (req, res, next) {

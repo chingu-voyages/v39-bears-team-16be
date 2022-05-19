@@ -1,7 +1,5 @@
 require("dotenv").config();
 
-const forgotPasswordRequest = require("../middlewares/requests/forgot-password.request");
-const { validationResult } = require("express-validator");
 const transporter = require("../utilities/ses-transport.util");
 const users = require("../dao/user.dao");
 const passwordResetTokens = require("../dao/password-reset-token.dao");
@@ -16,7 +14,9 @@ function ForgotPasswordController() {
       const user = await users.findUserBy("email", email);
 
       if (!user) {
-        return res.status(400).send("email not found.");
+        return res
+          .status(400)
+          .send({ errors: [{ msg: "Email not found.", value: "email" }] });
       }
       // check if token already existed
       let passwordResetToken = await passwordResetTokens.findTokenBy(
@@ -48,7 +48,7 @@ function ForgotPasswordController() {
         html: `<a href=${url}>Click here to reset password</a>`,
       });
 
-      res.status(200).send(`message sent ${message.messageId}`);
+      res.status(200).send({ msg: "Email sent." });
     } catch (err) {
       return next(err);
     }

@@ -6,6 +6,7 @@ const registerStoreRequest = require("../middlewares/requests/register-store.req
 const loginStoreRequest = require("../middlewares/requests/login-store.request");
 const forgotPasswordRequest = require("../middlewares/requests/forgot-password.request");
 //middlewares
+const passport = require("../middlewares/passport.middleware");
 const { isAuth, isAdmin } = require("../middlewares/auth.middleware");
 // controllers
 const registerController = require("../controllers/register.controller.js");
@@ -22,18 +23,20 @@ const studentCohortController = require("../controllers/student/student-cohort.c
 const router = express.Router();
 
 router.route("/register").post(registerStoreRequest, registerController.store);
-
 router.route("/login").post(loginStoreRequest, loginController.store);
-
 router.route("/logout").post(logoutController.store);
-
 router
   .route("/forgot-password")
   .post(forgotPasswordRequest, forgotPasswordController.store);
-
 router
   .route("/reset-password")
   .post(resetPasswordRequest, resetPasswordController.store);
+// OAuth 1
+router.route("/auth/twitter").get(passport.authenticate("twitter"));
+
+router.route("/auth/twitter/callback").get((req, res) => {
+  res.status(200).send({ msg: "Debugging" });
+});
 // admin
 router.route("/admin/cohorts").get(isAdmin, adminCohortController.index);
 router
