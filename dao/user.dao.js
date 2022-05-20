@@ -76,18 +76,6 @@ function UserDao() {
       console.error(err);
     }
   };
-
-  this.upsertUser = async function upsertUser(twitterId) {
-    try {
-      console.log("upserting");
-      const result = await users.update({ twitterId }, { twitterId }, { upsert: true });
-      
-      console.log("upserting done");
-      return result;
-    } catch (err) {
-      console.error(err);
-    }
-  }
 }
 
 const userDao = new UserDao();

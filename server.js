@@ -18,8 +18,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://127.0.0.1:3000",
-      "https://deploy-preview-55--100devstracker.netlify.app",
-      "https://api.twitter.com",
+      "https://deploy-preview-55--100devstracker.netlify.app"
     ],
     credentials: true,
   })
@@ -29,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   session({
     secret: process.env.SECRET,
-    resave: true,
+    resave: false,
     rolling: true,
     saveUninitialized: true,
     store: MongoStore.create({

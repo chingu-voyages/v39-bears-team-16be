@@ -31,12 +31,7 @@ router
 router
   .route("/reset-password")
   .post(resetPasswordRequest, resetPasswordController.store);
-// OAuth 1
-router.route("/auth/twitter").get(passport.authenticate("twitter"));
 
-router.route("/auth/twitter/callback").get((req, res) => {
-  res.status(200).send({ msg: "Debugging" });
-});
 // admin
 router.route("/admin/cohorts").get(isAdmin, adminCohortController.index);
 router

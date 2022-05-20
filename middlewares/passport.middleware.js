@@ -1,7 +1,6 @@
 require("dotenv").config();
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
-const TwitterStrategy = require("passport-twitter");
 const users = require("../dao/user.dao");
 const { validatePassword } = require("../utilities/password.util");
 
@@ -33,19 +32,6 @@ passport.use(
   )
 );
 
-passport.use(
-  new TwitterStrategy(
-    {
-      consumerKey: process.env.TWITTER_CONSUMER_KEY,
-      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-      callback: `http://127.0.0.1:5000/auth/twitter/callback`,
-    },
-    async function (token, tokenSecret, profile, cb) {
-      const user = await users.upsertUser(profile.id);
-      return cb(err, user);
-    }
-  )
-);
 
 passport.serializeUser((user, cb) => {
   cb(null, user.email);
