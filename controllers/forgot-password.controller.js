@@ -47,8 +47,8 @@ function ForgotPasswordController() {
         subject: "Reset password link",
         html: `<a href=${url}>Click here to reset password</a>`,
       });
-
       res.status(200).send({ msg: "Email sent." });
+
     } catch (err) {
       return next(err);
     }

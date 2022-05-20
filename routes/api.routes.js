@@ -23,8 +23,11 @@ const studentCohortController = require("../controllers/student/student-cohort.c
 const router = express.Router();
 
 router.route("/register").post(registerStoreRequest, registerController.store);
+
 router.route("/login").post(loginStoreRequest, loginController.store);
+
 router.route("/logout").post(logoutController.store);
+
 router
   .route("/forgot-password")
   .post(forgotPasswordRequest, forgotPasswordController.store);
