@@ -3,6 +3,7 @@ function AdminClassController() {
     const cohortId = req.params.cohortId;
     res.status(200).send({ cohortId });
   };
+  
 }
 
 const adminClassController = new AdminClassController();
