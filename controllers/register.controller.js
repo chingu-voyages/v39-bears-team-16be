@@ -1,11 +1,9 @@
-const users = require("../dao/user.dao");
-const { hashPassword } = require("../utilities/password.util");
+const users = require('../dao/user.dao');
+const { hashPassword } = require('../utilities/password.util');
 
 function RegisterController() {
-  this.store = async function store(req, res, next) {
-    const name = req.body.name;
-    const email = req.body.email;
-    const password = req.body.password;
+  this.store = async (req, res, next) => {
+    const { name, email, password } = req.body;
 
     const { hashedPassword, salt } = hashPassword(password);
 
@@ -18,7 +16,7 @@ function RegisterController() {
 
     try {
       await users.insertUser(user);
-      res.status(200).send({ success: true, message: "A user has been created." });
+      return res.status(200).send({ success: true, message: 'A user has been created.' });
     } catch (err) {
       return next(err);
     }

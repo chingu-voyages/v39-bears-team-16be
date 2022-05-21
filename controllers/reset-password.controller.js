@@ -1,13 +1,11 @@
-require("dotenv").config();
-const passwordResetTokens = require("../dao/password-reset-token.dao");
-const { hashPassword } = require("../utilities/password.util");
-const users = require("../dao/user.dao");
+require('dotenv').config();
+const passwordResetTokens = require('../dao/password-reset-token.dao');
+const { hashPassword } = require('../utilities/password.util');
+const users = require('../dao/user.dao');
 
 function ResetPasswordController() {
-  this.store = async function store(req, res, next) {
-    const email = req.body.email;
-    const password = req.body.password;
-    const token = req.body.token;
+  this.store = async (req, res, next) => {
+    const { email, password, token } = req.body;
 
     try {
       // check if the token is valid
@@ -17,28 +15,24 @@ function ResetPasswordController() {
       });
 
       if (!resetPasswordToken) {
-        return res.status(400).send({ err: "token is not valid." });
+        return res.status(400).send({ err: 'token is not valid.' });
       }
       // generating hashed password and salt
       const { hashedPassword, salt } = hashPassword(password);
       // update the database
-      const updated = await users.updateUserPasswordByEmail(
-        email,
-        hashedPassword,
-        salt
-      );
+      const updated = await users.updateUserPasswordByEmail(email, hashedPassword, salt);
 
       if (!updated) {
-        res.set(400).send({ msg: "fail to update." });
+        res.set(400).send({ msg: 'failed to update.' });
       }
 
-      const deleted = await passwordResetTokens.deleteTokenBy("email", email);
+      const deleted = await passwordResetTokens.deleteTokenBy('email', email);
 
       if (deleted.deletedCount !== 1) {
-        res.set(400).send({ msg: "fail to update." });
+        res.status(400).send({ msg: 'failed to update.' });
       }
 
-      res.status(200).send({ message: "Password has been reset." })
+      return res.status(200).send({ message: 'Password has been reset.' });
     } catch (err) {
       return next(err);
     }

@@ -1,7 +1,7 @@
 function LogoutController() {
-  this.store = function store(req, res) {
+  this.store = (req, res) => {
     req.logout();
-    res.status(200).send({ message:"Success" })
+    return res.status(200).send({ message: 'Success' });
   };
 }
 

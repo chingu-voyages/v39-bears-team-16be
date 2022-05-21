@@ -1,10 +1,9 @@
 const { body, validationResult } = require('express-validator');
 
-const forgotPasswordRequest = [
-  body('email')
-    .isEmail()
-    .isLength({ min: 1, max: 255 })
-    .normalizeEmail({ gmail_remove_dots: false }),
+const adminCohortStoreRequest = [
+  body('name').isLength({ min: 1, max: 255 }).trim().escape(),
+  body('startDate').isDate(),
+  body('endDate').isDate(),
   (req, res, next) => {
     const errors = validationResult(req);
 
@@ -16,4 +15,4 @@ const forgotPasswordRequest = [
   },
 ];
 
-module.exports = forgotPasswordRequest;
+module.exports = adminCohortStoreRequest;

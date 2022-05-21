@@ -1,54 +1,46 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const transporter = require("../utilities/ses-transport.util");
-const users = require("../dao/user.dao");
-const passwordResetTokens = require("../dao/password-reset-token.dao");
-const crypto = require("crypto");
+const crypto = require('crypto');
+const transporter = require('../utilities/ses-transport.util');
+const users = require('../dao/user.dao');
+const passwordResetTokens = require('../dao/password-reset-token.dao');
 
 function ForgotPasswordController() {
-  this.store = async function store(req, res, next) {
-    const email = req.body.email;
+  this.store = async (req, res, next) => {
+    const { email } = req.body;
 
     try {
       // check if user exists
-      const user = await users.findUserBy("email", email);
+      const user = await users.findUserBy('email', email);
 
       if (!user) {
-        return res
-          .status(400)
-          .send({ errors: [{ msg: "Email not found.", value: "email" }] });
+        return res.status(400).send({ errors: [{ msg: 'Email not found.', value: 'email' }] });
       }
       // check if token already existed
-      let passwordResetToken = await passwordResetTokens.findTokenBy(
-        "email",
-        user.email
-      );
+      let passwordResetToken = await passwordResetTokens.findTokenBy('email', user.email);
 
       // if not create a new one
       if (!passwordResetToken) {
         const token = {
           email: user.email,
-          token: crypto.randomBytes(32).toString("hex"),
+          token: crypto.randomBytes(32).toString('hex'),
           createdAt: new Date(),
         };
 
         const result = await passwordResetTokens.insertToken(token);
-        passwordResetToken = await passwordResetTokens.findTokenBy(
-          "_id",
-          result.insertedId
-        );
+        passwordResetToken = await passwordResetTokens.findTokenBy('_id', result.insertedId);
       }
       // set the url
       const url = `${process.env.FRONTEND_URL}/reset-password/${passwordResetToken.token}`;
       // send email
-      const message = await transporter.sendMail({
-        from: "v39bearsteam16@gmail.com",
+      await transporter.sendMail({
+        from: 'v39bearsteam16@gmail.com',
         to: email,
-        subject: "Reset password link",
+        subject: 'Reset password link',
         html: `<a href=${url}>Click here to reset password</a>`,
       });
 
-      res.status(200).send({ msg: "Email sent." });
+      return res.status(200).send({ msg: 'Email sent.' });
     } catch (err) {
       return next(err);
     }

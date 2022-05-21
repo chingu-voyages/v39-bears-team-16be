@@ -1,33 +1,36 @@
+const { defaultCreationTS, defaultExpirationTime } = require('../config');
+
 let passwordResetTokens;
 
 function PasswordResetTokenDao() {
-  this.initialize = async function initialize(client) {
+  this.initialize = async (client) => {
     if (passwordResetTokens) {
       return;
     }
 
     try {
-      passwordResetTokens = await client.db().collection("passwordResetTokens");
+      passwordResetTokens = await client.db().collection('passwordResetTokens');
 
       passwordResetTokens.createIndex(
-        { createdAt: 1 },
-        { expireAfterSeconds: 300 }
+        { createdAt: defaultCreationTS },
+        { expireAfterSeconds: defaultExpirationTime }
       );
     } catch (err) {
       console.error(err);
     }
   };
 
-  this.insertToken = async function insertToken(token) {
+  this.insertToken = async (token) => {
     try {
       const result = await passwordResetTokens.insertOne(token);
       return result;
     } catch (err) {
       console.error(err);
+      return err;
     }
   };
 
-  this.findTokenBy = async function findTokenBy(key, value) {
+  this.findTokenBy = async (key, value) => {
     try {
       const passwordResetToken = await passwordResetTokens.findOne({
         [key]: value,
@@ -35,10 +38,11 @@ function PasswordResetTokenDao() {
       return passwordResetToken;
     } catch (err) {
       console.error(err);
+      return err;
     }
   };
 
-  this.deleteTokenBy = async function deleteTokenBy(key, value) {
+  this.deleteTokenBy = async (key, value) => {
     const query = {
       [key]: value,
     };
@@ -47,15 +51,17 @@ function PasswordResetTokenDao() {
       return result;
     } catch (err) {
       console.error(err);
+      return err;
     }
   };
 
-  this.findToken = async function findToken(query) {
+  this.findToken = async (query) => {
     try {
       const passwordResetToken = await passwordResetTokens.findOne(query);
       return passwordResetToken;
     } catch (err) {
       console.error(err);
+      return err;
     }
   };
 }
