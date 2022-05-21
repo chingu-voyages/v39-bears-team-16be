@@ -76,6 +76,33 @@ function UserDao() {
       console.error(err);
     }
   };
+
+  this.findOrInsert = async function findOrInsert(user) {
+    const { email, name } = user;
+    try {
+      const result = await users.findOneAndUpdate(
+        { email },
+        {
+          $setOnInsert: {
+            name,
+            email,
+            isAdmin: false,
+            createdAt: new Date(),
+            photo:
+              "https://images.unsplash.com/photo-1623584973952-182bcb43b8ad?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=480&q=80",
+            loginCount: 0,
+          },
+        },
+        {
+          upsert: true,
+          returnNewDocument: true,
+        }
+      );
+      return result.value;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 }
 
 const userDao = new UserDao();

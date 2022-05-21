@@ -1,8 +1,8 @@
 const passport = require("../middlewares/passport.middleware");
 
-function LoginController() {
+function AuthGithubController() {
   this.store = function store(req, res, next) {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("github", (err, user, info) => {
       if (err) {
         return next(err);
       }
@@ -13,14 +13,14 @@ function LoginController() {
         if (err) {
           return next(err);
         }
-        res.status(200).send(user);
+        res.redirect("http://localhost:3000/admin/cohorts");
       });
     })(req, res, next);
   };
 }
 
-const loginController = new LoginController();
+const authGithubController = new AuthGithubController();
 
-Object.freeze(loginController);
+Object.freeze(authGithubController);
 
-module.exports = loginController;
+module.exports = authGithubController;
