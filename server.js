@@ -47,7 +47,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(csrf());
+app.use(csrf({ cookie: true }));
 app.use(helmet());
 app.use(compression());
 app.use(router);
