@@ -36,10 +36,13 @@ app.use(
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URI,
     }),
+    proxy: true,
     cookie: {
       // 1 hour
       maxAge: 1000 * 60 * 60 * 1,
       httpOnly: true,
+      sameSite: 'none',
+      secure: true
     },
   })
 );
