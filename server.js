@@ -27,6 +27,8 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(csrf({ cookie: true }));
 app.use(
   session({
     secret: process.env.SECRET,
@@ -47,7 +49,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(csrf({ cookie: true }));
 app.use(helmet());
 app.use(compression());
 app.use(router);
