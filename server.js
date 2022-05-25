@@ -27,10 +27,11 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use(
   session({
     secret: process.env.SECRET,
-    resave: false,
+    resave: true,
     rolling: true,
     saveUninitialized: true,
     store: MongoStore.create({
@@ -45,6 +46,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
 app.use(csrf());
 app.use(helmet());
 app.use(compression());
