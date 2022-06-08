@@ -30,5 +30,9 @@ AWS_SECRET_ACCESS_KEY=
 ```
 the next step is to run the app
 ```cli
+npm install
+```
+
+```cli
 node index.js
 ```
