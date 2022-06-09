@@ -26,6 +26,7 @@ function AdminClassController() {
       res.status(500).json(err);
     }
   };
+  
 }
 
 const adminClassController = new AdminClassController();

@@ -30,3 +30,4 @@ const adminClassStoreRequest = [
 ];
 
 module.exports = adminClassStoreRequest;
+

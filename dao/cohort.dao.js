@@ -50,6 +50,20 @@ function CohortDao() {
       return err;
     }
   };
+
+  this.insertCohort = async function insertCohort(cohort) {
+    const { name, startDate, endDate } = cohort;
+    try {
+      const result = await cohorts.insertOne({
+        name,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+      });
+      return result;
+    } catch (err) {
+      console.error(err);
+    }
+  };
 }
 
 const cohortDao = new CohortDao();
