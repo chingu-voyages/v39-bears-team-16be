@@ -46,12 +46,21 @@ function ClassDao() {
   this.insertClasswork = async (classworkObj) => {
     const { classId, name, body } = classworkObj;
     const classwork = { name, body };
-    console.log(classwork);
     try {
       const result = await classes.updateOne(
         { _id: ObjectId(classId) },
         { $push: { classworks: classwork } }
       );
+      return result;
+    } catch (err) {
+      console.error(err);
+      return err;
+    }
+  };
+
+  this.deleteClass = async (classId) => {
+    try {
+      const result = await classes.deleteOne({ _id: ObjectId(classId) });
       return result;
     } catch (err) {
       console.error(err);

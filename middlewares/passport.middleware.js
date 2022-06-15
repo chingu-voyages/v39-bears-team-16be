@@ -38,7 +38,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: `${process.env.BASE_URL}/auth/github/callback`,
+      callbackURL: `https://bears-team-16be.herokuapp.com/auth/github/callback`,
     },
     async (accessToken, refreshToken, profile, cb) => {
       const { displayName } = profile;
@@ -67,7 +67,6 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser(async (username, cb) => {
   try {
-
     const user = await users.findUserBy('email', username);
 
     cb(null, user);

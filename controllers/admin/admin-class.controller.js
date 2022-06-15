@@ -26,7 +26,17 @@ function AdminClassController() {
       res.status(500).json(err);
     }
   };
-  
+
+  this.destroy = async (req, res) => {
+    const { classId } = req.params;
+
+    try {
+      const result = await classes.deleteClass(classId);
+      res.status(200).json(result);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 }
 
 const adminClassController = new AdminClassController();

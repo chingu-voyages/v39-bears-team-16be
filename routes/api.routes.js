@@ -38,23 +38,26 @@ router.route('/auth/github').get(passport.authenticate('github', { scope: ['user
 
 router.route('/auth/github/callback').get(authGithubController.store);
 
-router
-  .route("/auth/github")
-  .get(passport.authenticate("github", { scope: ["user:email"] }));
+router.route('/auth/github').get(passport.authenticate('github', { scope: ['user:email'] }));
 
-router.route("/auth/github/callback").get(authGithubController.store);
+router.route('/auth/github/callback').get(authGithubController.store);
 
 // admin
-
+// cohorts
 router.route('/admin/cohorts').get(isAdmin, adminCohortController.index);
 router
   .route('/admin/cohorts/create')
   .post(isAdmin, adminCohortStoreRequest, adminCohortController.store);
+router.route('/admin/cohorts/:cohortId').delete(isAdmin, adminCohortController.destroy);
+// classes
 router.route('/admin/cohorts/:cohortId/classes').get(isAdmin, adminClassController.index);
 router
   .route('/admin/cohorts/:cohortId/classes/create')
   .post(isAdmin, adminClassStoreRequest, adminClassController.store);
-
+router
+  .route('/admin/cohorts/:cohortId/classes/:classId')
+  .delete(isAdmin, adminClassController.destroy);
+// classworks
 router
   .route('/admin/cohorts/:cohortId/classes/:classId/classworks/create')
   .post(adminClassworkController.store);
