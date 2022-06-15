@@ -20,7 +20,11 @@ function ResetPasswordController() {
       // generating hashed password and salt
       const { hashedPassword, salt } = hashPassword(password);
       // update the database
-      const updated = await users.updateUserPasswordByEmail(email, hashedPassword, salt);
+      const updated = await users.updateUserPasswordByEmail(
+        email,
+        hashedPassword,
+        salt
+      );
 
       if (!updated) {
         res.set(400).send({ msg: 'failed to update.' });

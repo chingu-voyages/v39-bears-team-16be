@@ -24,23 +24,19 @@ function AdminCohortController() {
     }
   };
 
-  this.store = async function store(req, res, next) {
-    const name = req.body.name;
-    const startDate = req.body.startDate;
-    const endDate = req.body.endDate;
+  this.destroy = async (req, res) => {
+    const { cohortId } = req.params;
 
-    const cohort = {
-      name, startDate, endDate
-    }
-    console.log(cohort);
+    console.log(cohortId);
+
     try {
-      const result = await cohorts.insertCohort(cohort);
-      res.status(200).send({ msg: "success!", data : result })
+      const result = await cohorts.deleteCohort(cohortId);
+      res.status(200).json(result);
     } catch (err) {
-      res.status(500).send({ msg: "couldn't insert cohort" })
       console.error(err);
+      res.status(500).send({ msg: "couldn't delete cohort", data: err });
     }
-  }
+  };
 }
 
 const adminCohortController = new AdminCohortController();

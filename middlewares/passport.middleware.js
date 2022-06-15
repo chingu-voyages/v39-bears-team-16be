@@ -7,30 +7,33 @@ const users = require('../dao/user.dao');
 const { validatePassword } = require('../utilities/password.util');
 
 passport.use(
-  new LocalStrategy({ usernameField: 'email' }, async (username, password, cb) => {
-    try {
-      const user = await users.attemptLogin(username);
-      if (!user) {
-        return cb(null, false, {
-          msg: 'Incorrect username or password.',
-          data: { email: username, timestamp: new Date() },
-        });
+  new LocalStrategy(
+    { usernameField: 'email' },
+    async (username, password, cb) => {
+      try {
+        const user = await users.attemptLogin(username);
+        if (!user) {
+          return cb(null, false, {
+            msg: 'Incorrect username or password.',
+            data: { email: username, timestamp: new Date() },
+          });
+        }
+
+        const valid = validatePassword(password, user.password, user.salt);
+
+        if (!valid) {
+          return cb(null, false, {
+            msg: 'Incorrect username or password.',
+            data: { email: username, timestamp: new Date() },
+          });
+        }
+
+        return cb(null, user);
+      } catch (err) {
+        return cb(err);
       }
-
-      const valid = validatePassword(password, user.password, user.salt);
-
-      if (!valid) {
-        return cb(null, false, {
-          msg: 'Incorrect username or password.',
-          data: { email: username, timestamp: new Date() },
-        });
-      }
-
-      return cb(null, user);
-    } catch (err) {
-      return cb(err);
     }
-  })
+  )
 );
 
 passport.use(
@@ -38,7 +41,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: `${process.env.BASE_URL}/auth/github/callback`,
+      callbackURL: `https://bears-team-16be.herokuapp.com/auth/github/callback`,
     },
     async (accessToken, refreshToken, profile, cb) => {
       const { displayName } = profile;
@@ -67,7 +70,6 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser(async (username, cb) => {
   try {
-
     const user = await users.findUserBy('email', username);
 
     cb(null, user);

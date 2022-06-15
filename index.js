@@ -5,17 +5,15 @@ const passwordResetTokens = require('./dao/password-reset-token.dao');
 const classworkTypes = require('./dao/classwork-type.dao');
 const cohorts = require('./dao/cohort.dao');
 const classes = require('./dao/class.dao');
+const app = require('./app');
 
-const app = require('./server');
 const port = process.env.PORT || 8000;
-const client = new MongoClient(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const client = new MongoClient(process.env.MONGODB_URI);
 
 const main = async () => {
   try {
     await client.connect();
+
     await users.initialize(client);
     await passwordResetTokens.initialize(client);
     await classworkTypes.initialize(client);
@@ -30,4 +28,4 @@ const main = async () => {
   }
 };
 
-main().catch(console.error);
+main();

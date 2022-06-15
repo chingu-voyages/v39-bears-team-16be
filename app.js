@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const express = require('express');
@@ -11,6 +10,7 @@ const MongoStore = require('connect-mongo');
 
 const router = require('./routes/api.routes');
 const passport = require('./middlewares/passport.middleware');
+const { defaultOrigins } = require('./config');
 
 const app = express();
 
@@ -18,13 +18,7 @@ const productionEnv = process.env.NODE_ENV === 'production';
 
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-      'https://100devstracker.netlify.app/',
-      'https://api.github.com',
-      'https://github.com',
-    ],
+    origin: defaultOrigins,
     credentials: true,
   })
 );
@@ -67,4 +61,3 @@ app.use((err, req, res) => {
 });
 
 module.exports = app;
-
