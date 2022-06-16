@@ -14,10 +14,15 @@ function ForgotPasswordController() {
       const user = await users.findUserBy('email', email);
 
       if (!user) {
-        return res.status(400).send({ errors: [{ msg: 'Email not found.', value: 'email' }] });
+        return res
+          .status(400)
+          .send({ errors: [{ msg: 'Email not found.', value: 'email' }] });
       }
       // check if token already existed
-      let passwordResetToken = await passwordResetTokens.findTokenBy('email', user.email);
+      let passwordResetToken = await passwordResetTokens.findTokenBy(
+        'email',
+        user.email
+      );
 
       // if not create a new one
       if (!passwordResetToken) {
@@ -28,7 +33,10 @@ function ForgotPasswordController() {
         };
 
         const result = await passwordResetTokens.insertToken(token);
-        passwordResetToken = await passwordResetTokens.findTokenBy('_id', result.insertedId);
+        passwordResetToken = await passwordResetTokens.findTokenBy(
+          '_id',
+          result.insertedId
+        );
       }
       // set the url
       const url = `${process.env.FRONTEND_URL}/reset-password/${passwordResetToken.token}`;

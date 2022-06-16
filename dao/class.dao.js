@@ -17,7 +17,9 @@ function ClassDao() {
 
   this.getClassesByCohortId = async (cohortId) => {
     try {
-      const result = await classes.find({ cohortId: ObjectId(cohortId) }).sort({ date: 1 });
+      const result = await classes
+        .find({ cohortId: ObjectId(cohortId) })
+        .sort({ date: 1 });
       return result.toArray();
     } catch (err) {
       console.error(err);

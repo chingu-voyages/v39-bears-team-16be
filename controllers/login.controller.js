@@ -14,7 +14,6 @@ function LoginController() {
           return next(error);
         }
         return res.status(200).send(user);
-
       });
     })(req, res, next);
   };

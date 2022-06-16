@@ -19,7 +19,6 @@ function AuthGithubController() {
         }
 
         return res.redirect(`${process.env.FRONTEND_URL}/admin/cohorts`);
-
       });
     })(req, res, next);
   };

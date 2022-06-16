@@ -7,30 +7,33 @@ const users = require('../dao/user.dao');
 const { validatePassword } = require('../utilities/password.util');
 
 passport.use(
-  new LocalStrategy({ usernameField: 'email' }, async (username, password, cb) => {
-    try {
-      const user = await users.attemptLogin(username);
-      if (!user) {
-        return cb(null, false, {
-          msg: 'Incorrect username or password.',
-          data: { email: username, timestamp: new Date() },
-        });
+  new LocalStrategy(
+    { usernameField: 'email' },
+    async (username, password, cb) => {
+      try {
+        const user = await users.attemptLogin(username);
+        if (!user) {
+          return cb(null, false, {
+            msg: 'Incorrect username or password.',
+            data: { email: username, timestamp: new Date() },
+          });
+        }
+
+        const valid = validatePassword(password, user.password, user.salt);
+
+        if (!valid) {
+          return cb(null, false, {
+            msg: 'Incorrect username or password.',
+            data: { email: username, timestamp: new Date() },
+          });
+        }
+
+        return cb(null, user);
+      } catch (err) {
+        return cb(err);
       }
-
-      const valid = validatePassword(password, user.password, user.salt);
-
-      if (!valid) {
-        return cb(null, false, {
-          msg: 'Incorrect username or password.',
-          data: { email: username, timestamp: new Date() },
-        });
-      }
-
-      return cb(null, user);
-    } catch (err) {
-      return cb(err);
     }
-  })
+  )
 );
 
 passport.use(

@@ -1,7 +1,9 @@
 const crypto = require('crypto');
 
 const generateHash = (password, salt) => {
-  return crypto.pbkdf2Sync(password, salt, 310000, 32, 'sha256').toString('hex');
+  return crypto
+    .pbkdf2Sync(password, salt, 310000, 32, 'sha256')
+    .toString('hex');
 };
 
 const hashPassword = (password) => {
