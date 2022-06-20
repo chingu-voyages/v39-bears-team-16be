@@ -1,9 +1,9 @@
 require('dotenv').config();
 
 const crypto = require('crypto');
-const transporter = require('../utilities/ses-transport.util');
-const users = require('../dao/user.dao');
-const passwordResetTokens = require('../dao/password-reset-token.dao');
+const transporter = require('../../../utilities/ses-transport.util');
+const userDao = require('../../dao/user.dao');
+const passwordResetTokenDao = require('../../dao/password-reset-token.dao');
 
 function ForgotPasswordController() {
   this.store = async (req, res, next) => {
@@ -11,7 +11,7 @@ function ForgotPasswordController() {
 
     try {
       // check if user exists
-      const user = await users.findUserBy('email', email);
+      const user = await userDao.findUserBy('email', email);
 
       if (!user) {
         return res
