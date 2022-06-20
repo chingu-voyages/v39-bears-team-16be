@@ -1,14 +1,15 @@
-const passport = require('../../../config/passport.config');
+const { passport, userDao } = require('./index');
 
-function LoginController() {
+function SignInController() {
   this.store = (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
+    passport.authenticate('local', async (err, user, info) => {
       if (err) {
         return next(err);
       }
       if (!user) {
         res.status(401).send({ error: { message: info.message } });
       }
+      await userDao.login();
 
       return req.login(user, (error) => {
         if (error) {
@@ -20,8 +21,8 @@ function LoginController() {
   };
 }
 
-const loginController = new LoginController();
+const signInController = new SignInController();
 
-Object.freeze(loginController);
+Object.freeze(signInController);
 
-module.exports = loginController;
+module.exports = signInController;

@@ -1,10 +1,12 @@
-require('dotenv').config();
+const { passport, userDao } = require('./index');
 
-const passport = require('../../../config/passport.config');
+function GithubAuth() {
+  this.index = (req, res, next) => {
+    passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
+  };
 
-function AuthGithubController() {
   this.store = (req, res, next) => {
-    passport.authenticate('github', (err, user, info) => {
+    passport.authenticate('github', async (err, user, info) => {
       if (err) {
         return next(err);
       }
@@ -12,6 +14,8 @@ function AuthGithubController() {
       if (!user) {
         return res.status(401).send({ error: { message: info.message } });
       }
+
+      await userDao.login();
 
       return req.login(user, (e) => {
         if (e) {
@@ -24,8 +28,8 @@ function AuthGithubController() {
   };
 }
 
-const authGithubController = new AuthGithubController();
+const githubAuth = new GithubAuth();
 
-Object.freeze(authGithubController);
+Object.freeze(githubAuth);
 
-module.exports = authGithubController;
+module.exports = githubAuth;

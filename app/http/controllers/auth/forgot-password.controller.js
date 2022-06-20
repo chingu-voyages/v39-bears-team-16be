@@ -1,9 +1,6 @@
 require('dotenv').config();
 
-const crypto = require('crypto');
-const transporter = require('../../../utilities/ses-transport.util');
-const userDao = require('../../dao/user.dao');
-const passwordResetTokenDao = require('../../dao/password-reset-token.dao');
+const { transporter, userDao, passwordResetTokenDao } = require('./index');
 
 function ForgotPasswordController() {
   this.store = async (req, res, next) => {
@@ -11,32 +8,21 @@ function ForgotPasswordController() {
 
     try {
       // check if user exists
-      const user = await userDao.findUserBy('email', email);
+      const user = await userDao.find(email);
 
       if (!user) {
         return res
           .status(400)
           .send({ errors: [{ msg: 'Email not found.', value: 'email' }] });
       }
+
       // check if token already existed
-      let passwordResetToken = await passwordResetTokens.findTokenBy(
-        'email',
-        user.email
-      );
+      let passwordResetToken = await passwordResetTokenDao.find(user.email);
 
       // if not create a new one
       if (!passwordResetToken) {
-        const token = {
-          email: user.email,
-          token: crypto.randomBytes(32).toString('hex'),
-          createdAt: new Date(),
-        };
-
-        const result = await passwordResetTokens.insertToken(token);
-        passwordResetToken = await passwordResetTokens.findTokenBy(
-          '_id',
-          result.insertedId
-        );
+        await passwordResetTokenDao.create(user.email);
+        passwordResetToken = await passwordResetTokenDao.find(user.email);
       }
       // set the url
       const url = `${process.env.FRONTEND_URL}/reset-password/${passwordResetToken.token}`;
