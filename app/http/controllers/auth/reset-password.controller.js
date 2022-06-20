@@ -1,7 +1,6 @@
 require('dotenv').config();
-const passwordResetTokenDao = require('../../../dao/password-reset-token.dao');
-const userDao = require('../../../dao/user.dao');
-const { hashPassword } = require('../../../../utilities/password.util');
+
+const { passwordResetTokenDao, userDao, hashPassword } = require('./index');
 
 function ResetPasswordController() {
   this.store = async (req, res, next) => {

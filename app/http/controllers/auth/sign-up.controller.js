@@ -1,5 +1,4 @@
-const userDao = require('../../../dao/user.dao');
-const { hashPassword } = require('../../../../utilities/password.util');
+const { userDao, hashPassword } = require('./index');
 
 function SignUpControlle() {
   this.store = async (req, res, next) => {

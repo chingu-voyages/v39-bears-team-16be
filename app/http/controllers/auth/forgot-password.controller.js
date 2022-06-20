@@ -1,8 +1,6 @@
 require('dotenv').config();
 
-const transporter = require('../../../../utilities/ses-transport.util');
-const userDao = require('../../../dao/user.dao');
-const passwordResetTokenDao = require('../../../dao/password-reset-token.dao');
+const { transporter, userDao, passwordResetTokenDao } = require('./index');
 
 function ForgotPasswordController() {
   this.store = async (req, res, next) => {

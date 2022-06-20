@@ -1,4 +1,4 @@
-const passport = require('../../../../config/passport.config');
+const { passport, userDao } = require('./index');
 
 function GithubAuth() {
   this.index = (req, res, next) => {
@@ -6,7 +6,7 @@ function GithubAuth() {
   };
 
   this.store = (req, res, next) => {
-    passport.authenticate('github', (err, user, info) => {
+    passport.authenticate('github', async (err, user, info) => {
       if (err) {
         return next(err);
       }
@@ -14,6 +14,8 @@ function GithubAuth() {
       if (!user) {
         return res.status(401).send({ error: { message: info.message } });
       }
+
+      await userDao.login();
 
       return req.login(user, (e) => {
         if (e) {

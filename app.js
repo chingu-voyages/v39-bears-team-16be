@@ -19,7 +19,7 @@ app.use(
   cors({
     origin: defaultOrigins,
     credentials: true,
-  })
+  }),
 );
 // required express middlewares
 app.use(express.json());
@@ -40,7 +40,7 @@ app.use(
       sameSite: productionEnv ? 'none' : 'lax',
       secure: productionEnv,
     },
-  })
+  }),
 );
 app.set('trust proxy', 1);
 app.use(csrf());

@@ -2,10 +2,10 @@ require('dotenv').config();
 
 const { MongoClient } = require('mongodb');
 
-const users = require('./dao/user.dao');
-const passwordResetTokenDao = require('./dao/password-reset-token.dao');
-const cohortDao = require('./dao/cohort.dao');
-const classDao = require('./dao/class.dao');
+const userDao = require('./app/dao/user.dao');
+const passwordResetTokenDao = require('./app/dao/password-reset-token.dao');
+const cohortDao = require('./app/dao/cohort.dao');
+const classDao = require('./app/dao/class.dao');
 const app = require('./app');
 
 const port = process.env.PORT || 5000;
@@ -15,7 +15,7 @@ const main = async () => {
   try {
     await client.connect();
 
-    await users.initialize(client);
+    await userDao.initialize(client);
     await passwordResetTokenDao.initialize(client);
     await cohortDao.initialize(client);
     await classDao.initialize(client);
