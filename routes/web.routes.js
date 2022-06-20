@@ -1,15 +1,13 @@
 const express = require('express');
-
-const resetPasswordRequest = require('../middlewares/requests/reset-password.request');
 // requests
-
-const registerStoreRequest = require('../middlewares/requests/register-store.request');
-const loginStoreRequest = require('../middlewares/requests/login-store.request');
-const forgotPasswordRequest = require('../middlewares/requests/forgot-password.request');
-const adminCohortStoreRequest = require('../middlewares/requests/admin/admin-cohort-store.request');
+const resetPasswordRequest = require('../http/middlewares/requests/reset-password.request');
+const registerStoreRequest = require('../http/middlewares/requests/register-store.request');
+const loginStoreRequest = require('../http/middlewares/requests/login-store.request');
+const forgotPasswordRequest = require('../http/middlewares/requests/forgot-password.request');
+const adminCohortStoreRequest = require('../http/middlewares/requests/admin/admin-cohort-store.request');
 // middlewares
-const passport = require('../middlewares/passport.middleware');
-const { isAuth, isAdmin } = require('../middlewares/auth.middleware');
+const passport = require('../config/passport.config');
+const { isAuth, isAdmin } = require('../http/middlewares/auth.middleware');
 // controllers
 const registerController = require('../controllers/register.controller');
 const loginController = require('../controllers/login.controller');
@@ -23,7 +21,7 @@ const adminCohortController = require('../controllers/admin/admin-cohort.control
 const adminClassController = require('../controllers/admin/admin-class.controller');
 // student controllers
 const studentCohortController = require('../controllers/student/student-cohort.controller');
-const adminClassStoreRequest = require('../middlewares/requests/admin/admin-class-store.request');
+const adminClassStoreRequest = require('../http/middlewares/requests/admin/admin-class-store.request');
 const adminClassworkController = require('../controllers/admin/admin-classwork.controller');
 
 const router = express.Router();

@@ -1,4 +1,4 @@
-const passport = require('../middlewares/passport.middleware');
+const passport = require('../../../config/passport.config');
 
 function LoginController() {
   this.store = (req, res, next) => {
@@ -9,7 +9,8 @@ function LoginController() {
       if (!user) {
         res.status(401).send({ error: { message: info.message } });
       }
-      return req.logIn(user, (error) => {
+
+      return req.login(user, (error) => {
         if (error) {
           return next(error);
         }
