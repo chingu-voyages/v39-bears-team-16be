@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const passport = require('../middlewares/passport.middleware');
+const passport = require('../config/passport.config');
 
 function AuthGithubController() {
   this.store = function store(req, res, next) {
