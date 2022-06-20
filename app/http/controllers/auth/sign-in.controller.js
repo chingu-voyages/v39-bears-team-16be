@@ -1,6 +1,6 @@
-const passport = require('../../../config/passport.config');
+const passport = require('../../../../config/passport.config');
 
-function LoginController() {
+function SignInController() {
   this.store = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
       if (err) {
@@ -20,8 +20,8 @@ function LoginController() {
   };
 }
 
-const loginController = new LoginController();
+const signInController = new SignInController();
 
-Object.freeze(loginController);
+Object.freeze(signInController);
 
-module.exports = loginController;
+module.exports = signInController;

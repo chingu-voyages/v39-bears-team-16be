@@ -1,81 +1,37 @@
 const express = require('express');
-// requests
-const resetPasswordRequest = require('../http/middlewares/requests/reset-password.request');
-const registerStoreRequest = require('../http/middlewares/requests/register-store.request');
-const loginStoreRequest = require('../http/middlewares/requests/login-store.request');
-const forgotPasswordRequest = require('../http/middlewares/requests/forgot-password.request');
-const adminCohortStoreRequest = require('../http/middlewares/requests/admin/admin-cohort-store.request');
-// middlewares
-const passport = require('../config/passport.config');
-const { isAuth, isAdmin } = require('../http/middlewares/auth.middleware');
-// controllers
-const registerController = require('../controllers/register.controller');
-const loginController = require('../controllers/login.controller');
-const logoutController = require('../controllers/logout.controller');
-const forgotPasswordController = require('../controllers/forgot-password.controller');
-const resetPasswordController = require('../controllers/reset-password.controller');
-const authGithubController = require('../controllers/auth-github.controller');
 
-// admin ctonrollers
-const adminCohortController = require('../controllers/admin/admin-cohort.controller');
-const adminClassController = require('../controllers/admin/admin-class.controller');
-// student controllers
-const studentCohortController = require('../controllers/student/student-cohort.controller');
-const adminClassStoreRequest = require('../http/middlewares/requests/admin/admin-class-store.request');
-const adminClassworkController = require('../controllers/admin/admin-classwork.controller');
+const {
+  signUpStoreRequest,
+  signInStoreRequest,
+  forgotPasswordStoreRequest,
+  resetPasswordRequest,
+  signUpController,
+  signInController,
+  logoutController,
+  forgotPasswordController,
+  resetPasswordController,
+  githubAuthController,
+} = require('./index');
 
 const router = express.Router();
-
-router.route('/register').post(registerStoreRequest, registerController.store);
-router.route('/login').post(loginStoreRequest, loginController.store);
+// local
+router.route('/sign-up').post(signUpStoreRequest, signUpController.store);
+router.route('/sign-in').post(signInStoreRequest, signInController.store);
 router.route('/logout').post(logoutController.store);
 router
   .route('/forgot-password')
-  .post(forgotPasswordRequest, forgotPasswordController.store);
+  .post(forgotPasswordStoreRequest, forgotPasswordController.store);
 router
   .route('/reset-password')
   .post(resetPasswordRequest, resetPasswordController.store);
+// github
+router.route('/auth/github').get(githubAuthController.index);
+router.route('/auth/github/callback').get(githubAuthController.store);
+// resources
 
-router
-  .route('/auth/github')
-  .get(passport.authenticate('github', { scope: ['user:email'] }));
-
-router.route('/auth/github/callback').get(authGithubController.store);
-
-router
-  .route('/auth/github')
-  .get(passport.authenticate('github', { scope: ['user:email'] }));
-
-router.route('/auth/github/callback').get(authGithubController.store);
-
-// admin
-// cohorts
-router.route('/admin/cohorts').get(isAdmin, adminCohortController.index);
-router
-  .route('/admin/cohorts/create')
-  .post(isAdmin, adminCohortStoreRequest, adminCohortController.store);
-router
-  .route('/admin/cohorts/:cohortId')
-  .delete(isAdmin, adminCohortController.destroy);
-// classes
-router
-  .route('/admin/cohorts/:cohortId/classes')
-  .get(isAdmin, adminClassController.index);
-router
-  .route('/admin/cohorts/:cohortId/classes/create')
-  .post(isAdmin, adminClassStoreRequest, adminClassController.store);
-router
-  .route('/admin/cohorts/:cohortId/classes/:classId')
-  .delete(isAdmin, adminClassController.destroy);
-// classworks
-router
-  .route('/admin/cohorts/:cohortId/classes/:classId/classworks/create')
-  .post(adminClassworkController.store);
-// student
-router.route('/student/cohorts').get(isAuth, studentCohortController.index);
-
+// csrf token
 router.route('/fetchCsrfToken').get((req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
+  res.status(200).send({ csrfToken: req.csrfToken() });
 });
 
 module.exports = router;

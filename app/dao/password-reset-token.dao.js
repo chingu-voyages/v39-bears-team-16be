@@ -1,39 +1,44 @@
-const { defaultCreationTS, defaultExpirationTime } = require('../config');
+const crypto = require('crypto');
 
-let passwordResetTokens;
+let passwordResetTokenCollection;
 
 function PasswordResetTokenDao() {
   this.initialize = async (client) => {
-    if (passwordResetTokens) {
+    if (passwordResetTokenCollection) {
       return;
     }
 
     try {
-      passwordResetTokens = await client.db().collection('passwordResetTokens');
-
-      passwordResetTokens.createIndex(
-        { createdAt: defaultCreationTS },
-        { expireAfterSeconds: defaultExpirationTime }
-      );
+      passwordResetTokenCollection = await client
+        .db()
+        .collection('passwordResetTokens');
     } catch (err) {
       console.error(err);
     }
   };
 
-  this.insertToken = async (token) => {
+  this.create = async (
+    email,
+    token = crypto.randomBytes(32).toString('hex'),
+    createdAt = new Date(),
+  ) => {
     try {
-      const result = await passwordResetTokens.insertOne(token);
+      const result = await passwordResetTokenCollection.insertOne({
+        email,
+        token,
+        createdAt,
+      });
       return result;
     } catch (err) {
       console.error(err);
-      return err;
+      throw new Error(err.message);
     }
   };
 
-  this.findTokenBy = async (key, value) => {
+  this.find = async (email) => {
     try {
-      const passwordResetToken = await passwordResetTokens.findOne({
-        [key]: value,
+      const passwordResetToken = await passwordResetTokenCollection.findOne({
+        email,
       });
       return passwordResetToken;
     } catch (err) {
@@ -42,26 +47,13 @@ function PasswordResetTokenDao() {
     }
   };
 
-  this.deleteTokenBy = async (key, value) => {
-    const query = {
-      [key]: value,
-    };
+  this.delete = async (email) => {
     try {
-      const result = await passwordResetTokens.deleteOne(query);
+      const result = await passwordResetTokenCollection.deleteOne({ email });
       return result;
     } catch (err) {
       console.error(err);
-      return err;
-    }
-  };
-
-  this.findToken = async (query) => {
-    try {
-      const passwordResetToken = await passwordResetTokens.findOne(query);
-      return passwordResetToken;
-    } catch (err) {
-      console.error(err);
-      return err;
+      throw new Error(err.message);
     }
   };
 }
