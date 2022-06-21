@@ -25,6 +25,17 @@ function ClassController() {
     }
   };
 
+  this.show = async (req, res, next) => {
+    const { classId } = req.params;
+    try {
+      const result = await classDao.find(classId);
+      return res.status(200).send(result);
+    } catch (err) {
+      console.error(err);
+      return next(err);
+    }
+  };
+
   this.update = async (req, res, next) => {
     const { classId } = req.params;
     const { name, description, completed } = req.body;

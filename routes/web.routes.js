@@ -16,6 +16,9 @@ const {
 } = require('./index');
 
 const router = express.Router();
+router.route('/').get((req, res) => {
+  res.status(200).send('server is running');
+});
 // local
 router.route('/sign-up').post(signUpStoreRequest, signUpController.store);
 router.route('/sign-in').post(signInStoreRequest, signInController.store);
