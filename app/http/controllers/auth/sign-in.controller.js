@@ -6,14 +6,16 @@ function SignInController() {
       if (err) {
         return next(err);
       }
+
       if (!user) {
         res.status(401).send({ error: { message: info.message } });
       }
+
       await userDao.login();
 
-      return req.login(user, (error) => {
-        if (error) {
-          return next(error);
+      return req.login(user, (e) => {
+        if (e) {
+          return next(e);
         }
         return res.status(200).send(user);
       });

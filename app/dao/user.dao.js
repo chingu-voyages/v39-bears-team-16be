@@ -17,7 +17,9 @@ function UserDao() {
 
   this.all = async () => {
     try {
-      const users = userCollection.find().project({ _id: 0, hash: 0, salt: 0 });
+      const users = await userCollection
+        .find()
+        .project({ _id: 0, hash: 0, salt: 0 });
       return users.toArray();
     } catch (err) {
       console.error(err);
@@ -27,9 +29,9 @@ function UserDao() {
 
   this.find = async (email) => {
     try {
-      const user = userCollection.findOne(
+      const user = await userCollection.findOne(
         { email },
-        { _id: 0, hash: 0, salt: 0 },
+        { projection: { _id: 0 } },
       );
       return user;
     } catch (err) {
@@ -52,7 +54,7 @@ function UserDao() {
     createdAt = new Date(),
   }) => {
     try {
-      const user = await userCollection.insertOne({
+      const result = await userCollection.insertOne({
         name,
         profilePicture,
         email,
@@ -66,52 +68,6 @@ function UserDao() {
         createdAt,
       });
 
-      return user;
-    } catch (err) {
-      console.error(err);
-      throw new Error(err.message);
-    }
-  };
-
-  this.updatePassword = async (email, hash, salt) => {
-    try {
-      const result = await userCollection.updateOne(
-        {
-          email,
-        },
-        {
-          $set: {
-            hash,
-            salt,
-          },
-        },
-      );
-      return result;
-    } catch (err) {
-      console.error(err);
-      throw new Error(err.message);
-    }
-  };
-
-  this.attemptLogin = async (email) => {
-    try {
-      const result = await userCollection.findOne(
-        { email },
-        { _id: 0, hash: 1, salt: 1 },
-      );
-      return result;
-    } catch (err) {
-      console.error(err);
-      throw new Error(err.message);
-    }
-  };
-
-  this.login = async (email) => {
-    try {
-      const result = await userCollection.findOneAndUpdate(
-        { email },
-        { $set: { lastLogin: new Date() }, $inc: { loginCount: 1 } },
-      );
       return result;
     } catch (err) {
       console.error(err);
@@ -153,12 +109,46 @@ function UserDao() {
         {
           upsert: true,
           returnNewDocument: true,
+          projection: { _id: 0, hash: 0, salt: 0 },
         },
       );
       return result.value;
     } catch (err) {
       console.error(err);
       return err;
+    }
+  };
+
+  this.updatePassword = async (email, hash, salt) => {
+    try {
+      const result = await userCollection.updateOne(
+        {
+          email,
+        },
+        {
+          $set: {
+            hash,
+            salt,
+          },
+        },
+      );
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.login = async (email) => {
+    try {
+      const result = await userCollection.findOneAndUpdate(
+        { email },
+        { $set: { lastLogin: new Date() }, $inc: { loginCount: 1 } },
+      );
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
     }
   };
 }

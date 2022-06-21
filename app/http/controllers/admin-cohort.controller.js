@@ -27,8 +27,6 @@ function AdminCohortController() {
   this.destroy = async (req, res) => {
     const { cohortId } = req.params;
 
-    console.log(cohortId);
-
     try {
       const result = await cohorts.deleteCohort(cohortId);
       res.status(200).json(result);

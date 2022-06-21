@@ -50,7 +50,8 @@ app.use(helmet());
 app.use(compression());
 app.use(webRoutes);
 // error handler
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   if (err.code === 'EBADCSRFTOKEN') {
     return res.status(403).send({ message: 'Form has been tampered with.' });
   }

@@ -11,14 +11,16 @@ passport.use(
     { usernameField: 'email' },
     async (username, password, cb) => {
       try {
-        const user = await userDao.attemptLogin(username);
+        const user = await userDao.find(username);
+
         if (!user) {
           return cb(null, false, {
             msg: 'Incorrect username or password.',
             data: { email: username, timestamp: new Date() },
           });
         }
-        if (user.hash !== hashPassword(password, user.salt)) {
+
+        if (user.hash !== hashPassword(password, user.salt).hash) {
           return cb(null, false, {
             msg: 'Incorrect username or password.',
             data: { email: username, timestamp: new Date() },
@@ -71,8 +73,13 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser(async (email, cb) => {
   process.nextTick(async () => {
-    const user = await userDao.find(email);
-    return cb(null, user);
+    try {
+      const user = await userDao.find(email);
+      return cb(null, user);
+    } catch (err) {
+      console.error(err);
+      return cb(err);
+    }
   });
 });
 

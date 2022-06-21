@@ -6,7 +6,6 @@ const adminClassStoreRequest = [
   body('subject').isLength({ min: 1, max: 255 }).trim().escape(),
   param('cohortId').custom(async (value) => {
     try {
-      console.log(value);
       const cohort = await cohorts.findCohortById(value);
       if (!cohort) {
         // eslint-disable-next-line prefer-promise-reject-errors

@@ -8,6 +8,7 @@ const logoutController = require('../app/http/controllers/auth/logout.controller
 const forgotPasswordController = require('../app/http/controllers/auth/forgot-password.controller');
 const resetPasswordController = require('../app/http/controllers/auth/reset-password.controller');
 const githubAuthController = require('../app/http/controllers/auth/github-auth.controller');
+const planController = require('../app/http/controllers/plan.controller');
 
 module.exports = {
   signUpStoreRequest,
@@ -20,4 +21,5 @@ module.exports = {
   forgotPasswordController,
   resetPasswordController,
   githubAuthController,
+  planController,
 };

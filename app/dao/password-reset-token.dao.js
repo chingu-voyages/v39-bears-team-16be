@@ -17,6 +17,18 @@ function PasswordResetTokenDao() {
     }
   };
 
+  this.find = async (email) => {
+    try {
+      const passwordResetToken = await passwordResetTokenCollection.findOne({
+        email,
+      });
+      return passwordResetToken;
+    } catch (err) {
+      console.error(err);
+      return err;
+    }
+  };
+
   this.create = async (
     email,
     token = crypto.randomBytes(32).toString('hex'),
@@ -32,18 +44,6 @@ function PasswordResetTokenDao() {
     } catch (err) {
       console.error(err);
       throw new Error(err.message);
-    }
-  };
-
-  this.find = async (email) => {
-    try {
-      const passwordResetToken = await passwordResetTokenCollection.findOne({
-        email,
-      });
-      return passwordResetToken;
-    } catch (err) {
-      console.error(err);
-      return err;
     }
   };
 
