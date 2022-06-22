@@ -77,11 +77,13 @@ function PlanDao() {
       const result = await planCollection.updateOne(
         { _id: ObjectId(_id) },
         {
-          name,
-          description,
-          thumbnail,
-          visibility,
-          tags,
+          $set: {
+            name,
+            description,
+            thumbnail,
+            visibility,
+            tags,
+          },
         },
       );
 

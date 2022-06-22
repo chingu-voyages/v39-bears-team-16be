@@ -64,9 +64,11 @@ function ClassDao() {
     const result = await classCollection.updateOne(
       { _id: ObjectId(_id) },
       {
-        name,
-        description,
-        completed,
+        $set: {
+          name,
+          description,
+          completed,
+        },
       },
     );
 

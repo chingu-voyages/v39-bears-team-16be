@@ -119,7 +119,7 @@ function UserDao() {
     }
   };
 
-  this.updatePassword = async (email, hash, salt) => {
+  this.updatePassword = async ({ email, hash, salt }) => {
     try {
       const result = await userCollection.updateOne(
         {
