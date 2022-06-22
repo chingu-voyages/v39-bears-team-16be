@@ -16,7 +16,7 @@ function ResetPasswordController() {
       // generate has and salt
       const { hash, salt } = hashPassword(password);
       // update the database
-      const updated = await userDao.updatePassword(email, hash, salt);
+      const updated = await userDao.updatePassword({ email, hash, salt });
 
       if (!updated) {
         res.set(400).send({ msg: 'failed to update.' });
