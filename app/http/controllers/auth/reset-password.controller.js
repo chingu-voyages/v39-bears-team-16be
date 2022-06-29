@@ -1,7 +1,6 @@
 require('dotenv').config();
-const passwordResetTokens = require('../dao/password-reset-token.dao');
-const { hashPassword } = require('../utilities/password.util');
-const users = require('../dao/user.dao');
+
+const { passwordResetTokenDao, userDao, hashPassword } = require('./index');
 
 function ResetPasswordController() {
   this.store = async (req, res, next) => {
@@ -9,24 +8,21 @@ function ResetPasswordController() {
 
     try {
       // check if the token is valid
-      const resetPasswordToken = await passwordResetTokens.findToken({
-        email,
-        token,
-      });
+      const resetPasswordToken = await passwordResetTokenDao.find(email);
 
-      if (!resetPasswordToken) {
+      if (resetPasswordToken.token !== token) {
         return res.status(400).send({ err: 'token is not valid.' });
       }
-      // generating hashed password and salt
-      const { hashedPassword, salt } = hashPassword(password);
+      // generate has and salt
+      const { hash, salt } = hashPassword(password);
       // update the database
-      const updated = await users.updateUserPasswordByEmail(email, hashedPassword, salt);
+      const updated = await userDao.updatePassword({ email, hash, salt });
 
       if (!updated) {
         res.set(400).send({ msg: 'failed to update.' });
       }
 
-      const deleted = await passwordResetTokens.deleteTokenBy('email', email);
+      const deleted = await passwordResetTokenDao.delete(email);
 
       if (deleted.deletedCount !== 1) {
         res.status(400).send({ msg: 'failed to update.' });

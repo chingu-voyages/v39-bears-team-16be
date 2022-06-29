@@ -1,36 +1,30 @@
-
 require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const csrf = require('csurf');
 const compression = require('compression');
 const helmet = require('helmet');
-const MongoStore = require('connect-mongo');
 
-const router = require('./routes/api.routes');
-const passport = require('./middlewares/passport.middleware');
+const webRoutes = require('./routes/web.routes');
+const passport = require('./config/passport.config');
+const { defaultOrigins } = require('./config/cors.config');
 
 const app = express();
-
 const productionEnv = process.env.NODE_ENV === 'production';
-
+// cors config
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'http://127.0.0.1:3000',
-      'https://100devstracker.netlify.app/',
-      'https://api.github.com',
-      'https://github.com',
-    ],
+    origin: defaultOrigins,
     credentials: true,
-  })
+  }),
 );
+// required express middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set('trust proxy', 1);
+// session
 app.use(
   session({
     secret: process.env.SECRET,
@@ -41,25 +35,24 @@ app.use(
       mongoUrl: process.env.MONGODB_URI,
     }),
     cookie: {
-      // 1 hour
-      maxAge: 1000 * 60 * 60 * 1,
+      maxAge: 1000 * 60 * 60 * 1, // 1 hour
       httpOnly: true,
       sameSite: productionEnv ? 'none' : 'lax',
       secure: productionEnv,
     },
-  })
+  }),
 );
-app.use(passport.initialize());
-app.use(passport.session());
+app.set('trust proxy', 1);
 app.use(csrf());
+app.use(passport.authenticate('session'));
+// routing
 app.use(helmet());
 app.use(compression());
-app.use(router);
-
+app.use(webRoutes);
 // error handler
-app.use((err, req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
   if (err.code === 'EBADCSRFTOKEN') {
-    // handle CSRF token errors here
     return res.status(403).send({ message: 'Form has been tampered with.' });
   }
 
@@ -67,4 +60,3 @@ app.use((err, req, res) => {
 });
 
 module.exports = app;
-
