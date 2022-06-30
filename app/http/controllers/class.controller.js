@@ -15,7 +15,6 @@ function ClassController() {
   this.store = async (req, res, next) => {
     const { planId } = req.params;
     const { name, description } = req.body;
-
     try {
       const result = await classDao.create({ planId, name, description });
       return res.status(201).send({ msg: 'success!', data: result });

@@ -7,6 +7,7 @@ const MongoStore = require('connect-mongo');
 const csrf = require('csurf');
 const compression = require('compression');
 const helmet = require('helmet');
+const morgan = require('morgan');
 
 const webRoutes = require('./routes/web.routes');
 const passport = require('./config/passport.config');
@@ -48,6 +49,7 @@ app.use(passport.authenticate('session'));
 // routing
 app.use(helmet());
 app.use(compression());
+app.use(morgan('dev'));
 app.use(webRoutes);
 // error handler
 // eslint-disable-next-line no-unused-vars

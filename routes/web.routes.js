@@ -1,5 +1,4 @@
 const express = require('express');
-const classController = require('../app/http/controllers/class.controller');
 
 const {
   signUpStoreRequest,
@@ -13,6 +12,8 @@ const {
   resetPasswordController,
   githubAuthController,
   planController,
+  classController,
+  classworkController,
 } = require('./index');
 
 const router = express.Router();
@@ -45,6 +46,9 @@ router.route('/plans/:planId/classes').post(classController.store);
 router.route('/classes/:classId').get(classController.show);
 router.route('/classes/:classId').put(classController.update);
 router.route('/classes/:classId').delete(classController.destroy);
+// classworks
+router.route('/classes/:classId/classworks').get(classworkController.index);
+router.route('/classes/:classId/classworks').post(classworkController.store);
 // csrf token
 router.route('/fetchCsrfToken').get((req, res) => {
   res.status(200).send({ csrfToken: req.csrfToken() });

@@ -43,6 +43,7 @@ function ClassDao() {
     name = '',
     description = '',
     completed = false,
+    classworks = [],
     createdAt = new Date(),
   }) => {
     try {
@@ -51,6 +52,7 @@ function ClassDao() {
         name,
         description,
         completed,
+        classworks,
         createdAt,
       });
       return result;
@@ -80,6 +82,52 @@ function ClassDao() {
     try {
       const result = await classCollection.deleteOne({ _id: ObjectId(_id) });
       return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.createClasswork = async ({
+    classId = '',
+    classworkId = new ObjectId(),
+    name = '',
+    description = '',
+    type = '',
+    createdAt = new Date(),
+  }) => {
+    try {
+      const result = await classCollection.updateOne(
+        {
+          _id: ObjectId(classId),
+        },
+        {
+          // eslint-disable-next-line object-curly-newline
+          $push: {
+            classworks: {
+              _id: classworkId,
+              name,
+              description,
+              type,
+              createdAt,
+            },
+          },
+        },
+      );
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.allClassworks = async (classId) => {
+    try {
+      const classworks = await classCollection.findOne(
+        { _id: ObjectId(classId) },
+        { projection: { classworks: 1, _id: 0 } },
+      );
+      return classworks;
     } catch (err) {
       console.error(err);
       throw new Error(err.message);
