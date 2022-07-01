@@ -14,16 +14,16 @@ const {
   planController,
   classController,
   classworkController,
+  isAuth,
 } = require('./index');
 
 const router = express.Router();
 router.route('/').get((req, res) => {
   res.status(200).send('server is running');
 });
-// local
+// auth
 router.route('/sign-up').post(signUpStoreRequest, signUpController.store);
 router.route('/sign-in').post(signInStoreRequest, signInController.store);
-router.route('/logout').post(logoutController.store);
 router
   .route('/forgot-password')
   .post(forgotPasswordStoreRequest, forgotPasswordController.store);
@@ -33,6 +33,14 @@ router
 // github
 router.route('/auth/github').get(githubAuthController.index);
 router.route('/auth/github/callback').get(githubAuthController.store);
+// csrf token
+router.route('/fetchCsrfToken').get((req, res) => {
+  res.status(200).json({ csrfToken: req.csrfToken() });
+});
+
+router.use(isAuth);
+// auth
+router.route('/logout').post(logoutController.store);
 // resources
 // plans
 router.route('/plans').get(planController.index);
@@ -49,9 +57,11 @@ router.route('/classes/:classId').delete(classController.destroy);
 // classworks
 router.route('/classes/:classId/classworks').get(classworkController.index);
 router.route('/classes/:classId/classworks').post(classworkController.store);
-// csrf token
-router.route('/fetchCsrfToken').get((req, res) => {
-  res.status(200).send({ csrfToken: req.csrfToken() });
-});
+router
+  .route('/classes/:classId/classworks/:classworkId')
+  .delete(classworkController.destroy);
+
+// enrolled
+router.route('/enrollments');
 
 module.exports = router;

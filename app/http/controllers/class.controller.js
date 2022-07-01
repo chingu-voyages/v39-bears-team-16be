@@ -17,7 +17,7 @@ function ClassController() {
     const { name, description } = req.body;
     try {
       const result = await classDao.create({ planId, name, description });
-      return res.status(201).send({ msg: 'success!', data: result });
+      return res.status(201).json({ msg: 'success!', data: result });
     } catch (err) {
       console.error(err);
       return next(err);
@@ -28,7 +28,7 @@ function ClassController() {
     const { classId } = req.params;
     try {
       const result = await classDao.find(classId);
-      return res.status(200).send(result);
+      return res.status(200).json(result);
     } catch (err) {
       console.error(err);
       return next(err);
@@ -46,7 +46,7 @@ function ClassController() {
         description,
         completed,
       });
-      return res.status(200).send(result);
+      return res.status(200).json(result);
     } catch (err) {
       console.error(err);
       return next(err);

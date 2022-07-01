@@ -48,7 +48,7 @@ function ClassDao() {
   }) => {
     try {
       const result = await classCollection.insertOne({
-        planId,
+        planId: ObjectId(planId),
         name,
         description,
         completed,
@@ -88,6 +88,19 @@ function ClassDao() {
     }
   };
 
+  this.allClassworks = async (classId) => {
+    try {
+      const classworks = await classCollection.findOne(
+        { _id: ObjectId(classId) },
+        { projection: { classworks: 1, _id: 0 } },
+      );
+      return classworks;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
   this.createClasswork = async ({
     classId = '',
     classworkId = new ObjectId(),
@@ -121,13 +134,15 @@ function ClassDao() {
     }
   };
 
-  this.allClassworks = async (classId) => {
+  this.deleteClasswork = async ({ classId, classworkId }) => {
+    console.log(typeof classworkId);
     try {
-      const classworks = await classCollection.findOne(
+      const result = await classCollection.updateOne(
         { _id: ObjectId(classId) },
-        { projection: { classworks: 1, _id: 0 } },
+        { $pull: { classworks: { _id: ObjectId(classworkId) } } },
       );
-      return classworks;
+
+      return result;
     } catch (err) {
       console.error(err);
       throw new Error(err.message);

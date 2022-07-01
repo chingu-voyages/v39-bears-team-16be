@@ -5,7 +5,7 @@ function ClassworkController() {
     const { classId } = req.params;
     try {
       const classworks = await classDao.allClassworks(classId);
-      return res.status(200).send(classworks);
+      return res.status(200).json(classworks);
     } catch (err) {
       console.error(err);
       return next(err);
@@ -23,7 +23,18 @@ function ClassworkController() {
         description,
         type,
       });
-      return res.status(200).json({ data: result });
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error(err);
+      return next(err);
+    }
+  };
+
+  this.destroy = async (req, res, next) => {
+    const { classId, classworkId } = req.params;
+    try {
+      const result = await classDao.deleteClasswork({ classId, classworkId });
+      return res.status(200).json(result);
     } catch (err) {
       console.error(err);
       return next(err);

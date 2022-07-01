@@ -42,29 +42,27 @@ function UserDao() {
 
   this.create = async ({
     name = '',
-    profilePicture = defaultProfilePicture,
     email = '',
     hash = '',
     salt = '',
-    sex = null,
+    profilePicture = defaultProfilePicture,
     location = '',
+    sex = '',
     isAdmin = false,
-    lastLogin = null,
-    loginCount = 0,
+    enrolledIn = [],
     createdAt = new Date(),
   }) => {
     try {
       const result = await userCollection.insertOne({
         name,
-        profilePicture,
         email,
         hash,
         salt,
-        sex,
+        profilePicture,
         location,
+        sex,
         isAdmin,
-        lastLogin,
-        loginCount,
+        enrolledIn,
         createdAt,
       });
 
@@ -77,15 +75,14 @@ function UserDao() {
 
   this.findOrCreate = async ({
     name = '',
-    profilePicture = defaultProfilePicture,
     email = '',
     hash = '',
     salt = '',
-    sex = null,
+    profilePicture = defaultProfilePicture,
     location = '',
+    sex = '',
     isAdmin = false,
-    lastLogin = null,
-    loginCount = 0,
+    enrolledIn = [],
     createdAt = new Date(),
   }) => {
     try {
@@ -94,15 +91,14 @@ function UserDao() {
         {
           $setOnInsert: {
             name,
-            profilePicture,
             email,
             hash,
             salt,
-            sex,
+            profilePicture,
             location,
+            sex,
             isAdmin,
-            lastLogin,
-            loginCount,
+            enrolledIn,
             createdAt,
           },
         },
@@ -131,19 +127,6 @@ function UserDao() {
             salt,
           },
         },
-      );
-      return result;
-    } catch (err) {
-      console.error(err);
-      throw new Error(err.message);
-    }
-  };
-
-  this.login = async (email) => {
-    try {
-      const result = await userCollection.findOneAndUpdate(
-        { email },
-        { $set: { lastLogin: new Date() }, $inc: { loginCount: 1 } },
       );
       return result;
     } catch (err) {
