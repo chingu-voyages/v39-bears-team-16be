@@ -4,7 +4,7 @@ function PlanController() {
   this.index = async (req, res, next) => {
     try {
       const plans = await planDao.all();
-      return res.status(200).send(plans);
+      return res.status(200).json({ plans });
     } catch (err) {
       console.error(err);
       return next(err);
@@ -34,6 +34,18 @@ function PlanController() {
     try {
       const plan = await planDao.find(planId);
       return res.status(200).json({ plan });
+    } catch (err) {
+      console.error(err);
+      return next(err);
+    }
+  };
+
+  this.showByUser = async (req, res, next) => {
+    const { email } = req.user;
+
+    try {
+      const plans = await planDao.allByUser(email);
+      return res.status(200).json({ plans });
     } catch (err) {
       console.error(err);
       return next(err);

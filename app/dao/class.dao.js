@@ -94,6 +94,7 @@ function ClassDao() {
     name = '',
     description = '',
     type = '',
+    order = 0,
     createdAt = new Date(),
   }) => {
     try {
@@ -109,6 +110,7 @@ function ClassDao() {
               name,
               description,
               type,
+              order,
               createdAt,
             },
           },

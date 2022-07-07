@@ -26,6 +26,16 @@ function PlanDao() {
     }
   };
 
+  this.allByUser = async (email) => {
+    try {
+      const cursor = await planCollection.find({ createdBy: email });
+      return cursor.toArray();
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
   this.find = async (_id) => {
     try {
       const plan = await planCollection.findOne({ _id: ObjectId(_id) });

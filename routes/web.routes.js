@@ -45,6 +45,7 @@ router.route('/logout').post(logoutController.store);
 // resources
 // plans
 router.route('/plans').get(planController.index);
+router.route('/user/plans').get(planController.showByUser);
 router.route('/plans').post(planController.store);
 router.route('/plans/:planId').get(planController.show);
 router.route('/plans/:planId').put(planController.update);
