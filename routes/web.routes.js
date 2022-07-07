@@ -14,6 +14,7 @@ const {
   planController,
   classController,
   classworkController,
+  enrollmentController,
   isAuth,
 } = require('./index');
 
@@ -55,13 +56,11 @@ router.route('/classes/:classId').get(classController.show);
 router.route('/classes/:classId').put(classController.update);
 router.route('/classes/:classId').delete(classController.destroy);
 // classworks
-router.route('/classes/:classId/classworks').get(classworkController.index);
 router.route('/classes/:classId/classworks').post(classworkController.store);
 router
   .route('/classes/:classId/classworks/:classworkId')
   .delete(classworkController.destroy);
-
 // enrolled
-router.route('/enrollments');
+router.route('/enrollments').get(enrollmentController.index);
 
 module.exports = router;

@@ -15,19 +15,6 @@ function ClassDao() {
     }
   };
 
-  this.all = async (planId) => {
-    try {
-      const classes = await classCollection
-        .find({ planId })
-        .sort({ createdAt: 1 });
-
-      return classes.toArray();
-    } catch (err) {
-      console.error(err);
-      throw new Error(err.message);
-    }
-  };
-
   this.find = async (_id) => {
     try {
       const result = await classCollection.findOne({ _id: ObjectId(_id) });

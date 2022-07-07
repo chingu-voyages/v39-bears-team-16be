@@ -33,7 +33,7 @@ function PlanController() {
 
     try {
       const plan = await planDao.find(planId);
-      return res.status(200).send(plan);
+      return res.status(200).json({ plan });
     } catch (err) {
       console.error(err);
       return next(err);

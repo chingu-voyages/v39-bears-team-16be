@@ -11,6 +11,7 @@ const githubAuthController = require('../app/http/controllers/auth/github-auth.c
 const planController = require('../app/http/controllers/plan.controller');
 const classController = require('../app/http/controllers/class.controller');
 const classworkController = require('../app/http/controllers/classwork.controller');
+const enrollmentController = require('../app/http/controllers/enrollment.controller');
 const { isAuth } = require('../app/http/middlewares/auth.middleware');
 
 module.exports = {
@@ -27,5 +28,6 @@ module.exports = {
   planController,
   classController,
   classworkController,
+  enrollmentController,
   isAuth,
 };

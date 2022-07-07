@@ -1,11 +1,12 @@
 const classDao = require('../../dao/class.dao');
+const planDao = require('../../dao/plan.dao');
 
 function ClassController() {
   this.index = async (req, res, next) => {
     const { planId } = req.params;
     try {
-      const result = await classDao.all(planId);
-      return res.status(200).json(result);
+      const classes = await planDao.allClasses(planId);
+      return res.status(200).json({ classes });
     } catch (err) {
       console.error(err);
       return next(err);
