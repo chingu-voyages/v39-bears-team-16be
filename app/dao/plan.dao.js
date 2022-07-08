@@ -87,19 +87,21 @@ function PlanDao() {
     likes,
     visible,
   }) => {
+    const planObject = {
+      ...(name && { name }),
+      ...(description && { description }),
+      ...(thumbnail && { thumbnail }),
+      ...(tags && { tags }),
+      ...(classes && { classes }),
+      ...(likes && { likes }),
+      ...(visible && { visible }),
+    };
+
     try {
       const result = await planCollection.updateOne(
         { _id: ObjectId(_id) },
         {
-          $set: {
-            name,
-            description,
-            thumbnail,
-            tags,
-            classes,
-            likes,
-            visible,
-          },
+          $set: planObject,
         },
       );
 

@@ -55,7 +55,7 @@ function PlanController() {
   this.update = async (req, res, next) => {
     const { planId } = req.params;
     // eslint-disable-next-line object-curly-newline
-    const { name, description, thumbnail, visibility, tags } = req.body;
+    const { name, description, thumbnail, visible, tags, likes } = req.body;
 
     try {
       const result = await planDao.update({
@@ -63,7 +63,8 @@ function PlanController() {
         name,
         description,
         thumbnail,
-        visibility,
+        visible,
+        likes,
         tags,
       });
       return res.status(200).send(result);
