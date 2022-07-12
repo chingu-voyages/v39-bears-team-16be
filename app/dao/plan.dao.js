@@ -94,7 +94,7 @@ function PlanDao() {
       ...(tags && { tags }),
       ...(classes && { classes }),
       ...(likes && { likes }),
-      ...(visible && { visible }),
+      ...((visible === true || visible === false) && { visible }),
     };
 
     try {
