@@ -50,6 +50,7 @@ app.use(passport.authenticate('session'));
 app.use(helmet());
 app.use(compression());
 app.use(morgan('dev'));
+
 app.use(webRoutes);
 // error handler
 // eslint-disable-next-line no-unused-vars

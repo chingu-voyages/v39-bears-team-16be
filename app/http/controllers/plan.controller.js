@@ -13,7 +13,6 @@ function PlanController() {
 
   this.store = async (req, res, next) => {
     const { name, description, thumbnail } = req.body;
-
     try {
       const result = await planDao.create({
         name,

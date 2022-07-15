@@ -25,6 +25,7 @@ router.route('/').get((req, res) => {
 // auth
 router.route('/sign-up').post(signUpStoreRequest, signUpController.store);
 router.route('/sign-in').post(signInStoreRequest, signInController.store);
+
 router
   .route('/forgot-password')
   .post(forgotPasswordStoreRequest, forgotPasswordController.store);
