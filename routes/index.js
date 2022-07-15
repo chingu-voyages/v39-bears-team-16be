@@ -9,6 +9,10 @@ const forgotPasswordController = require('../app/http/controllers/auth/forgot-pa
 const resetPasswordController = require('../app/http/controllers/auth/reset-password.controller');
 const githubAuthController = require('../app/http/controllers/auth/github-auth.controller');
 const planController = require('../app/http/controllers/plan.controller');
+const classController = require('../app/http/controllers/class.controller');
+const classworkController = require('../app/http/controllers/classwork.controller');
+const enrollmentController = require('../app/http/controllers/enrollment.controller');
+const { isAuth } = require('../app/http/middlewares/auth.middleware');
 
 module.exports = {
   signUpStoreRequest,
@@ -22,4 +26,8 @@ module.exports = {
   resetPasswordController,
   githubAuthController,
   planController,
+  classController,
+  classworkController,
+  enrollmentController,
+  isAuth,
 };

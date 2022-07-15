@@ -18,8 +18,18 @@ function PlanDao() {
 
   this.all = async () => {
     try {
-      const plans = await planCollection.find();
-      return plans.toArray();
+      const cursor = await planCollection.find();
+      return cursor.toArray();
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.allByUser = async (email) => {
+    try {
+      const cursor = await planCollection.find({ createdBy: email });
+      return cursor.toArray();
     } catch (err) {
       console.error(err);
       throw new Error(err.message);
@@ -40,10 +50,11 @@ function PlanDao() {
     name = '',
     description = '',
     thumbnail = defaultProfilePicture,
-    createdBy = '',
-    like = 0,
-    visibility = false,
     tags = [],
+    likes = 0,
+    classes = [],
+    createdBy = '',
+    visible = false,
     createdAt = new Date(),
   }) => {
     try {
@@ -51,10 +62,11 @@ function PlanDao() {
         name,
         description,
         thumbnail,
-        createdBy,
-        like,
-        visibility,
         tags,
+        classes,
+        createdBy,
+        likes,
+        visible,
         createdAt,
       });
 
@@ -70,20 +82,26 @@ function PlanDao() {
     name,
     description,
     thumbnail,
-    visibility,
     tags = [],
+    classes,
+    likes,
+    visible,
   }) => {
+    const planObject = {
+      ...(name && { name }),
+      ...(description && { description }),
+      ...(thumbnail && { thumbnail }),
+      ...(tags && { tags }),
+      ...(classes && { classes }),
+      ...(likes && { likes }),
+      ...((visible === true || visible === false) && { visible }),
+    };
+
     try {
       const result = await planCollection.updateOne(
         { _id: ObjectId(_id) },
         {
-          $set: {
-            name,
-            description,
-            thumbnail,
-            visibility,
-            tags,
-          },
+          $set: planObject,
         },
       );
 
@@ -98,6 +116,33 @@ function PlanDao() {
     try {
       const result = await planCollection.deleteOne({ _id: ObjectId(_id) });
       return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.allClasses = async (_id) => {
+    try {
+      const cursor = await planCollection.aggregate([
+        {
+          $match: {
+            _id: ObjectId(_id),
+          },
+        },
+        {
+          $lookup: {
+            from: 'classes',
+            localField: 'classes',
+            foreignField: '_id',
+            as: 'classes',
+          },
+        },
+      ]);
+
+      const data = await cursor.toArray();
+
+      return data[0].classes;
     } catch (err) {
       console.error(err);
       throw new Error(err.message);

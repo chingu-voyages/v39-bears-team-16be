@@ -1,4 +1,4 @@
-const { passport, userDao } = require('./index');
+const { passport, logDao } = require('./index');
 
 function SignInController() {
   this.store = (req, res, next) => {
@@ -12,7 +12,7 @@ function SignInController() {
         return res.status(401).send({ error: { message: info.message } });
       }
 
-      await userDao.login();
+      await logDao.login(user.email);
 
       return req.login(user, (e) => {
         if (e) {

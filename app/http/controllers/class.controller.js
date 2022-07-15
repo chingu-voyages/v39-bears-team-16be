@@ -1,11 +1,12 @@
 const classDao = require('../../dao/class.dao');
+const planDao = require('../../dao/plan.dao');
 
 function ClassController() {
   this.index = async (req, res, next) => {
     const { planId } = req.params;
     try {
-      const result = await classDao.all(planId);
-      return res.status(200).json(result);
+      const classes = await planDao.allClasses(planId);
+      return res.status(200).json({ classes });
     } catch (err) {
       console.error(err);
       return next(err);
@@ -15,10 +16,9 @@ function ClassController() {
   this.store = async (req, res, next) => {
     const { planId } = req.params;
     const { name, description } = req.body;
-
     try {
       const result = await classDao.create({ planId, name, description });
-      return res.status(201).send({ msg: 'success!', data: result });
+      return res.status(201).json({ msg: 'success!', data: result });
     } catch (err) {
       console.error(err);
       return next(err);
@@ -29,7 +29,7 @@ function ClassController() {
     const { classId } = req.params;
     try {
       const result = await classDao.find(classId);
-      return res.status(200).send(result);
+      return res.status(200).json(result);
     } catch (err) {
       console.error(err);
       return next(err);
@@ -47,7 +47,7 @@ function ClassController() {
         description,
         completed,
       });
-      return res.status(200).send(result);
+      return res.status(200).json(result);
     } catch (err) {
       console.error(err);
       return next(err);

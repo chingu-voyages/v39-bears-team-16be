@@ -17,10 +17,11 @@ function UserDao() {
 
   this.all = async () => {
     try {
-      const users = await userCollection
-        .find()
-        .project({ _id: 0, hash: 0, salt: 0 });
-      return users.toArray();
+      const cursor = await userCollection.find(
+        {},
+        { projection: { _id: 0, hash: 0, salt: 0 } },
+      );
+      return cursor.toArray();
     } catch (err) {
       console.error(err);
       throw new Error(err.message);
@@ -42,29 +43,27 @@ function UserDao() {
 
   this.create = async ({
     name = '',
-    profilePicture = defaultProfilePicture,
     email = '',
     hash = '',
     salt = '',
-    sex = null,
+    profilePicture = defaultProfilePicture,
     location = '',
+    sex = '',
     isAdmin = false,
-    lastLogin = null,
-    loginCount = 0,
+    enrolledIn = [],
     createdAt = new Date(),
   }) => {
     try {
       const result = await userCollection.insertOne({
         name,
-        profilePicture,
         email,
         hash,
         salt,
-        sex,
+        profilePicture,
         location,
+        sex,
         isAdmin,
-        lastLogin,
-        loginCount,
+        enrolledIn,
         createdAt,
       });
 
@@ -77,15 +76,14 @@ function UserDao() {
 
   this.findOrCreate = async ({
     name = '',
-    profilePicture = defaultProfilePicture,
     email = '',
     hash = '',
     salt = '',
-    sex = null,
+    profilePicture = defaultProfilePicture,
     location = '',
+    sex = '',
     isAdmin = false,
-    lastLogin = null,
-    loginCount = 0,
+    enrolledIn = [],
     createdAt = new Date(),
   }) => {
     try {
@@ -94,15 +92,14 @@ function UserDao() {
         {
           $setOnInsert: {
             name,
-            profilePicture,
             email,
             hash,
             salt,
-            sex,
+            profilePicture,
             location,
+            sex,
             isAdmin,
-            lastLogin,
-            loginCount,
+            enrolledIn,
             createdAt,
           },
         },
@@ -139,13 +136,61 @@ function UserDao() {
     }
   };
 
-  this.login = async (email) => {
+  this.allPlans = async (email) => {
     try {
-      const result = await userCollection.findOneAndUpdate(
-        { email },
-        { $set: { lastLogin: new Date() }, $inc: { loginCount: 1 } },
-      );
-      return result;
+      const cursor = await userCollection.aggregate([
+        {
+          $match: {
+            email,
+          },
+        },
+        {
+          $unwind: '$enrolledIn',
+        },
+        {
+          $lookup: {
+            from: 'plans',
+            let: {
+              planId: '$enrolledIn.planId',
+              plans: '$enrolledIn',
+              progress: '$enrolledIn.progress',
+            },
+            pipeline: [
+              {
+                $match: { $expr: { $eq: ['$_id', '$$planId'] } },
+              },
+              {
+                $replaceRoot: {
+                  newRoot: {
+                    $mergeObjects: ['$$plans', '$$ROOT'],
+                  },
+                },
+              },
+              {
+                $project: {
+                  planId: 0,
+                },
+              },
+            ],
+            as: 'plans',
+          },
+        },
+        {
+          $group: {
+            _id: '$_id',
+            plans: { $push: { $first: '$plans' } },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+          },
+        },
+      ]);
+
+      const data = await cursor.toArray();
+
+      return data[0].plans;
     } catch (err) {
       console.error(err);
       throw new Error(err.message);

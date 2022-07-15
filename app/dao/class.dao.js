@@ -15,19 +15,6 @@ function ClassDao() {
     }
   };
 
-  this.all = async (planId) => {
-    try {
-      const classes = await classCollection
-        .find({ planId })
-        .sort({ createdAt: 1 });
-
-      return classes.toArray();
-    } catch (err) {
-      console.error(err);
-      throw new Error(err.message);
-    }
-  };
-
   this.find = async (_id) => {
     try {
       const result = await classCollection.findOne({ _id: ObjectId(_id) });
@@ -43,14 +30,16 @@ function ClassDao() {
     name = '',
     description = '',
     completed = false,
+    classworks = [],
     createdAt = new Date(),
   }) => {
     try {
       const result = await classCollection.insertOne({
-        planId,
+        planId: ObjectId(planId),
         name,
         description,
         completed,
+        classworks,
         createdAt,
       });
       return result;
@@ -79,6 +68,69 @@ function ClassDao() {
   this.delete = async (_id) => {
     try {
       const result = await classCollection.deleteOne({ _id: ObjectId(_id) });
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.allClassworks = async (classId) => {
+    try {
+      const classworks = await classCollection.findOne(
+        { _id: ObjectId(classId) },
+        { projection: { classworks: 1, _id: 0 } },
+      );
+      return classworks;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.createClasswork = async ({
+    classId = '',
+    classworkId = new ObjectId(),
+    name = '',
+    description = '',
+    type = '',
+    order = 0,
+    createdAt = new Date(),
+  }) => {
+    try {
+      const result = await classCollection.updateOne(
+        {
+          _id: ObjectId(classId),
+        },
+        {
+          // eslint-disable-next-line object-curly-newline
+          $push: {
+            classworks: {
+              _id: classworkId,
+              name,
+              description,
+              type,
+              order,
+              createdAt,
+            },
+          },
+        },
+      );
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.deleteClasswork = async ({ classId, classworkId }) => {
+    console.log(typeof classworkId);
+    try {
+      const result = await classCollection.updateOne(
+        { _id: ObjectId(classId) },
+        { $pull: { classworks: { _id: ObjectId(classworkId) } } },
+      );
+
       return result;
     } catch (err) {
       console.error(err);

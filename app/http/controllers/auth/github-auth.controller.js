@@ -1,4 +1,4 @@
-const { passport, userDao } = require('./index');
+const { passport, logDao } = require('./index');
 
 function GithubAuth() {
   this.index = (req, res, next) => {
@@ -15,8 +15,8 @@ function GithubAuth() {
         return res.status(401).send({ error: { message: info.message } });
       }
 
-      await userDao.login();
-
+      await logDao.login(user.email);
+      
       return req.login(user, (e) => {
         if (e) {
           return next(e);

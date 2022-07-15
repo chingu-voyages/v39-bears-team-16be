@@ -4,7 +4,7 @@ function PlanController() {
   this.index = async (req, res, next) => {
     try {
       const plans = await planDao.all();
-      return res.status(200).send(plans);
+      return res.status(200).json({ plans });
     } catch (err) {
       console.error(err);
       return next(err);
@@ -14,7 +14,12 @@ function PlanController() {
   this.store = async (req, res, next) => {
     const { name, description, thumbnail } = req.body;
     try {
-      const result = await planDao.create({ name, description, thumbnail });
+      const result = await planDao.create({
+        name,
+        description,
+        thumbnail,
+        createdBy: req.user.email,
+      });
       return res.status(201).send({ msg: 'success!', data: result });
     } catch (err) {
       console.error(err);
@@ -27,7 +32,19 @@ function PlanController() {
 
     try {
       const plan = await planDao.find(planId);
-      return res.status(200).send(plan);
+      return res.status(200).json({ plan });
+    } catch (err) {
+      console.error(err);
+      return next(err);
+    }
+  };
+
+  this.showByUser = async (req, res, next) => {
+    const { email } = req.user;
+
+    try {
+      const plans = await planDao.allByUser(email);
+      return res.status(200).json({ plans });
     } catch (err) {
       console.error(err);
       return next(err);
@@ -37,7 +54,7 @@ function PlanController() {
   this.update = async (req, res, next) => {
     const { planId } = req.params;
     // eslint-disable-next-line object-curly-newline
-    const { name, description, thumbnail, visibility, tags } = req.body;
+    const { name, description, thumbnail, visible, tags, likes } = req.body;
 
     try {
       const result = await planDao.update({
@@ -45,7 +62,8 @@ function PlanController() {
         name,
         description,
         thumbnail,
-        visibility,
+        visible,
+        likes,
         tags,
       });
       return res.status(200).send(result);
