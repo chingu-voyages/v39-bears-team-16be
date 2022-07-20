@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
 let userCollection;
@@ -191,6 +192,40 @@ function UserDao() {
       const data = await cursor.toArray();
 
       return data[0].plans;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.findPlan = async ({ email, planId }) => {
+    try {
+      const cursor = await userCollection.aggregate([
+        {
+          $match: {
+            email,
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: {
+              $first: {
+                $filter: {
+                  input: '$enrolledIn',
+                  as: 'item',
+                  cond: {
+                    $eq: ['$$item.planId', ObjectId(planId)],
+                  },
+                },
+              },
+            },
+          },
+        },
+      ]);
+
+      const plan = cursor.toArray();
+
+      return plan;
     } catch (err) {
       console.error(err);
       throw new Error(err.message);
