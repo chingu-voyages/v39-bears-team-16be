@@ -17,8 +17,10 @@ function ClassController() {
     const { planId } = req.params;
     const { name, description } = req.body;
     try {
-      const result = await classDao.create({ planId, name, description });
-      return res.status(201).json({ msg: 'success!', data: result });
+      const classId = await classDao.create({ name, description });
+      const addClass = await planDao.addClass({ planId, classId });
+
+      return res.status(201).json({ msg: 'success!', data: addClass });
     } catch (err) {
       console.error(err);
       return next(err);

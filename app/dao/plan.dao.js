@@ -148,6 +148,24 @@ function PlanDao() {
       throw new Error(err.message);
     }
   };
+
+  this.addClass = async ({ planId, classId }) => {
+    try {
+      const result = await planCollection.updateOne(
+        {
+          _id: ObjectId(planId),
+        },
+        {
+          $push: { classes: ObjectId(classId) },
+        },
+      );
+
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
 }
 
 const planDao = new PlanDao();

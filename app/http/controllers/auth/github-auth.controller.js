@@ -16,7 +16,7 @@ function GithubAuth() {
       }
 
       await logDao.login(user.email);
-      
+
       return req.login(user, (e) => {
         if (e) {
           return next(e);

@@ -26,7 +26,6 @@ function ClassDao() {
   };
 
   this.create = async ({
-    planId = '',
     name = '',
     description = '',
     completed = false,
@@ -35,14 +34,14 @@ function ClassDao() {
   }) => {
     try {
       const result = await classCollection.insertOne({
-        planId: ObjectId(planId),
         name,
         description,
         completed,
         classworks,
         createdAt,
       });
-      return result;
+
+      return result.insertedId;
     } catch (err) {
       console.log(err);
       throw new Error(err.message);
