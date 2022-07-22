@@ -49,13 +49,14 @@ function ClassDao() {
     }
   };
 
-  this.update = async ({ _id, name, description, completed }) => {
+  this.update = async ({ _id, name, description, classworks, completed }) => {
     const result = await classCollection.updateOne(
       { _id: ObjectId(_id) },
       {
         $set: {
           name,
           description,
+          classworks,
           completed,
         },
       },

@@ -38,7 +38,7 @@ function ClassController() {
         };
       }
 
-      return res.status(200).json({ classes: planResult });
+      return res.status(200).json({ plan: planResult });
     } catch (err) {
       console.error(err);
       return next(err);
