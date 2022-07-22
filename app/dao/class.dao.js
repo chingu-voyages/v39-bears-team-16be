@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 const { ObjectId } = require('mongodb');
 
 let classCollection;
@@ -48,7 +49,6 @@ function ClassDao() {
     }
   };
 
-  // eslint-disable-next-line object-curly-newline
   this.update = async ({ _id, name, description, completed }) => {
     const result = await classCollection.updateOne(
       { _id: ObjectId(_id) },
@@ -102,7 +102,6 @@ function ClassDao() {
           _id: ObjectId(classId),
         },
         {
-          // eslint-disable-next-line object-curly-newline
           $push: {
             classworks: {
               _id: classworkId,

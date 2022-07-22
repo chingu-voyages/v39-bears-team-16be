@@ -142,7 +142,7 @@ function PlanDao() {
 
       const data = await cursor.toArray();
 
-      return data[0].classes;
+      return data[0];
     } catch (err) {
       console.error(err);
       throw new Error(err.message);
