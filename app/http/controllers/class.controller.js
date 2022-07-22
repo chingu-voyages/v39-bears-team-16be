@@ -15,29 +15,30 @@ function ClassController() {
         userDao.findPlan({ email, planId }),
       ]);
 
-      const planResult = values[0].value; // object
-      const userResult = values[1].value[0]; // object
+      let planResult = values[0].value;
+      const userResult = values[1].value;
 
-      const classProgresses = userResult.classes.reduce(
-        (acc, item) => ({
-          ...acc,
-          [item.classId]: item.progress,
-        }),
-        {},
-      );
+      if (userResult) {
+        const classProgresses = userResult[0].classes.reduce(
+          (acc, item) => ({
+            ...acc,
+            [item.classId]: item.progress,
+          }),
+          {},
+        );
 
-      planResult.classes = planResult.classes.map((item) => ({
-        ...item,
-        progress: classProgresses[item._id.toString()],
-      }));
+        planResult.classes = planResult.classes.map((item) => ({
+          ...item,
+          progress: classProgresses[item._id.toString()],
+        }));
 
-      // attach plan progress
-      const plan = {
-        ...planResult,
-        progress: userResult.progress,
-      };
+        planResult = {
+          ...planResult,
+          progress: userResult[0].progress,
+        };
+      }
 
-      return res.status(200).json({ plan });
+      return res.status(200).json({ classes: planResult });
     } catch (err) {
       console.error(err);
       return next(err);
