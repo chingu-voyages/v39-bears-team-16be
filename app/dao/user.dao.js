@@ -231,6 +231,45 @@ function UserDao() {
       throw new Error(err.message);
     }
   };
+
+  this.addPlan = async ({ email, planId }) => {
+    const newPlanObj = {
+      planId: ObjectId(planId),
+      progress: 0,
+      classes: [],
+    };
+    try {
+      const result = await userCollection.updateOne(
+        {
+          email,
+        },
+        { $push: { enrolledIn: newPlanObj } },
+      );
+
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.removePlan = async ({ email, planId }) => {
+    try {
+      const result = await userCollection.updateOne(
+        {
+          email,
+        },
+        {
+          $pull: { enrolledIn: { planId: ObjectId(planId) } },
+        },
+      );
+
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
 }
 
 const userDao = new UserDao();

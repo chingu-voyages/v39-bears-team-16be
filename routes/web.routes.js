@@ -64,5 +64,7 @@ router
   .delete(classworkController.destroy);
 // enrolled
 router.route('/enrollments').get(enrollmentController.index);
+router.route('/enrollments').post(enrollmentController.store);
+router.route('/enrollments').delete(enrollmentController.destroy);
 
 module.exports = router;

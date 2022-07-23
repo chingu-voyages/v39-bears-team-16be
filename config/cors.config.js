@@ -1,6 +1,6 @@
 const defaultOrigins = [
   'http://localhost:3000',
-  /coderamble.netlify\.app$/,
+  /sailacademy.netlify\.app$/,
   /github\.com$/,
 ];
 

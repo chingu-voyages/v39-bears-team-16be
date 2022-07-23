@@ -1,9 +1,25 @@
+/*
+  {
+    _id: ObjectId,
+    name: String,
+    description: String,
+    classworks: [
+      _id: ObjectId,
+      name: String,
+      link: String,
+      type: ObjectId,
+      order: 32-bit integer
+    ],
+    createdAt: Date
+  }
+*/
+
 /* eslint-disable object-curly-newline */
 const { ObjectId } = require('mongodb');
 
-let classCollection;
-
 function ClassDao() {
+  let classCollection;
+
   this.initialize = async (client) => {
     if (classCollection) {
       return;
