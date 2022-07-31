@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
 const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
-let userCollection;
-
 function UserDao() {
+  let userCollection;
+
   this.initialize = async (client) => {
     if (userCollection) {
       return;

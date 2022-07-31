@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
 const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
-let planCollection;
-
 function PlanDao() {
+  let planCollection;
+
   this.initialize = async (client) => {
     if (planCollection) {
       return;
@@ -102,6 +102,23 @@ function PlanDao() {
         { _id: ObjectId(_id) },
         {
           $set: planObject,
+        },
+      );
+
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.updateLike = async ({ planId, val, session }) => {
+    try {
+      const result = await planCollection.updateOne(
+        { _id: ObjectId(planId) },
+        { $inc: { likes: val } },
+        {
+          session,
         },
       );
 

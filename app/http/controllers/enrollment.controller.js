@@ -26,7 +26,7 @@ function EnrollmentController() {
 
   this.destroy = async (req, res, next) => {
     const { email } = req.user;
-    const { planId } = req.body;
+    const { planId } = req.params;
     try {
       const result = await userDao.removePlan({ email, planId });
       return res.status(200).json({ result });
