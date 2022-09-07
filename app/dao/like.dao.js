@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb');
+
 function LikeDao() {
   let likeCollection;
 
@@ -13,12 +15,26 @@ function LikeDao() {
     }
   };
 
+  this.show = async (email, planId) => {
+    try {
+      const result = await likeCollection.findOne({
+        email,
+        planId: ObjectId(planId),
+      });
+
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
   this.create = async ({ email, planId, session }) => {
     try {
       const result = await likeCollection.insertOne(
         {
           email,
-          planId,
+          planId: ObjectId(planId),
           createdAt: new Date(),
         },
         { session },
@@ -33,7 +49,7 @@ function LikeDao() {
   this.delete = async ({ email, planId, session }) => {
     try {
       const result = await likeCollection.deleteOne(
-        { email, planId },
+        { email, planId: ObjectId(planId) },
         { session },
       );
       return result;
