@@ -8,10 +8,8 @@
     "npm": "8.x"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "server": "nodemon index.js -e html,js,ejs,css",
-    "expose": "lt --port 5000"
+    "tsc": "tsc --watch",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +23,7 @@
   "homepage": "https://github.com/chingu-voyages/v39-bears-team-16be#readme",
   "dependencies": {
     "@aws-sdk/client-ses": "^3.76.0",
+    "@types/node": "^18.7.16",
     "compression": "^1.7.4",
     "connect-mongo": "^4.6.0",
     "cors": "^2.8.5",
@@ -45,6 +44,7 @@
     "eslint": "^8.16.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "nodemon": "^2.0.15",
-    "prettier": "2.6.2"
+    "prettier": "2.6.2",
+    "typescript": "^4.8.2"
   }
 }
