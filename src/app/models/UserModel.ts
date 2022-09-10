@@ -30,6 +30,7 @@ class UserModel {
     enrolledIn = [],
     createdAt = new Date(),
   ) {
+    this._id = new mongodb.ObjectId();
     this.name = name;
     this.email = email;
     this.hash = hash;

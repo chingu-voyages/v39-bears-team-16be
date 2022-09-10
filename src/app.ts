@@ -1,5 +1,11 @@
 require('dotenv').config();
 
+import { Request, Response, NextFunction } from 'express';
+
+interface Error extends NodeJS.ErrnoException {
+  status?: number;
+}
+
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
@@ -15,17 +21,17 @@ const { defaultOrigins } = require('./config/cors.config');
 
 const app = express();
 const productionEnv = process.env.NODE_ENV === 'production';
-// cors config
+
 app.use(
   cors({
     origin: defaultOrigins,
     credentials: true,
   }),
 );
-// required express middlewares
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// session
+
 app.use(
   session({
     secret: process.env.SECRET,
@@ -46,15 +52,14 @@ app.use(
 app.set('trust proxy', 1);
 app.use(csrf());
 app.use(passport.authenticate('session'));
-// routing
+
 app.use(helmet());
 app.use(compression());
 app.use(morgan('dev'));
 
 app.use(webRoutes);
-// error handler
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   if (err.code === 'EBADCSRFTOKEN') {
     return res.status(403).send({ message: 'Form has been tampered with.' });
   }
