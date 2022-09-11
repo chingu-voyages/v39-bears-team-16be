@@ -1,6 +1,5 @@
-let logCollection;
-
 function LogDao() {
+  let logCollection;
   this.initialize = async (client) => {
     if (logCollection) {
       return;

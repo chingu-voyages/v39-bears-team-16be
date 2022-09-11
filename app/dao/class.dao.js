@@ -1,8 +1,25 @@
+/*
+  {
+    _id: ObjectId,
+    name: String,
+    description: String,
+    classworks: [
+      _id: ObjectId,
+      name: String,
+      link: String,
+      type: ObjectId,
+      order: 32-bit integer
+    ],
+    createdAt: Date
+  }
+*/
+
+/* eslint-disable object-curly-newline */
 const { ObjectId } = require('mongodb');
 
-let classCollection;
-
 function ClassDao() {
+  let classCollection;
+
   this.initialize = async (client) => {
     if (classCollection) {
       return;
@@ -26,7 +43,6 @@ function ClassDao() {
   };
 
   this.create = async ({
-    planId = '',
     name = '',
     description = '',
     completed = false,
@@ -35,28 +51,28 @@ function ClassDao() {
   }) => {
     try {
       const result = await classCollection.insertOne({
-        planId: ObjectId(planId),
         name,
         description,
         completed,
         classworks,
         createdAt,
       });
-      return result;
+
+      return result.insertedId;
     } catch (err) {
       console.log(err);
       throw new Error(err.message);
     }
   };
 
-  // eslint-disable-next-line object-curly-newline
-  this.update = async ({ _id, name, description, completed }) => {
+  this.update = async ({ _id, name, description, classworks, completed }) => {
     const result = await classCollection.updateOne(
       { _id: ObjectId(_id) },
       {
         $set: {
           name,
           description,
+          classworks,
           completed,
         },
       },
@@ -103,7 +119,6 @@ function ClassDao() {
           _id: ObjectId(classId),
         },
         {
-          // eslint-disable-next-line object-curly-newline
           $push: {
             classworks: {
               _id: classworkId,

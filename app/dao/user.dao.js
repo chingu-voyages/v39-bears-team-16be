@@ -1,8 +1,9 @@
+const { ObjectId } = require('mongodb');
 const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
-let userCollection;
-
 function UserDao() {
+  let userCollection;
+
   this.initialize = async (client) => {
     if (userCollection) {
       return;
@@ -191,6 +192,79 @@ function UserDao() {
       const data = await cursor.toArray();
 
       return data[0].plans;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.findPlan = async ({ email, planId }) => {
+    try {
+      const cursor = await userCollection.aggregate([
+        {
+          $match: {
+            email,
+          },
+        },
+        {
+          $replaceRoot: {
+            newRoot: {
+              $first: {
+                $filter: {
+                  input: '$enrolledIn',
+                  as: 'item',
+                  cond: {
+                    $eq: ['$$item.planId', ObjectId(planId)],
+                  },
+                },
+              },
+            },
+          },
+        },
+      ]);
+
+      const plan = cursor.toArray();
+
+      return plan;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.addPlan = async ({ email, planId }) => {
+    const newPlanObj = {
+      planId: ObjectId(planId),
+      progress: 0,
+      classes: [],
+    };
+    try {
+      const result = await userCollection.updateOne(
+        {
+          email,
+        },
+        { $push: { enrolledIn: newPlanObj } },
+      );
+
+      return result;
+    } catch (err) {
+      console.error(err);
+      throw new Error(err.message);
+    }
+  };
+
+  this.removePlan = async ({ email, planId }) => {
+    try {
+      const result = await userCollection.updateOne(
+        {
+          email,
+        },
+        {
+          $pull: { enrolledIn: { planId: ObjectId(planId) } },
+        },
+      );
+
+      return result;
     } catch (err) {
       console.error(err);
       throw new Error(err.message);

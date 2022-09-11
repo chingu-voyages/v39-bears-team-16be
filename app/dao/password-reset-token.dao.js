@@ -1,8 +1,7 @@
 const crypto = require('crypto');
 
-let passwordResetTokenCollection;
-
 function PasswordResetTokenDao() {
+  let passwordResetTokenCollection;
   this.initialize = async (client) => {
     if (passwordResetTokenCollection) {
       return;

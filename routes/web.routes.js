@@ -1,4 +1,5 @@
 const express = require('express');
+const likeController = require('../app/http/controllers/like.controller');
 
 const {
   signUpStoreRequest,
@@ -51,6 +52,8 @@ router.route('/plans').post(planController.store);
 router.route('/plans/:planId').get(planController.show);
 router.route('/plans/:planId').put(planController.update);
 router.route('/plans/:planId').delete(planController.destroy);
+router.route('/plans/:planId/like').post(likeController.like);
+router.route('/plans/:planId/dislike').delete(likeController.dislike);
 // classes
 router.route('/plans/:planId/classes').get(classController.index);
 router.route('/plans/:planId/classes').post(classController.store);
@@ -64,5 +67,7 @@ router
   .delete(classworkController.destroy);
 // enrolled
 router.route('/enrollments').get(enrollmentController.index);
+router.route('/enrollments').post(enrollmentController.store);
+router.route('/enrollments').delete(enrollmentController.destroy);
 
 module.exports = router;

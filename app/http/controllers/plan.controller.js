@@ -1,4 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 const planDao = require('../../dao/plan.dao');
+const { userDao } = require('./auth');
 
 function PlanController() {
   this.index = async (req, res, next) => {
@@ -29,9 +31,18 @@ function PlanController() {
 
   this.show = async (req, res, next) => {
     const { planId } = req.params;
+    const { email } = req.user;
 
     try {
-      const plan = await planDao.find(planId);
+      const values = await Promise.allSettled([
+        userDao.findPlan({ email, planId }),
+        planDao.find(planId),
+      ]);
+
+      const result = values.reduce((acc, value) => acc.concat(value.value), []);
+
+      const plan = { ...result[0], ...result[1] };
+
       return res.status(200).json({ plan });
     } catch (err) {
       console.error(err);
