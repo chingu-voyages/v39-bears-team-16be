@@ -1,40 +1,38 @@
 import * as mongodb from 'mongodb';
 
-enum ClassworkTypes {
-  SUBMISSION= 'submission',
-  ASSIGNMENT= 'assignment'
+export enum ClassworkType {
+  ASSIGNMENT = 'assignment',
+  MATERIAL = 'material',
 }
 
-export interface ClassworkInterface {
+// export interface ClassworkInterface {
+//   _id: mongodb.ObjectId;
+//   name: string;
+//   description: string;
+//   link: string;
+//   type: ClassworkType;
+// }
+
+class ClassworkModel {
   _id: mongodb.ObjectId;
   name: string;
   description: string;
-  type: ClassworkTypes;
-  order: number;
-  createdAt: Date;
-}
-
-export class ClassworkModel implements ClassworkInterface {
-  _id: mongodb.ObjectId;
-  name: string;
-  description: string;
-  type: ClassworkTypes;
-  order: number;
-  createdAt: Date;
+  link: string;
+  type: ClassworkType;
 
   constructor(
-    _id = new mongodb.ObjectId(),
-    name = '',
-    description = '',
-    type = ClassworkTypes.ASSIGNMENT,
-    order = 0,
-    createdAt = new Date(),
+    _id: mongodb.ObjectId = new mongodb.ObjectId(),
+    name: string = '',
+    description: string = '',
+    link: string = '',
+    type: ClassworkType = ClassworkType.MATERIAL,
   ) {
     this._id = _id;
     this.name = name;
     this.description = description;
+    this.link = link;
     this.type = type;
-    this.order = order;
-    this.createdAt = createdAt;
   }
 }
+
+export default ClassworkModel;
