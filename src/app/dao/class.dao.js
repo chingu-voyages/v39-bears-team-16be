@@ -16,6 +16,8 @@
 
 /* eslint-disable object-curly-newline */
 const { ObjectId } = require('mongodb');
+const { ClassModel } = require('../models/ClassModel');
+const { ClassworkModel } = require('../models/ClassworkModel');
 
 function ClassDao() {
   let classCollection;
@@ -43,20 +45,21 @@ function ClassDao() {
   };
 
   this.create = async ({
-    name = '',
-    description = '',
-    completed = false,
-    classworks = [],
-    createdAt = new Date(),
+    name,
+    description,
+    completed,
+    classworks,
+    createdAt,
   }) => {
+    const classInstance = new ClassModel(
+      name,
+      description,
+      completed,
+      classworks,
+      createdAt,
+    );
     try {
-      const result = await classCollection.insertOne({
-        name,
-        description,
-        completed,
-        classworks,
-        createdAt,
-      });
+      const result = await classCollection.insertOne(classInstance);
 
       return result.insertedId;
     } catch (err) {
@@ -113,6 +116,15 @@ function ClassDao() {
     order = 0,
     createdAt = new Date(),
   }) => {
+    const classworkInstance = new ClassworkModel(
+      classworkId,
+      name,
+      description,
+      type,
+      order,
+      createdAt,
+    );
+
     try {
       const result = await classCollection.updateOne(
         {
@@ -120,14 +132,7 @@ function ClassDao() {
         },
         {
           $push: {
-            classworks: {
-              _id: classworkId,
-              name,
-              description,
-              type,
-              order,
-              createdAt,
-            },
+            classworks: classworkInstance,
           },
         },
       );
