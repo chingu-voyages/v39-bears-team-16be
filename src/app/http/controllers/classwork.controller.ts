@@ -1,6 +1,6 @@
 import ClassworkModel, { ClassworkType } from "../../models/ClassworkModel";
 import { Request, Response, NextFunction } from "express";
-import { userDao } from "./auth";
+import userDao from "../../dao/user.dao";
 
 const { ObjectId } = require("mongodb");
 const classDao = require("../../dao/class.dao");
@@ -33,7 +33,7 @@ class ClassworkController {
         name,
         description,
         type === ClassworkType.ASSIGNMENT ? "" : link,
-        type,
+        type
       );
 
       const result = await classDao.createClasswork(classId, newClasswork);
@@ -61,7 +61,12 @@ class ClassworkController {
     const { completed } = req.body;
 
     try {
-      const result = await userDao.updateClasswork({ email, classId, classworkId, completed });
+      const result = await userDao.updateClasswork({
+        email,
+        classId,
+        classworkId,
+        completed,
+      });
       return res.status(200).json(result);
     } catch (err) {
       console.error(err);

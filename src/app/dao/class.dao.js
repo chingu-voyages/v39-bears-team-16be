@@ -15,9 +15,9 @@
 */
 
 /* eslint-disable object-curly-newline */
-const { ObjectId } = require('mongodb');
-const { ClassModel } = require('../models/ClassModel');
-const { ClassworkModel } = require('../models/ClassworkModel');
+const { ObjectId } = require("mongodb");
+const { ClassModel } = require("../models/ClassModel");
+const { ClassworkModel } = require("../models/ClassworkModel");
 
 function ClassDao() {
   let classCollection;
@@ -28,7 +28,7 @@ function ClassDao() {
     }
 
     try {
-      classCollection = await client.db().collection('classes');
+      classCollection = await client.db().collection("classes");
     } catch (err) {
       console.error(err);
     }
@@ -44,20 +44,8 @@ function ClassDao() {
     }
   };
 
-  this.create = async ({
-    name,
-    description,
-    completed,
-    classworks,
-    createdAt,
-  }) => {
-    const classInstance = new ClassModel(
-      name,
-      description,
-      completed,
-      classworks,
-      createdAt,
-    );
+  this.create = async ({ name, description, completed, classworks, createdAt }) => {
+    const classInstance = new ClassModel(name, description, completed, classworks, createdAt);
     try {
       const result = await classCollection.insertOne(classInstance);
 
@@ -78,7 +66,7 @@ function ClassDao() {
           classworks,
           completed,
         },
-      },
+      }
     );
 
     return result;
@@ -98,7 +86,7 @@ function ClassDao() {
     try {
       const classworks = await classCollection.findOne(
         { _id: ObjectId(classId) },
-        { projection: { classworks: 1, _id: 0 } },
+        { projection: { classworks: 1, _id: 0 } }
       );
       return classworks;
     } catch (err) {
@@ -108,22 +96,15 @@ function ClassDao() {
   };
 
   this.createClasswork = async ({
-    classId = '',
+    classId = "",
     classworkId = new ObjectId(),
-    name = '',
-    description = '',
-    type = '',
+    name = "",
+    description = "",
+    type = "",
     order = 0,
     createdAt = new Date(),
   }) => {
-    const classworkInstance = new ClassworkModel(
-      classworkId,
-      name,
-      description,
-      type,
-      order,
-      createdAt,
-    );
+    const classworkInstance = new ClassworkModel(classworkId, name, description, type, order, createdAt);
 
     try {
       const result = await classCollection.updateOne(
@@ -134,7 +115,7 @@ function ClassDao() {
           $push: {
             classworks: classworkInstance,
           },
-        },
+        }
       );
       return result;
     } catch (err) {
@@ -148,7 +129,7 @@ function ClassDao() {
     try {
       const result = await classCollection.updateOne(
         { _id: ObjectId(classId) },
-        { $pull: { classworks: { _id: ObjectId(classworkId) } } },
+        { $pull: { classworks: { _id: ObjectId(classworkId) } } }
       );
 
       return result;

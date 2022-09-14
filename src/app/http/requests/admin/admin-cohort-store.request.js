@@ -1,9 +1,9 @@
-const { body, validationResult } = require('express-validator');
+const { body, validationResult } = require("express-validator");
 
 const adminCohortStoreRequest = [
-  body('name').isLength({ min: 1, max: 255 }).trim().escape(),
-  body('startDate').isDate(),
-  body('endDate').isDate(),
+  body("name").isLength({ min: 1, max: 255 }).trim().escape(),
+  body("startDate").isDate(),
+  body("endDate").isDate(),
   (req, res, next) => {
     const errors = validationResult(req);
 

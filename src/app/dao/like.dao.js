@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const { ObjectId } = require("mongodb");
 
 function LikeDao() {
   let likeCollection;
@@ -9,7 +9,7 @@ function LikeDao() {
     }
 
     try {
-      likeCollection = await client.db().collection('likes');
+      likeCollection = await client.db().collection("likes");
     } catch (err) {
       console.error(err);
     }
@@ -37,7 +37,7 @@ function LikeDao() {
           planId: ObjectId(planId),
           createdAt: new Date(),
         },
-        { session },
+        { session }
       );
       return result;
     } catch (err) {
@@ -48,10 +48,7 @@ function LikeDao() {
 
   this.delete = async ({ email, planId, session }) => {
     try {
-      const result = await likeCollection.deleteOne(
-        { email, planId: ObjectId(planId) },
-        { session },
-      );
+      const result = await likeCollection.deleteOne({ email, planId: ObjectId(planId) }, { session });
       return result;
     } catch (err) {
       console.error(err);

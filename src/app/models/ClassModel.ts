@@ -1,5 +1,5 @@
-import * as mongodb from 'mongodb';
-import { ClassworkInterface } from './ClassworkModel';
+import * as mongodb from "mongodb";
+import { ClassworkInterface } from "./ClassworkModel";
 
 export interface ClassInterface {
   _id: mongodb.ObjectId;
@@ -10,21 +10,15 @@ export interface ClassInterface {
   createdAt: Date;
 }
 
-export class ClassModel implements ClassInterface {
-  _id: mongodb.ObjectId;
-  name: string;
-  description: string;
-  completed: boolean;
-  classworks: ClassworkInterface[];
-  createdAt: Date;
+class ClassModel implements ClassInterface {
+  _id;
+  name;
+  description;
+  completed;
+  classworks;
+  createdAt;
 
-  constructor(
-    name = '',
-    description = '',
-    completed = false,
-    classworks = [],
-    createdAt = new Date(),
-  ) {
+  constructor(name = "", description = "", completed = false, classworks = [], createdAt = new Date()) {
     this._id = new mongodb.ObjectId();
     this.name = name;
     this.description = description;
@@ -33,3 +27,5 @@ export class ClassModel implements ClassInterface {
     this.createdAt = createdAt;
   }
 }
+
+export default ClassModel;

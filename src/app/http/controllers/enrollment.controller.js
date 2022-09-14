@@ -1,4 +1,4 @@
-const { userDao } = require('./auth');
+const { userDao } = require("./auth");
 
 function EnrollmentController() {
   this.index = async (req, res, next) => {

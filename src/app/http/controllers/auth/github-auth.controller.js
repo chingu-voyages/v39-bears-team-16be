@@ -1,12 +1,12 @@
-const { passport, logDao } = require('./index');
+const { passport, logDao } = require("./index");
 
 function GithubAuth() {
   this.index = (req, res, next) => {
-    passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
+    passport.authenticate("github", { scope: ["user:email"] })(req, res, next);
   };
 
   this.store = (req, res, next) => {
-    passport.authenticate('github', async (err, user, info) => {
+    passport.authenticate("github", async (err, user, info) => {
       if (err) {
         return next(err);
       }

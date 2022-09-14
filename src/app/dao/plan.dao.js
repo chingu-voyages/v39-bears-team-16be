@@ -1,5 +1,5 @@
-const { ObjectId } = require('mongodb');
-const { defaultProfilePicture } = require('../../config/defaultVars.config');
+const { ObjectId } = require("mongodb");
+const { defaultProfilePicture } = require("../../config/defaultVars.config");
 
 function PlanDao() {
   let planCollection;
@@ -10,7 +10,7 @@ function PlanDao() {
     }
 
     try {
-      planCollection = await client.db().collection('plans');
+      planCollection = await client.db().collection("plans");
     } catch (err) {
       console.error(err);
     }
@@ -47,13 +47,13 @@ function PlanDao() {
   };
 
   this.create = async ({
-    name = '',
-    description = '',
+    name = "",
+    description = "",
     thumbnail = defaultProfilePicture,
     tags = [],
     likes = 0,
     classes = [],
-    createdBy = '',
+    createdBy = "",
     visible = false,
     createdAt = new Date(),
   }) => {
@@ -77,16 +77,7 @@ function PlanDao() {
     }
   };
 
-  this.update = async ({
-    _id,
-    name,
-    description,
-    thumbnail,
-    tags = [],
-    classes,
-    likes,
-    visible,
-  }) => {
+  this.update = async ({ _id, name, description, thumbnail, tags = [], classes, likes, visible }) => {
     const planObject = {
       ...(name && { name }),
       ...(description && { description }),
@@ -102,7 +93,7 @@ function PlanDao() {
         { _id: ObjectId(_id) },
         {
           $set: planObject,
-        },
+        }
       );
 
       return result;
@@ -119,7 +110,7 @@ function PlanDao() {
         { $inc: { likes: val } },
         {
           session,
-        },
+        }
       );
 
       return result;
@@ -149,10 +140,10 @@ function PlanDao() {
         },
         {
           $lookup: {
-            from: 'classes',
-            localField: 'classes',
-            foreignField: '_id',
-            as: 'classes',
+            from: "classes",
+            localField: "classes",
+            foreignField: "_id",
+            as: "classes",
           },
         },
       ]);
@@ -174,7 +165,7 @@ function PlanDao() {
         },
         {
           $push: { classes: ObjectId(classId) },
-        },
+        }
       );
 
       return result;

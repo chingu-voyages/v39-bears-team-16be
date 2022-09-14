@@ -5,9 +5,7 @@
     "outDir": "./build",
     "allowJs": true,
     "target": "es5",
-    "strict": true,
+    "strict": true
   },
-  "include": [
-    "./src/**/*"
-  ]
+  "include": ["./src/**/*"]
 }

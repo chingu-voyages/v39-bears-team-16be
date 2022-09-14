@@ -6,7 +6,7 @@ function LogDao() {
     }
 
     try {
-      logCollection = await client.db().collection('logs');
+      logCollection = await client.db().collection("logs");
     } catch (err) {
       console.error(err);
     }
@@ -16,7 +16,7 @@ function LogDao() {
     try {
       const result = await logCollection.insertOne({
         user: email,
-        action: 'login',
+        action: "login",
         createdAt: new Date(),
       });
       return result;
@@ -30,7 +30,7 @@ function LogDao() {
     try {
       const result = await logCollection.insertOne({
         user: email,
-        action: 'logout',
+        action: "logout",
         createdAt: new Date(),
       });
       return result;

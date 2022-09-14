@@ -1,4 +1,4 @@
-const { userDao, hashPassword } = require('./index');
+const { userDao, hashPassword } = require("./index");
 
 function SignUpControlle() {
   this.store = async (req, res, next) => {
@@ -12,9 +12,7 @@ function SignUpControlle() {
         hash,
         salt,
       });
-      return res
-        .status(200)
-        .send({ success: true, message: 'A user has been created.' });
+      return res.status(200).send({ success: true, message: "A user has been created." });
     } catch (err) {
       return next(err);
     }
