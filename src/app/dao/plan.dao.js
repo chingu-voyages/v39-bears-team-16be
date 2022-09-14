@@ -1,5 +1,5 @@
-const { ObjectId } = require("mongodb");
-const { defaultProfilePicture } = require("../../config/defaultVars.config");
+const { ObjectId } = require('mongodb');
+const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
 function PlanDao() {
   let planCollection;
@@ -10,7 +10,7 @@ function PlanDao() {
     }
 
     try {
-      planCollection = await client.db().collection("plans");
+      planCollection = await client.db().collection('plans');
     } catch (err) {
       console.error(err);
     }
@@ -47,13 +47,13 @@ function PlanDao() {
   };
 
   this.create = async ({
-    name = "",
-    description = "",
+    name = '',
+    description = '',
     thumbnail = defaultProfilePicture,
     tags = [],
     likes = 0,
     classes = [],
-    createdBy = "",
+    createdBy = '',
     visible = false,
     createdAt = new Date(),
   }) => {
@@ -140,10 +140,10 @@ function PlanDao() {
         },
         {
           $lookup: {
-            from: "classes",
-            localField: "classes",
-            foreignField: "_id",
-            as: "classes",
+            from: 'classes',
+            localField: 'classes',
+            foreignField: '_id',
+            as: 'classes',
           },
         },
       ]);

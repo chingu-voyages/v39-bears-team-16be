@@ -1,7 +1,12 @@
-const { userDao } = require("./auth");
+import { Request, Response, NextFunction } from 'express';
+const { userDao } = require('./auth');
 
-function EnrollmentController() {
-  this.index = async (req, res, next) => {
+class EnrolmentController {
+  static async index(req: Request, res: Response, next: NextFunction) {
+    if (!req.user) {
+      return res.status(403);
+    }
+
     const { email } = req.user;
     try {
       const plans = await userDao.allPlans(email);
@@ -10,9 +15,13 @@ function EnrollmentController() {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  this.store = async (req, res, next) => {
+  static async store(req: Request, res: Response, next: NextFunction) {
+    if (!req.user) {
+      return res.status(403);
+    }
+
     const { email } = req.user;
     const { planId } = req.body;
     try {
@@ -22,9 +31,13 @@ function EnrollmentController() {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  this.destroy = async (req, res, next) => {
+  static async destroy(req: Request, res: Response, next: NextFunction) {
+    if (!req.user) {
+      return res.status(403);
+    }
+
     const { email } = req.user;
     const { planId } = req.params;
     try {
@@ -34,11 +47,7 @@ function EnrollmentController() {
       console.error(err);
       return next(err);
     }
-  };
+  }
 }
 
-const enrollmentController = new EnrollmentController();
-
-Object.freeze(enrollmentController);
-
-module.exports = enrollmentController;
+export default EnrolmentController;

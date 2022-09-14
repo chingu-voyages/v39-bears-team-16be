@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
-const planDao = require("../../dao/plan.dao");
-const { userDao } = require("./auth");
+const planDao = require('../../dao/plan.dao');
+const { userDao } = require('./auth');
 
 function PlanController() {
   this.index = async (req, res, next) => {
@@ -22,7 +22,7 @@ function PlanController() {
         thumbnail,
         createdBy: req.user.email,
       });
-      return res.status(201).send({ msg: "success!", data: result });
+      return res.status(201).send({ msg: 'success!', data: result });
     } catch (err) {
       console.error(err);
       return next(err);

@@ -1,5 +1,5 @@
-import * as mongodb from "mongodb";
-import { ClassworkInterface } from "./ClassworkModel";
+import * as mongodb from 'mongodb';
+import { ClassworkInterface } from './ClassworkModel';
 
 export interface ClassInterface {
   _id: mongodb.ObjectId;
@@ -18,7 +18,7 @@ class ClassModel implements ClassInterface {
   classworks;
   createdAt;
 
-  constructor(name = "", description = "", completed = false, classworks = [], createdAt = new Date()) {
+  constructor(name = '', description = '', completed = false, classworks = [], createdAt = new Date()) {
     this._id = new mongodb.ObjectId();
     this.name = name;
     this.description = description;

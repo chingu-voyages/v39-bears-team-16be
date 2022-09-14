@@ -15,9 +15,9 @@
 */
 
 /* eslint-disable object-curly-newline */
-const { ObjectId } = require("mongodb");
-const { ClassModel } = require("../models/ClassModel");
-const { ClassworkModel } = require("../models/ClassworkModel");
+const { ObjectId } = require('mongodb');
+const { ClassModel } = require('../models/ClassModel');
+const { ClassworkModel } = require('../models/ClassworkModel');
 
 function ClassDao() {
   let classCollection;
@@ -28,7 +28,7 @@ function ClassDao() {
     }
 
     try {
-      classCollection = await client.db().collection("classes");
+      classCollection = await client.db().collection('classes');
     } catch (err) {
       console.error(err);
     }
@@ -96,11 +96,11 @@ function ClassDao() {
   };
 
   this.createClasswork = async ({
-    classId = "",
+    classId = '',
     classworkId = new ObjectId(),
-    name = "",
-    description = "",
-    type = "",
+    name = '',
+    description = '',
+    type = '',
     order = 0,
     createdAt = new Date(),
   }) => {

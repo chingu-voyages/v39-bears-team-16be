@@ -1,26 +1,26 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const passport = require("passport");
-const LocalStrategy = require("passport-local");
-const GitHubStrategy = require("passport-github2").Strategy;
-const userDao = require("../app/dao/user.dao");
-const { hashPassword } = require("../utilities/password.util");
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const GitHubStrategy = require('passport-github2').Strategy;
+const userDao = require('../app/dao/user.dao');
+const { hashPassword } = require('../utilities/password.util');
 
 passport.use(
-  new LocalStrategy({ usernameField: "email" }, async (username, password, cb) => {
+  new LocalStrategy({ usernameField: 'email' }, async (username, password, cb) => {
     try {
       const user = await userDao.find(username);
 
       if (!user) {
         return cb(null, false, {
-          msg: "Incorrect username or password.",
+          msg: 'Incorrect username or password.',
           data: { email: username, timestamp: new Date() },
         });
       }
 
       if (user.hash !== hashPassword(password, user.salt).hash) {
         return cb(null, false, {
-          msg: "Incorrect username or password.",
+          msg: 'Incorrect username or password.',
           data: { email: username, timestamp: new Date() },
         });
       }
@@ -37,7 +37,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: "https://bears-team-16be.herokuapp.com/auth/github/callback",
+      callbackURL: 'https://bears-team-16be.herokuapp.com/auth/github/callback',
     },
     async (accessToken, refreshToken, profile, cb) => {
       const { displayName } = profile;
@@ -45,7 +45,7 @@ passport.use(
 
       if (email === null) {
         return cb(null, false, {
-          message: "Email is not public.",
+          message: 'Email is not public.',
         });
       }
 

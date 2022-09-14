@@ -1,4 +1,4 @@
-import * as mongodb from "mongodb";
+import * as mongodb from 'mongodb';
 
 interface ProgressClassworkInterface {
   classworkId: mongodb.ObjectId;

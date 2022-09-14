@@ -1,13 +1,13 @@
-const { body, validationResult } = require("express-validator");
-const userDao = require("../../dao/user.dao");
+const { body, validationResult } = require('express-validator');
+const userDao = require('../../dao/user.dao');
 
 const signUpStoreRequest = [
-  body("name")
-    .isAlpha("en-US", { ignore: ["-", "_"] })
+  body('name')
+    .isAlpha('en-US', { ignore: ['-', '_'] })
     .isLength({ min: 1, max: 255 })
     .trim()
     .escape(),
-  body("email")
+  body('email')
     .isLength({ min: 1, max: 255 })
     .trim()
     .isEmail()
@@ -17,10 +17,10 @@ const signUpStoreRequest = [
       const user = await userDao.find(value);
       if (user) {
         // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject("E-mail already in use");
+        return Promise.reject('E-mail already in use');
       }
     }),
-  body("password").isAlphanumeric().isLength({ min: 1, max: 255 }).trim(),
+  body('password').isAlphanumeric().isLength({ min: 1, max: 255 }).trim(),
   (req, res, next) => {
     const errors = validationResult(req);
 

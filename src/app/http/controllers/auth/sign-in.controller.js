@@ -1,9 +1,9 @@
-const { passport, logDao } = require("./index");
+const { passport, logDao } = require('./index');
 
 function SignInController() {
   this.store = (req, res, next) => {
     // eslint-disable-next-line no-unused-vars
-    passport.authenticate("local", async (err, user, info, status) => {
+    passport.authenticate('local', async (err, user, info, status) => {
       if (err) {
         return next(err);
       }

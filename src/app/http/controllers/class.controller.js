@@ -1,8 +1,8 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable no-underscore-dangle */
-const classDao = require("../../dao/class.dao");
-const planDao = require("../../dao/plan.dao");
-const { userDao } = require("./auth");
+const classDao = require('../../dao/class.dao');
+const planDao = require('../../dao/plan.dao');
+const { userDao } = require('./auth');
 
 function ClassController() {
   this.index = async (req, res, next) => {
@@ -49,7 +49,7 @@ function ClassController() {
       const classId = await classDao.create({ name, description });
       const addClass = await planDao.addClass({ planId, classId });
 
-      return res.status(201).json({ msg: "success!", data: addClass });
+      return res.status(201).json({ msg: 'success!', data: addClass });
     } catch (err) {
       console.error(err);
       return next(err);

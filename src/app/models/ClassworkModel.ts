@@ -1,8 +1,8 @@
-import * as mongodb from "mongodb";
+import * as mongodb from 'mongodb';
 
 export enum ClassworkType {
-  ASSIGNMENT = "assignment",
-  MATERIAL = "material",
+  ASSIGNMENT = 'assignment',
+  MATERIAL = 'material',
 }
 
 export interface ClassworkInterface {
@@ -21,9 +21,9 @@ class ClassworkModel implements ClassworkInterface {
   type;
 
   constructor(
-    name: string = "",
-    description: string = "",
-    link: string = "",
+    name: string = '',
+    description: string = '',
+    link: string = '',
     type: ClassworkType = ClassworkType.MATERIAL
   ) {
     this._id = new mongodb.ObjectId();

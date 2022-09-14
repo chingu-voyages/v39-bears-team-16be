@@ -1,5 +1,5 @@
-const { ObjectId } = require("mongodb");
-const { defaultProfilePicture } = require("../../config/defaultVars.config");
+const { ObjectId } = require('mongodb');
+const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
 function UserDao() {
   let userCollection;
@@ -10,7 +10,7 @@ function UserDao() {
     }
 
     try {
-      userCollection = await client.db().collection("users");
+      userCollection = await client.db().collection('users');
     } catch (err) {
       console.error(err);
     }
@@ -37,13 +37,13 @@ function UserDao() {
   };
 
   this.create = async ({
-    name = "",
-    email = "",
-    hash = "",
-    salt = "",
+    name = '',
+    email = '',
+    hash = '',
+    salt = '',
     profilePicture = defaultProfilePicture,
-    location = "",
-    sex = "",
+    location = '',
+    sex = '',
     isAdmin = false,
     enrolledIn = [],
     createdAt = new Date(),
@@ -70,13 +70,13 @@ function UserDao() {
   };
 
   this.findOrCreate = async ({
-    name = "",
-    email = "",
-    hash = "",
-    salt = "",
+    name = '',
+    email = '',
+    hash = '',
+    salt = '',
     profilePicture = defaultProfilePicture,
-    location = "",
-    sex = "",
+    location = '',
+    sex = '',
     isAdmin = false,
     enrolledIn = [],
     createdAt = new Date(),
@@ -140,24 +140,24 @@ function UserDao() {
           },
         },
         {
-          $unwind: "$enrolledIn",
+          $unwind: '$enrolledIn',
         },
         {
           $lookup: {
-            from: "plans",
+            from: 'plans',
             let: {
-              planId: "$enrolledIn.planId",
-              plans: "$enrolledIn",
-              progress: "$enrolledIn.progress",
+              planId: '$enrolledIn.planId',
+              plans: '$enrolledIn',
+              progress: '$enrolledIn.progress',
             },
             pipeline: [
               {
-                $match: { $expr: { $eq: ["$_id", "$$planId"] } },
+                $match: { $expr: { $eq: ['$_id', '$$planId'] } },
               },
               {
                 $replaceRoot: {
                   newRoot: {
-                    $mergeObjects: ["$$plans", "$$ROOT"],
+                    $mergeObjects: ['$$plans', '$$ROOT'],
                   },
                 },
               },
@@ -167,13 +167,13 @@ function UserDao() {
                 },
               },
             ],
-            as: "plans",
+            as: 'plans',
           },
         },
         {
           $group: {
-            _id: "$_id",
-            plans: { $push: { $first: "$plans" } },
+            _id: '$_id',
+            plans: { $push: { $first: '$plans' } },
           },
         },
         {
@@ -205,10 +205,10 @@ function UserDao() {
             newRoot: {
               $first: {
                 $filter: {
-                  input: "$enrolledIn",
-                  as: "item",
+                  input: '$enrolledIn',
+                  as: 'item',
                   cond: {
-                    $eq: ["$$item.planId", ObjectId(planId)],
+                    $eq: ['$$item.planId', ObjectId(planId)],
                   },
                 },
               },

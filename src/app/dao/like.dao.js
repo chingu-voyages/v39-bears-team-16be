@@ -1,4 +1,4 @@
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require('mongodb');
 
 function LikeDao() {
   let likeCollection;
@@ -9,7 +9,7 @@ function LikeDao() {
     }
 
     try {
-      likeCollection = await client.db().collection("likes");
+      likeCollection = await client.db().collection('likes');
     } catch (err) {
       console.error(err);
     }

@@ -1,15 +1,9 @@
-import ClassworkModel, { ClassworkType } from "../../models/ClassworkModel";
-import { Request, Response, NextFunction } from "express";
-import userDao from "../../dao/user.dao";
+import ClassworkModel, { ClassworkType } from '../../models/ClassworkModel';
+import { Request, Response, NextFunction } from 'express';
+import userDao from '../../dao/user.dao';
 
-const { ObjectId } = require("mongodb");
-const classDao = require("../../dao/class.dao");
-
-interface RequestInterface extends Request {
-  user: {
-    email: string;
-  };
-}
+const { ObjectId } = require('mongodb');
+const classDao = require('../../dao/class.dao');
 
 class ClassworkController {
   index = async (req: Request, res: Response, next: NextFunction) => {
@@ -28,13 +22,7 @@ class ClassworkController {
     const { name, description, link, type } = req.body;
 
     try {
-      const newClasswork = new ClassworkModel(
-        new ObjectId(),
-        name,
-        description,
-        type === ClassworkType.ASSIGNMENT ? "" : link,
-        type
-      );
+      const newClasswork = new ClassworkModel(name, description, type === ClassworkType.ASSIGNMENT ? '' : link, type);
 
       const result = await classDao.createClasswork(classId, newClasswork);
       return res.status(200).json(result);
@@ -55,19 +43,23 @@ class ClassworkController {
     }
   };
 
-  markAsComplete = async (req: RequestInterface, res: Response, next: NextFunction) => {
+  markAsComplete = async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(403);
+    }
+
     const { classId, classworkId } = req.params;
     const { email } = req.user;
     const { completed } = req.body;
 
     try {
-      const result = await userDao.updateClasswork({
-        email,
-        classId,
-        classworkId,
-        completed,
-      });
-      return res.status(200).json(result);
+      // const result = await userDao.updateClasswork({
+      //   email,
+      //   classId,
+      //   classworkId,
+      //   completed,
+      // });
+      return res.status(200);
     } catch (err) {
       console.error(err);
       return next(err);
@@ -75,8 +67,4 @@ class ClassworkController {
   };
 }
 
-const classworkController = new ClassworkController();
-
-Object.freeze(classworkController);
-
-module.exports = classworkController;
+export default ClassworkController;

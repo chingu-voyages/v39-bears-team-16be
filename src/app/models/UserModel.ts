@@ -1,9 +1,9 @@
-import * as mongodb from "mongodb";
-import { defaultProfilePicture } from "../../config/defaultVars.config";
+import * as mongodb from 'mongodb';
+import { defaultProfilePicture } from '../../config/defaultVars.config';
 
 enum Sexes {
-  MALE = "male",
-  FEMALE = "female",
+  MALE = 'male',
+  FEMALE = 'female',
 }
 
 interface UserInterface {
@@ -34,12 +34,12 @@ class UserModel implements UserInterface {
   createdAt;
 
   constructor(
-    name = "",
-    email = "",
-    hash = "",
-    salt = "",
+    name = '',
+    email = '',
+    hash = '',
+    salt = '',
     profilePicture = defaultProfilePicture,
-    location = "",
+    location = '',
     sex: Sexes | null = null,
     isAdmin = false,
     enrolledIn: mongodb.ObjectId[] = [],
