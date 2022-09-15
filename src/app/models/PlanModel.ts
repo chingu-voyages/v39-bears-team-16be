@@ -22,7 +22,8 @@ class PlanModel {
     createdBy = '',
     visible = false,
     createdAt = Date,
-  ) {
+  ) 
+   {
     this._id = new mongodb.ObjectId();
     this.name = name;
     this.description = description;
