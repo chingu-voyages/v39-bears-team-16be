@@ -77,7 +77,9 @@ function PlanDao() {
     }
   };
 
-  this.update = async ({ _id, name, description, thumbnail, tags = [], classes, likes, visible }) => {
+  this.update = async ({
+    _id, name, description, thumbnail, tags = [], classes, likes, visible,
+  }) => {
     const planObject = {
       ...(name && { name }),
       ...(description && { description }),
@@ -93,7 +95,7 @@ function PlanDao() {
         { _id: ObjectId(_id) },
         {
           $set: planObject,
-        }
+        },
       );
 
       return result;
@@ -110,7 +112,7 @@ function PlanDao() {
         { $inc: { likes: val } },
         {
           session,
-        }
+        },
       );
 
       return result;
@@ -165,7 +167,7 @@ function PlanDao() {
         },
         {
           $push: { classes: ObjectId(classId) },
-        }
+        },
       );
 
       return result;

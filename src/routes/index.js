@@ -1,5 +1,3 @@
-import ClassworkController from '../app/http/controllers/classworkController';
-
 const signUpStoreRequest = require('../app/http/requests/sign-up-store.request');
 const signInStoreRequest = require('../app/http/requests/sign-in-store.request');
 const forgotPasswordStoreRequest = require('../app/http/requests/forgot-password-store.request');
@@ -12,10 +10,6 @@ const resetPasswordController = require('../app/http/controllers/auth/reset-pass
 const githubAuthController = require('../app/http/controllers/auth/github-auth.controller');
 const planController = require('../app/http/controllers/plan.controller');
 const classController = require('../app/http/controllers/class.controller');
-// eslint-disable-next-line import/no-unresolved
-
-// eslint-disable-next-line import/no-unresolved, import/extensions
-const EnrolmentController = require('../app/http/controllers/enrolmentController');
 const { isAuth } = require('../app/http/middlewares/auth.middleware');
 
 module.exports = {
@@ -31,7 +25,5 @@ module.exports = {
   githubAuthController,
   planController,
   classController,
-  ClassworkController,
-  EnrolmentController,
   isAuth,
 };

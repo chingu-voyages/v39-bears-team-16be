@@ -1,12 +1,12 @@
 import ClassworkModel, { ClassworkType } from '../../models/ClassworkModel';
 import { Request, Response, NextFunction } from 'express';
-import userDao from '../../dao/user.dao';
+// import userDao from '../../dao/user.dao';
 
 const { ObjectId } = require('mongodb');
 const classDao = require('../../dao/class.dao');
 
 class ClassworkController {
-  index = async (req: Request, res: Response, next: NextFunction) => {
+  static async index(req: Request, res: Response, next: NextFunction) {
     const { classId } = req.params;
     try {
       const classworks = await classDao.allClassworks(classId);
@@ -15,9 +15,9 @@ class ClassworkController {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  store = async (req: Request, res: Response, next: NextFunction) => {
+  static async store(req: Request, res: Response, next: NextFunction) {
     const { classId } = req.params;
     const { name, description, link, type } = req.body;
 
@@ -30,9 +30,9 @@ class ClassworkController {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  destroy = async (req: Request, res: Response, next: NextFunction) => {
+  static async destroy(req: Request, res: Response, next: NextFunction) {
     const { classId, classworkId } = req.params;
     try {
       const result = await classDao.deleteClasswork({ classId, classworkId });
@@ -41,9 +41,9 @@ class ClassworkController {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  markAsComplete = async (req: Request, res: Response, next: NextFunction) => {
+  static async markAsComplete(req: Request, res: Response, next: NextFunction) {
     if (!req.user) {
       return res.status(403);
     }
@@ -64,7 +64,7 @@ class ClassworkController {
       console.error(err);
       return next(err);
     }
-  };
+  }
 }
 
 export default ClassworkController;

@@ -1,42 +1,49 @@
-const { ObjectId } = require('mongodb');
+import * as mongodb from 'mongodb';
+
 const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
-function UserDao() {
-  let userCollection;
+class UserDao {
+  static userCollection: mongodb.Collection | undefined;
 
-  this.initialize = async (client) => {
-    if (userCollection) {
+  static async initialize(client: mongodb.MongoClient) {
+    if (this.userCollection) {
       return;
     }
 
     try {
-      userCollection = await client.db().collection('users');
+      this.userCollection = await client.db().collection('users');
     } catch (err) {
       console.error(err);
     }
-  };
+  }
 
-  this.all = async () => {
+  static async all() {
+    if (!this.userCollection) {
+      return;
+    }
+
     try {
-      const cursor = await userCollection.find({}, { projection: { _id: 0, hash: 0, salt: 0 } });
+      const cursor = await this.userCollection.find({}, { projection: { _id: 0, hash: 0, salt: 0 } });
       return cursor.toArray();
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.find = async (email) => {
+  static async find(email: string) {
+    if (!this.userCollection) {
+      return;
+    }
+
     try {
-      const user = await userCollection.findOne({ email }, { projection: { _id: 0 } });
+      const user = await this.userCollection.findOne({ email }, { projection: { _id: 0 } });
       return user;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.create = async ({
+  static async create({
     name = '',
     email = '',
     hash = '',
@@ -47,9 +54,13 @@ function UserDao() {
     isAdmin = false,
     enrolledIn = [],
     createdAt = new Date(),
-  }) => {
+  }) {
+    if (!this.userCollection) {
+      return;
+    }
+
     try {
-      const result = await userCollection.insertOne({
+      const result = await this.userCollection.insertOne({
         name,
         email,
         hash,
@@ -65,11 +76,10 @@ function UserDao() {
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.findOrCreate = async ({
+  static async findOrCreate({
     name = '',
     email = '',
     hash = '',
@@ -80,40 +90,44 @@ function UserDao() {
     isAdmin = false,
     enrolledIn = [],
     createdAt = new Date(),
-  }) => {
+  }) {
+    if (!this.userCollection) {
+      return;
+    }
+
     try {
-      const result = await userCollection.findOneAndUpdate(
-        { email },
-        {
-          $setOnInsert: {
-            name,
-            email,
-            hash,
-            salt,
-            profilePicture,
-            location,
-            sex,
-            isAdmin,
-            enrolledIn,
-            createdAt,
-          },
-        },
-        {
-          upsert: true,
-          returnNewDocument: true,
-          projection: { _id: 0, hash: 0, salt: 0 },
-        }
-      );
-      return result.value;
+      const user = await this.userCollection.findOne({ email });
+
+      if (user) {
+        return user;
+      }
+
+      const newUser = await this.userCollection.insertOne({
+        name,
+        email,
+        hash,
+        salt,
+        profilePicture,
+        location,
+        sex,
+        isAdmin,
+        enrolledIn,
+        createdAt,
+      });
+
+      return newUser;
     } catch (err) {
       console.error(err);
-      return err;
     }
-  };
+  }
 
-  this.updatePassword = async ({ email, hash, salt }) => {
+  static async updatePassword({ email, hash, salt }: { email: string; hash: string; salt: string }) {
+    if (!this.userCollection) {
+      return;
+    }
+
     try {
-      const result = await userCollection.updateOne(
+      const result = await this.userCollection.updateOne(
         {
           email,
         },
@@ -127,13 +141,15 @@ function UserDao() {
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.allPlans = async (email) => {
+  static async allPlans(email: string) {
+    if (!this.userCollection) {
+      return;
+    }
     try {
-      const cursor = await userCollection.aggregate([
+      const cursor = await this.userCollection.aggregate([
         {
           $match: {
             email,
@@ -188,13 +204,16 @@ function UserDao() {
       return data[0].plans;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.findPlan = async ({ email, planId }) => {
+  static async findPlan({ email, planId }: { email: string; planId: string }) {
+    if (!this.userCollection) {
+      return;
+    }
+
     try {
-      const cursor = await userCollection.aggregate([
+      const cursor = await this.userCollection.aggregate([
         {
           $match: {
             email,
@@ -208,7 +227,7 @@ function UserDao() {
                   input: '$enrolledIn',
                   as: 'item',
                   cond: {
-                    $eq: ['$$item.planId', ObjectId(planId)],
+                    $eq: ['$$item.planId', new mongodb.ObjectId(planId)],
                   },
                 },
               },
@@ -222,18 +241,22 @@ function UserDao() {
       return plan;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.addPlan = async ({ email, planId }) => {
+  static async addPlan({ email, planId }: { email: string; planId: string }) {
+    if (!this.userCollection) {
+      return;
+    }
+
     const newPlanObj = {
-      planId: ObjectId(planId),
+      planId: new mongodb.ObjectId(planId),
       progress: 0,
       classes: [],
     };
+
     try {
-      const result = await userCollection.updateOne(
+      const result = await this.userCollection.updateOne(
         {
           email,
         },
@@ -243,31 +266,28 @@ function UserDao() {
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.removePlan = async ({ email, planId }) => {
+  static async removePlan({ email, planId }: { email: string; planId: string }) {
+    if (!this.userCollection) {
+      return;
+    }
+
     try {
-      const result = await userCollection.updateOne(
+      const result = await this.userCollection.updateOne(
         {
           email,
         },
         {
-          $pull: { enrolledIn: { planId: ObjectId(planId) } },
+          $pull: { enrolledIn: { planId: new mongodb.ObjectId(planId) } },
         }
       );
 
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 }
-
-const userDao = new UserDao();
-
-Object.freeze(userDao);
-
-module.exports = userDao;
+export default UserDao;

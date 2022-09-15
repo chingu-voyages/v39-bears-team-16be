@@ -1,3 +1,6 @@
+import { Request, Response, NextFunction } from 'express';
+import ClassworkController from '../app/http/controllers/classworkController';
+import EnrolmentController from '../app/http/controllers/enrolmentController';
 const express = require('express');
 const likeController = require('../app/http/controllers/like.controller');
 
@@ -14,13 +17,11 @@ const {
   githubAuthController,
   planController,
   classController,
-  classworkController,
-  EnrolmentController,
   isAuth,
 } = require('./index');
 
 const router = express.Router();
-router.route('/').get((req, res) => {
+router.route('/').get((req: Request, res: Response) => {
   res.status(200).send('server is running');
 });
 // auth
@@ -33,7 +34,7 @@ router.route('/reset-password').post(resetPasswordRequest, resetPasswordControll
 router.route('/auth/github').get(githubAuthController.index);
 router.route('/auth/github/callback').get(githubAuthController.store);
 // csrf token
-router.route('/fetchCsrfToken').get((req, res) => {
+router.route('/fetchCsrfToken').get((req: Request, res: Response) => {
   res.status(200).json({ csrfToken: req.csrfToken() });
 });
 
@@ -57,8 +58,8 @@ router.route('/classes/:classId').get(classController.show);
 router.route('/classes/:classId').put(classController.update);
 router.route('/classes/:classId').delete(classController.destroy);
 // classworks
-router.route('/classes/:classId/classworks').post(classworkController.store);
-router.route('/classes/:classId/classworks/:classworkId').delete(classworkController.destroy);
+router.route('/classes/:classId/classworks').post(ClassworkController.store);
+router.route('/classes/:classId/classworks/:classworkId').delete(ClassworkController.destroy);
 // enrolled
 router.route('/enrollments').get(EnrolmentController.index);
 router.route('/enrollments').post(EnrolmentController.store);

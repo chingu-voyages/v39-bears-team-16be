@@ -6,6 +6,7 @@ declare global {
       user?: {
         email: string;
       };
+      csrfToken: () => void;
     }
   }
 }

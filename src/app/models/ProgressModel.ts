@@ -5,36 +5,29 @@ interface ProgressClassworkInterface {
   classworkProgress: number;
 }
 
+interface ProgressClassInterface {
+  classId: mongodb.ObjectId;
+  classProgress: number;
+  classworks: ProgressClassworkInterface[];
+}
+
 interface ProgressInterface {
   _id: mongodb.ObjectId;
   userId: mongodb.ObjectId;
   planId: mongodb.ObjectId;
-  classId: mongodb.ObjectId;
-  classProgress: number;
-  classworks: ProgressClassworkInterface[];
+  classes: ProgressClassInterface[];
 }
 
 class ProgressModel implements ProgressInterface {
   _id;
   userId;
   planId;
-  classId;
-  classProgress;
-  classworks;
-
-  constructor(
-    userId: mongodb.ObjectId,
-    classId: mongodb.ObjectId,
-    planId: mongodb.ObjectId,
-    classProgress = 0,
-    classworks: ProgressClassworkInterface[]
-  ) {
+  classes;
+  constructor(userId: mongodb.ObjectId, planId: mongodb.ObjectId, classes: ProgressClassInterface[] = []) {
     this._id = new mongodb.ObjectId();
     this.userId = userId;
-    this.classId = classId;
     this.planId = planId;
-    this.classProgress = classProgress;
-    this.classworks = classworks;
+    this.classes = classes;
   }
 }
 

@@ -1,19 +1,3 @@
-/*
-  {
-    _id: ObjectId,
-    name: String,
-    description: String,
-    classworks: [
-      _id: ObjectId,
-      name: String,
-      link: String,
-      type: ObjectId,
-      order: 32-bit integer
-    ],
-    createdAt: Date
-  }
-*/
-
 /* eslint-disable object-curly-newline */
 const { ObjectId } = require('mongodb');
 const { ClassModel } = require('../models/ClassModel');
@@ -66,7 +50,7 @@ function ClassDao() {
           classworks,
           completed,
         },
-      }
+      },
     );
 
     return result;
@@ -86,7 +70,7 @@ function ClassDao() {
     try {
       const classworks = await classCollection.findOne(
         { _id: ObjectId(classId) },
-        { projection: { classworks: 1, _id: 0 } }
+        { projection: { classworks: 1, _id: 0 } },
       );
       return classworks;
     } catch (err) {
@@ -115,7 +99,7 @@ function ClassDao() {
           $push: {
             classworks: classworkInstance,
           },
-        }
+        },
       );
       return result;
     } catch (err) {
@@ -129,7 +113,7 @@ function ClassDao() {
     try {
       const result = await classCollection.updateOne(
         { _id: ObjectId(classId) },
-        { $pull: { classworks: { _id: ObjectId(classworkId) } } }
+        { $pull: { classworks: { _id: ObjectId(classworkId) } } },
       );
 
       return result;
