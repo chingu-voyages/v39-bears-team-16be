@@ -1,27 +1,30 @@
 import * as mongodb from 'mongodb';
+import { ClassInterface } from './ClassModel';
+
+const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
 class PlanModel {
   _id: mongodb.ObjectId;
   name: string;
   description: string;
-  thumbnail: string;
+  thumbnail: File;
   tags: string[];
   likes: number;
-  classes: string[];
+  classes: ClassInterface[];
   createdBy: string;
   visible: boolean;
-  createdAt = Date;
+  createdAt: Date;
 
   constructor(
     name = '',
     description = '',
-    thumbnail = '',
+    thumbnail = defaultProfilePicture,
     tags = [],
-    _likes = 0,
+    likes = 0,
     classes = [],
     createdBy = '',
     visible = false,
-    createdAt = Date,
+    createdAt = new Date(),
   ) 
    {
     this._id = new mongodb.ObjectId();
