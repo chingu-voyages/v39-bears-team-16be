@@ -1,23 +1,26 @@
 import * as mongodb from 'mongodb';
 
-class LikeModel {
+export interface LikeInterface {
+  _id: mongodb.ObjectId;
+  email: string;
+  planId: mongodb.ObjectId; 
+  createdAt: Date;
+}
+
+export class LikeModel implements LikeInterface {
  _id: mongodb.ObjectId;
  email: string;
  planId: mongodb.ObjectId; 
  createdAt: Date;
 
- constructor(
-    email = '',
-    planId = '', 
-    createdAt = new Date(),
-
+constructor(
+  email = '',
+  planId = '', 
+  createdAt = new Date(),
   ) {
-    this._id = new mongodb.ObjectId();
-    this.email = email;
-    this.planId = new mongodb.ObjectId(planId);
-    this.createdAt = createdAt;
+  this._id = new mongodb.ObjectId();
+  this.email = email;
+  this.planId = new mongodb.ObjectId(planId);
+  this.createdAt = createdAt;
   }
-
 }
-
-export default LikeModel;
