@@ -15,12 +15,11 @@ export class LikeModel implements LikeInterface {
 
 constructor(
   email = '',
-  planId = '', 
-  createdAt = new Date(),
-  ) {
+  planId = '' 
+) {
   this._id = new mongodb.ObjectId();
   this.email = email;
   this.planId = new mongodb.ObjectId(planId);
-  this.createdAt = createdAt;
-  }
+  this.createdAt = new Date()
+}
 }
