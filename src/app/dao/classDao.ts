@@ -1,7 +1,8 @@
 /* eslint-disable object-curly-newline */
+import ClassModel from '../models/ClassModel';
+import ClassworkModel from '../models/ClassworkModel';
 const { ObjectId } = require('mongodb');
-const { ClassModel } = require('../models/ClassModel');
-const { ClassworkModel } = require('../models/ClassworkModel');
+const { ClassworkType } = require('../models/ClassworkModel');
 
 function ClassDao() {
   let classCollection;
@@ -50,7 +51,7 @@ function ClassDao() {
           classworks,
           completed,
         },
-      },
+      }
     );
 
     return result;
@@ -70,7 +71,7 @@ function ClassDao() {
     try {
       const classworks = await classCollection.findOne(
         { _id: ObjectId(classId) },
-        { projection: { classworks: 1, _id: 0 } },
+        { projection: { classworks: 1, _id: 0 } }
       );
       return classworks;
     } catch (err) {
@@ -81,14 +82,17 @@ function ClassDao() {
 
   this.createClasswork = async ({
     classId = '',
-    classworkId = new ObjectId(),
     name = '',
     description = '',
+    link = '',
     type = '',
-    order = 0,
-    createdAt = new Date(),
   }) => {
-    const classworkInstance = new ClassworkModel(classworkId, name, description, type, order, createdAt);
+    const newClasswork = new ClassworkModel(
+      name,
+      description,
+      type === ClassworkType.ASSIGNMENT ? '' : link,
+      type
+    );
 
     try {
       const result = await classCollection.updateOne(
@@ -97,9 +101,9 @@ function ClassDao() {
         },
         {
           $push: {
-            classworks: classworkInstance,
+            classworks: newClasswork,
           },
-        },
+        }
       );
       return result;
     } catch (err) {
@@ -113,7 +117,7 @@ function ClassDao() {
     try {
       const result = await classCollection.updateOne(
         { _id: ObjectId(classId) },
-        { $pull: { classworks: { _id: ObjectId(classworkId) } } },
+        { $pull: { classworks: { _id: ObjectId(classworkId) } } }
       );
 
       return result;

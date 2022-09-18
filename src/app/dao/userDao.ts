@@ -1,4 +1,7 @@
 import * as mongodb from 'mongodb';
+import { ClassInterface } from '../models/ClassModel';
+import classDao = require('./classDao');
+import planDao = require('./plan.dao');
 
 const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
@@ -23,7 +26,10 @@ class UserDao {
     }
 
     try {
-      const cursor = await this.userCollection.find({}, { projection: { _id: 0, hash: 0, salt: 0 } });
+      const cursor = await this.userCollection.find(
+        {},
+        { projection: { _id: 0, hash: 0, salt: 0 } }
+      );
       return cursor.toArray();
     } catch (err) {
       console.error(err);
@@ -121,7 +127,15 @@ class UserDao {
     }
   }
 
-  static async updatePassword({ email, hash, salt }: { email: string; hash: string; salt: string }) {
+  static async updatePassword({
+    email,
+    hash,
+    salt,
+  }: {
+    email: string;
+    hash: string;
+    salt: string;
+  }) {
     if (!this.userCollection) {
       return;
     }
@@ -256,14 +270,24 @@ class UserDao {
     };
 
     try {
-      const result = await this.userCollection.updateOne(
-        {
-          email,
-        },
-        { $push: { enrolledIn: newPlanObj } }
+      // const result = await this.userCollection.updateOne(
+      //   {
+      //     email,
+      //   },
+      //   { $push: { enrolledIn: newPlanObj } }
+      // );
+
+      const { classes } = await planDao.allClasses(planId);
+
+      console.log('Classes', classes);
+
+      const result = await Promise.all(
+        classes.map((item: ClassInterface) => classDao.allClassworks(item._id))
       );
 
-      return result;
+      console.log('Classworks', result);
+
+      // return result;
     } catch (err) {
       console.error(err);
     }

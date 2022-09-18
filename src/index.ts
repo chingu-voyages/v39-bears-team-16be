@@ -5,8 +5,8 @@ const { MongoClient } = require('mongodb');
 import app from './app';
 import debug from 'debug';
 import * as http from 'http';
+import UserDao from './app/dao/userDao';
 
-const userDao = require('./app/dao/user.dao');
 const passwordResetTokenDao = require('./app/dao/password-reset-token.dao');
 const planDao = require('./app/dao/plan.dao');
 const classDao = require('./app/dao/class.dao');
@@ -57,6 +57,7 @@ function onError(error: NodeJS.ErrnoException) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr?.port;
+  console.log('Listening on ' + bind);
   debug('sailbe:server')('Listening on ' + bind);
 }
 
@@ -64,7 +65,7 @@ async function main() {
   try {
     await client.connect();
 
-    await userDao.initialize(client);
+    await UserDao.initialize(client);
     await passwordResetTokenDao.initialize(client);
     await planDao.initialize(client);
     await classDao.initialize(client);

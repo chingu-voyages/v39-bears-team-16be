@@ -8,8 +8,9 @@
     "npm": "8.x"
   },
   "scripts": {
+    "start": "node ./build/index.js",
     "tsc": "tsc --watch",
-    "start": "node index.js"
+    "watch": "nodemon ./build/index.js"
   },
   "repository": {
     "type": "git",

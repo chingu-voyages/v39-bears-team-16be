@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-const { userDao } = require('./auth');
+import UserDao from '../../dao/userDao';
 
 class EnrolmentController {
   static async index(req: Request, res: Response, next: NextFunction) {
@@ -9,7 +9,7 @@ class EnrolmentController {
 
     const { email } = req.user;
     try {
-      const plans = await userDao.allPlans(email);
+      const plans = await UserDao.allPlans(email);
       return res.status(200).json({ plans });
     } catch (err) {
       console.error(err);
@@ -25,7 +25,7 @@ class EnrolmentController {
     const { email } = req.user;
     const { planId } = req.body;
     try {
-      const result = await userDao.addPlan({ email, planId });
+      const result = await UserDao.addPlan({ email, planId });
       return res.status(200).json({ result });
     } catch (err) {
       console.error(err);
@@ -41,7 +41,7 @@ class EnrolmentController {
     const { email } = req.user;
     const { planId } = req.params;
     try {
-      const result = await userDao.removePlan({ email, planId });
+      const result = await UserDao.removePlan({ email, planId });
       return res.status(200).json({ result });
     } catch (err) {
       console.error(err);

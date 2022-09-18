@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+import passport from './config/passport.config';
 import { Request, Response, NextFunction } from 'express';
 
 interface Error extends NodeJS.ErrnoException {
@@ -16,7 +17,6 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 
 const webRoutes = require('./routes/web.routes');
-const passport = require('./config/passport.config');
 const { defaultOrigins } = require('./config/cors.config');
 
 const app = express();

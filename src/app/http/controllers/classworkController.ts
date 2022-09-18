@@ -1,4 +1,3 @@
-import ClassworkModel, { ClassworkType } from '../../models/ClassworkModel';
 import { Request, Response, NextFunction } from 'express';
 // import userDao from '../../dao/user.dao';
 
@@ -22,9 +21,7 @@ class ClassworkController {
     const { name, description, link, type } = req.body;
 
     try {
-      const newClasswork = new ClassworkModel(name, description, type === ClassworkType.ASSIGNMENT ? '' : link, type);
-
-      const result = await classDao.createClasswork(classId, newClasswork);
+      const result = await classDao.createClasswork({ classId, name, description, link, type });
       return res.status(200).json(result);
     } catch (err) {
       console.error(err);

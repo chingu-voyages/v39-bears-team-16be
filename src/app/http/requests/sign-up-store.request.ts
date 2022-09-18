@@ -1,5 +1,7 @@
+import UserDao from '../../dao/userDao';
+import { Request, Response, NextFunction } from 'express';
+
 const { body, validationResult } = require('express-validator');
-const userDao = require('../../dao/user.dao');
 
 const signUpStoreRequest = [
   body('name')
@@ -13,15 +15,15 @@ const signUpStoreRequest = [
     .isEmail()
     .normalizeEmail({ gmail_remove_dots: false })
     // eslint-disable-next-line consistent-return
-    .custom(async (value) => {
-      const user = await userDao.find(value);
+    .custom(async (value: string) => {
+      const user = await UserDao.find(value);
       if (user) {
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject('E-mail already in use');
       }
     }),
   body('password').isAlphanumeric().isLength({ min: 1, max: 255 }).trim(),
-  (req, res, next) => {
+  (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {

@@ -1,6 +1,5 @@
-/* eslint-disable object-curly-newline */
 /* eslint-disable no-underscore-dangle */
-const classDao = require('../../dao/class.dao');
+const classDao = require('../../dao/classDao');
 const planDao = require('../../dao/plan.dao');
 const { userDao } = require('./auth');
 
@@ -10,7 +9,10 @@ function ClassController() {
     const { email } = req.user;
 
     try {
-      const values = await Promise.allSettled([planDao.allClasses(planId), userDao.findPlan({ email, planId })]);
+      const values = await Promise.allSettled([
+        planDao.allClasses(planId),
+        userDao.findPlan({ email, planId }),
+      ]);
 
       let planResult = values[0].value;
       const userResult = values[1].value;
@@ -21,7 +23,7 @@ function ClassController() {
             ...acc,
             [item.classId]: item.progress,
           }),
-          {}
+          {},
         );
 
         planResult.classes = planResult.classes.map((item) => ({
@@ -69,7 +71,9 @@ function ClassController() {
 
   this.update = async (req, res, next) => {
     const { classId } = req.params;
-    const { name, description, classworks, completed } = req.body;
+    const {
+      name, description, classworks, completed,
+    } = req.body;
 
     try {
       const result = await classDao.update({
