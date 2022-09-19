@@ -9,7 +9,7 @@ export interface ClassworkInterface {
   _id: mongodb.ObjectId;
   name: string;
   description: string;
-  link: string;
+  link: string | '';
   type: ClassworkType;
 }
 

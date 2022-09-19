@@ -9,7 +9,6 @@ const forgotPasswordController = require('../app/http/controllers/auth/forgot-pa
 const resetPasswordController = require('../app/http/controllers/auth/reset-password.controller');
 const githubAuthController = require('../app/http/controllers/auth/github-auth.controller');
 const planController = require('../app/http/controllers/plan.controller');
-const classController = require('../app/http/controllers/class.controller');
 const { isAuth } = require('../app/http/middlewares/auth.middleware');
 
 module.exports = {
@@ -24,6 +23,5 @@ module.exports = {
   resetPasswordController,
   githubAuthController,
   planController,
-  classController,
   isAuth,
 };

@@ -1,7 +1,7 @@
 import * as mongodb from 'mongodb';
-import { ClassInterface } from '../models/ClassModel';
-import classDao = require('./classDao');
+import { ProgressClassInterface } from '../models/ProgressModel';
 import planDao = require('./plan.dao');
+import ProgressDao from './progressDao';
 
 const { defaultProfilePicture } = require('../../config/defaultVars.config');
 
@@ -263,29 +263,34 @@ class UserDao {
       return;
     }
 
-    const newPlanObj = {
-      planId: new mongodb.ObjectId(planId),
-      progress: 0,
-      classes: [],
-    };
-
     try {
-      // const result = await this.userCollection.updateOne(
-      //   {
-      //     email,
-      //   },
-      //   { $push: { enrolledIn: newPlanObj } }
-      // );
+      await this.userCollection.updateOne(
+        {
+          email,
+        },
+        { $push: { enrolledIn: new mongodb.ObjectId(planId) } }
+      );
 
       const { classes } = await planDao.allClasses(planId);
 
-      console.log('Classes', classes);
+      const classProgress: ProgressClassInterface[] = classes.map((classItem: any) => {
+        const classworkProgress = classItem.classworks.map((classwork: any) => ({
+          _id: classwork._id,
+          progress: 0,
+        }));
 
-      const result = await Promise.all(
-        classes.map((item: ClassInterface) => classDao.allClassworks(item._id))
-      );
+        return {
+          _id: classItem._id,
+          progresses: 0,
+          classworks: classworkProgress,
+        };
+      });
 
-      console.log('Classworks', result);
+      const result = await ProgressDao.create({
+        user: email,
+        planId: new mongodb.ObjectId(planId),
+        classes: classProgress,
+      });
 
       // return result;
     } catch (err) {

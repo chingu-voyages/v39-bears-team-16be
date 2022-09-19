@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import ClassworkController from '../app/http/controllers/classworkController';
 import EnrolmentController from '../app/http/controllers/enrolmentController';
+import ClassController from '../app/http/controllers/classController';
+
 const express = require('express');
 const likeController = require('../app/http/controllers/like.controller');
 
@@ -16,7 +18,6 @@ const {
   resetPasswordController,
   githubAuthController,
   planController,
-  classController,
   isAuth,
 } = require('./index');
 
@@ -52,11 +53,11 @@ router.route('/plans/:planId').delete(planController.destroy);
 router.route('/plans/:planId/like').post(likeController.like);
 router.route('/plans/:planId/dislike').delete(likeController.dislike);
 // classes
-router.route('/plans/:planId/classes').get(classController.index);
-router.route('/plans/:planId/classes').post(classController.store);
-router.route('/classes/:classId').get(classController.show);
-router.route('/classes/:classId').put(classController.update);
-router.route('/classes/:classId').delete(classController.destroy);
+router.route('/plans/:planId/classes').get(ClassController.index);
+router.route('/plans/:planId/classes').post(ClassController.store);
+router.route('/classes/:classId').get(ClassController.show);
+router.route('/classes/:classId').put(ClassController.update);
+router.route('/classes/:classId').delete(ClassController.destroy);
 // classworks
 router.route('/classes/:classId/classworks').post(ClassworkController.store);
 router.route('/classes/:classId/classworks/:classworkId').delete(ClassworkController.destroy);

@@ -15,16 +15,16 @@ class ClassModel implements ClassInterface {
   name;
   description;
   completed;
-  classworks;
+  classworks: ClassworkInterface[];
   createdAt;
 
-  constructor(name = '', description = '', completed = false, classworks = [], createdAt = new Date()) {
+  constructor(name = '', description = '') {
     this._id = new mongodb.ObjectId();
     this.name = name;
     this.description = description;
-    this.completed = completed;
-    this.classworks = classworks;
-    this.createdAt = createdAt;
+    this.completed = false;
+    this.classworks = [];
+    this.createdAt = new Date();
   }
 }
 

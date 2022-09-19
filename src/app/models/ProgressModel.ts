@@ -1,31 +1,31 @@
 import * as mongodb from 'mongodb';
 
-interface ProgressClassworkInterface {
+export interface ProgressClassworkInterface {
   classworkId: mongodb.ObjectId;
   classworkProgress: number;
 }
 
-interface ProgressClassInterface {
+export interface ProgressClassInterface {
   classId: mongodb.ObjectId;
   classProgress: number;
   classworks: ProgressClassworkInterface[];
 }
 
-interface ProgressInterface {
+export interface ProgressInterface {
   _id: mongodb.ObjectId;
-  userId: mongodb.ObjectId;
+  user: string;
   planId: mongodb.ObjectId;
   classes: ProgressClassInterface[];
 }
 
 class ProgressModel implements ProgressInterface {
   _id;
-  userId;
+  user;
   planId;
   classes;
-  constructor(userId: mongodb.ObjectId, planId: mongodb.ObjectId, classes: ProgressClassInterface[] = []) {
+  constructor(user: string, planId: mongodb.ObjectId, classes: ProgressClassInterface[] = []) {
     this._id = new mongodb.ObjectId();
-    this.userId = userId;
+    this.user = user;
     this.planId = planId;
     this.classes = classes;
   }

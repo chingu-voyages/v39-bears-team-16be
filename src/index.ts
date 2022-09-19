@@ -6,10 +6,11 @@ import app from './app';
 import debug from 'debug';
 import * as http from 'http';
 import UserDao from './app/dao/userDao';
+import ClassDao from './app/dao/classDao';
+import ProgressDao from './app/dao/progressDao';
 
 const passwordResetTokenDao = require('./app/dao/password-reset-token.dao');
 const planDao = require('./app/dao/plan.dao');
-const classDao = require('./app/dao/class.dao');
 const logDao = require('./app/dao/log.dao');
 
 const port = normalizePort(process.env.PORT || '5000');
@@ -68,8 +69,9 @@ async function main() {
     await UserDao.initialize(client);
     await passwordResetTokenDao.initialize(client);
     await planDao.initialize(client);
-    await classDao.initialize(client);
+    await ClassDao.initialize(client);
     await logDao.initialize(client);
+    await ProgressDao.initialize(client);
 
     server.listen(port);
     server.on('error', onError);

@@ -1,49 +1,71 @@
-/* eslint-disable object-curly-newline */
 import ClassModel from '../models/ClassModel';
 import ClassworkModel from '../models/ClassworkModel';
-const { ObjectId } = require('mongodb');
-const { ClassworkType } = require('../models/ClassworkModel');
+import { ClassworkInterface, ClassworkType } from '../models/ClassworkModel';
+import * as mongodb from 'mongodb';
 
-function ClassDao() {
-  let classCollection;
+class ClassDao {
+  static classCollection: mongodb.Collection | undefined;
 
-  this.initialize = async (client) => {
-    if (classCollection) {
+  static async initialize(client: mongodb.MongoClient) {
+    if (this.classCollection) {
       return;
     }
 
     try {
-      classCollection = await client.db().collection('classes');
+      this.classCollection = await client.db().collection('classes');
     } catch (err) {
       console.error(err);
     }
-  };
+  }
 
-  this.find = async (_id) => {
+  static async find(_id: mongodb.ObjectId) {
+    if (!this.classCollection) {
+      throw new Error(`class collection hasn't been initialized`);
+    }
+
     try {
-      const result = await classCollection.findOne({ _id: ObjectId(_id) });
+      const result = await this.classCollection.findOne({ _id: new mongodb.ObjectId(_id) });
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.create = async ({ name, description, completed, classworks, createdAt }) => {
-    const classInstance = new ClassModel(name, description, completed, classworks, createdAt);
+  static async create({ name, description }: { name: string; description: string }) {
+    const classInstance = new ClassModel(name, description);
+
+    if (!this.classCollection) {
+      throw new Error(`class collection hasn't been initialized`);
+    }
+
     try {
-      const result = await classCollection.insertOne(classInstance);
+      const result = await this.classCollection.insertOne(classInstance);
 
       return result.insertedId;
     } catch (err) {
-      console.log(err);
-      throw new Error(err.message);
+      console.error(err);
     }
-  };
+  }
 
-  this.update = async ({ _id, name, description, classworks, completed }) => {
-    const result = await classCollection.updateOne(
-      { _id: ObjectId(_id) },
+  static async update({
+    _id,
+    name,
+    description,
+    classworks,
+    completed,
+  }: {
+    _id: mongodb.ObjectId;
+    name: string;
+    description: string;
+    classworks: ClassworkInterface;
+    completed: boolean;
+  }) {
+    if (!this.classCollection) {
+      throw new Error(`class collection hasn't been initialized`);
+    }
+
+    const result = await this.classCollection.updateOne(
+      { _id: new mongodb.ObjectId(_id) },
       {
         $set: {
           name,
@@ -55,38 +77,54 @@ function ClassDao() {
     );
 
     return result;
-  };
+  }
 
-  this.delete = async (_id) => {
+  static async delete(_id: mongodb.ObjectId) {
+    if (!this.classCollection) {
+      throw new Error(`class collection hasn't been initialized`);
+    }
+
     try {
-      const result = await classCollection.deleteOne({ _id: ObjectId(_id) });
+      const result = await this.classCollection.deleteOne({ _id: new mongodb.ObjectId(_id) });
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.allClassworks = async (classId) => {
+  static async allClassworks(classId: mongodb.ObjectId) {
+    if (!this.classCollection) {
+      throw new Error(`class collection hasn't been initialized`);
+    }
+
     try {
-      const classworks = await classCollection.findOne(
-        { _id: ObjectId(classId) },
+      const classworks = await this.classCollection.findOne(
+        { _id: new mongodb.ObjectId(classId) },
         { projection: { classworks: 1, _id: 0 } }
       );
       return classworks;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.createClasswork = async ({
-    classId = '',
+  static async createClasswork({
+    classId,
     name = '',
     description = '',
     link = '',
-    type = '',
-  }) => {
+    type = ClassworkType.MATERIAL,
+  }: {
+    classId: mongodb.ObjectId;
+    name: string;
+    description: string;
+    link: string;
+    type: ClassworkType;
+  }) {
+    if (!this.classCollection) {
+      throw new Error(`class collection hasn't been initialized`);
+    }
+
     const newClasswork = new ClassworkModel(
       name,
       description,
@@ -95,9 +133,9 @@ function ClassDao() {
     );
 
     try {
-      const result = await classCollection.updateOne(
+      const result = await this.classCollection.updateOne(
         {
-          _id: ObjectId(classId),
+          _id: new mongodb.ObjectId(classId),
         },
         {
           $push: {
@@ -108,28 +146,31 @@ function ClassDao() {
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 
-  this.deleteClasswork = async ({ classId, classworkId }) => {
-    console.log(typeof classworkId);
+  static async deleteClasswork({
+    classId,
+    classworkId,
+  }: {
+    classId: mongodb.ObjectId;
+    classworkId: mongodb.ObjectId;
+  }) {
+    if (!this.classCollection) {
+      throw new Error(`class collection hasn't been initialized`);
+    }
+
     try {
-      const result = await classCollection.updateOne(
-        { _id: ObjectId(classId) },
-        { $pull: { classworks: { _id: ObjectId(classworkId) } } }
+      const result = await this.classCollection.updateOne(
+        { _id: new mongodb.ObjectId(classId) },
+        { $pull: { classworks: { _id: new mongodb.ObjectId(classworkId) } } }
       );
 
       return result;
     } catch (err) {
       console.error(err);
-      throw new Error(err.message);
     }
-  };
+  }
 }
 
-const classDao = new ClassDao();
-
-Object.freeze(classDao);
-
-module.exports = classDao;
+export default ClassDao;

@@ -78,7 +78,14 @@ function PlanDao() {
   };
 
   this.update = async ({
-    _id, name, description, thumbnail, tags = [], classes, likes, visible,
+    _id,
+    name,
+    description,
+    thumbnail,
+    tags = [],
+    classes,
+    likes,
+    visible,
   }) => {
     const planObject = {
       ...(name && { name }),
