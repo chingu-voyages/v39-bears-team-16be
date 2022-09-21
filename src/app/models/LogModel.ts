@@ -2,14 +2,14 @@ import * as mongodb from 'mongodb';
 
 
 export interface LogInterface {
-  id: mongodb.ObjectId;
+  _id: mongodb.ObjectId;
   user: string;
   action: string;
   createdAt: Date;
 }
 
 export class LogModel implements LogInterface {
-  id: mongodb.ObjectId;
+  _id: mongodb.ObjectId;
   user: string;
   action: string;
   createdAt: Date;
@@ -19,7 +19,7 @@ export class LogModel implements LogInterface {
     action = '',
     createdAt = new Date(),
   ) {
-    this.id = new mongodb.ObjectId();
+    this._id = new mongodb.ObjectId();
     this.user = user;
     this.action = action;
     this.createdAt = createdAt;
