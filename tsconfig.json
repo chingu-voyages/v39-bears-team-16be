@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node", // https://www.typescriptlang.org/tsconfig#moduleResolution
     "outDir": "./build",
     "allowJs": true,
     "target": "es5",
-    "strict": true
+    "strict": true,
   },
-  "include": ["./src/**/*"]
+  "include": [
+    "./src/**/*"
+  ]
 }
