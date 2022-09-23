@@ -264,6 +264,22 @@ class UserDao {
     }
 
     try {
+      const alreadyEnroled = await this.userCollection
+        .aggregate([
+          {
+            $match: {
+              enrolledIn: {
+                $in: [`${planId}`],
+              },
+            },
+          },
+        ])
+        .toArray();
+
+      if (alreadyEnroled.length >= 0) {
+        throw new Error('already enroled');
+      }
+
       await this.userCollection.updateOne(
         {
           email,
@@ -292,7 +308,7 @@ class UserDao {
         classes: classProgress,
       });
 
-      // return result;
+      return result;
     } catch (err) {
       console.error(err);
     }

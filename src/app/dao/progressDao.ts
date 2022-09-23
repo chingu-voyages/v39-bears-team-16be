@@ -39,6 +39,38 @@ class ProgressDao {
       console.error(err);
     }
   }
+
+  static async markClassworkAsComplete({
+    email,
+    planId,
+    classId,
+    classworkId,
+  }: {
+    email: string;
+    planId: mongodb.ObjectId;
+    classId: mongodb.ObjectId;
+    classworkId: mongodb.ObjectId;
+  }) {
+    if (!this.progressCollection) {
+      throw new Error(`Progress collection hasn't been initialized`);
+    }
+
+    try {
+      const result = await this.progressCollection.updateOne(
+        {
+          userEmail: `${email}`,
+          planId: new mongodb.ObjectId(planId),
+        },
+        {
+          $set: {},
+        }
+      );
+
+      return result;
+    } catch (err) {
+      console.error(err);
+    }
+  }
 }
 
 export default ProgressDao;

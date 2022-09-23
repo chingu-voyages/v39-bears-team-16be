@@ -46,29 +46,6 @@ class ClassworkController {
       return next(err);
     }
   }
-
-  static async markAsComplete(req: Request, res: Response, next: NextFunction) {
-    if (!req.user) {
-      return res.status(403);
-    }
-
-    const { classId, classworkId } = req.params;
-    const { email } = req.user;
-    const { completed } = req.body;
-
-    try {
-      // const result = await userDao.updateClasswork({
-      //   email,
-      //   classId,
-      //   classworkId,
-      //   completed,
-      // });
-      return res.status(200);
-    } catch (err) {
-      console.error(err);
-      return next(err);
-    }
-  }
 }
 
 export default ClassworkController;

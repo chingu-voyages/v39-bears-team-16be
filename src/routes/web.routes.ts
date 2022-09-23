@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import ClassworkController from '../app/http/controllers/classworkController';
 import EnrolmentController from '../app/http/controllers/enrolmentController';
 import ClassController from '../app/http/controllers/classController';
+import ProgressController from '../app/http/controllers/progressController';
 
 const express = require('express');
 const likeController = require('../app/http/controllers/like.controller');
@@ -61,9 +62,11 @@ router.route('/classes/:classId').delete(ClassController.destroy);
 // classworks
 router.route('/classes/:classId/classworks').post(ClassworkController.store);
 router.route('/classes/:classId/classworks/:classworkId').delete(ClassworkController.destroy);
-// enrolled
+// enrolment
 router.route('/enrollments').get(EnrolmentController.index);
 router.route('/enrollments').post(EnrolmentController.store);
 router.route('/enrollments').delete(EnrolmentController.destroy);
+// progress
+router.route('/classes/:classId/classworks/:classworkId').post(ProgressController.markAsComplete);
 
 module.exports = router;
