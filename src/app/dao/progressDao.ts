@@ -40,16 +40,18 @@ class ProgressDao {
     }
   }
 
-  static async markClassworkAsComplete({
+  static async updateClassworkProgressValue({
     email,
     planId,
     classId,
     classworkId,
+    val,
   }: {
     email: string;
     planId: mongodb.ObjectId;
     classId: mongodb.ObjectId;
     classworkId: mongodb.ObjectId;
+    val: 1 | 0;
   }) {
     if (!this.progressCollection) {
       throw new Error(`Progress collection hasn't been initialized`);
@@ -62,7 +64,15 @@ class ProgressDao {
           planId: new mongodb.ObjectId(planId),
         },
         {
-          $set: {},
+          $set: {
+            'classes.$[class].classworks.$[classwork].progress': val,
+          },
+        },
+        {
+          arrayFilters: [
+            { 'class._id': new mongodb.ObjectId(classId) },
+            { 'classwork._id': new mongodb.ObjectId(classworkId) },
+          ],
         }
       );
 
