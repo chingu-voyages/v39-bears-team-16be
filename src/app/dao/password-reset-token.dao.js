@@ -8,9 +8,7 @@ function PasswordResetTokenDao() {
     }
 
     try {
-      passwordResetTokenCollection = await client
-        .db()
-        .collection('passwordResetTokens');
+      passwordResetTokenCollection = await client.db().collection('passwordResetTokens');
     } catch (err) {
       console.error(err);
     }
@@ -28,11 +26,7 @@ function PasswordResetTokenDao() {
     }
   };
 
-  this.create = async (
-    email,
-    token = crypto.randomBytes(32).toString('hex'),
-    createdAt = new Date(),
-  ) => {
+  this.create = async (email, token = crypto.randomBytes(32).toString('hex'), createdAt = new Date()) => {
     try {
       const result = await passwordResetTokenCollection.insertOne({
         email,

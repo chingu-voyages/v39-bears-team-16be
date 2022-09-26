@@ -34,10 +34,7 @@ function PlanController() {
     const { email } = req.user;
 
     try {
-      const values = await Promise.allSettled([
-        userDao.findPlan({ email, planId }),
-        planDao.find(planId),
-      ]);
+      const values = await Promise.allSettled([userDao.findPlan({ email, planId }), planDao.find(planId)]);
 
       const result = values.reduce((acc, value) => acc.concat(value.value), []);
 

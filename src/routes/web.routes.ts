@@ -1,3 +1,9 @@
+import { Request, Response, NextFunction } from 'express';
+import ClassworkController from '../app/http/controllers/classworkController';
+import EnrolmentController from '../app/http/controllers/enrolmentController';
+import ClassController from '../app/http/controllers/classController';
+import ProgressController from '../app/http/controllers/progressController';
+
 const express = require('express');
 const likeController = require('../app/http/controllers/like.controller');
 
@@ -13,31 +19,24 @@ const {
   resetPasswordController,
   githubAuthController,
   planController,
-  classController,
-  classworkController,
-  enrollmentController,
   isAuth,
 } = require('./index');
 
 const router = express.Router();
-router.route('/').get((req, res) => {
+router.route('/').get((req: Request, res: Response) => {
   res.status(200).send('server is running');
 });
 // auth
 router.route('/sign-up').post(signUpStoreRequest, signUpController.store);
 router.route('/sign-in').post(signInStoreRequest, signInController.store);
 
-router
-  .route('/forgot-password')
-  .post(forgotPasswordStoreRequest, forgotPasswordController.store);
-router
-  .route('/reset-password')
-  .post(resetPasswordRequest, resetPasswordController.store);
+router.route('/forgot-password').post(forgotPasswordStoreRequest, forgotPasswordController.store);
+router.route('/reset-password').post(resetPasswordRequest, resetPasswordController.store);
 // github
 router.route('/auth/github').get(githubAuthController.index);
 router.route('/auth/github/callback').get(githubAuthController.store);
 // csrf token
-router.route('/fetchCsrfToken').get((req, res) => {
+router.route('/fetchCsrfToken').get((req: Request, res: Response) => {
   res.status(200).json({ csrfToken: req.csrfToken() });
 });
 
@@ -55,19 +54,19 @@ router.route('/plans/:planId').delete(planController.destroy);
 router.route('/plans/:planId/like').post(likeController.like);
 router.route('/plans/:planId/dislike').delete(likeController.dislike);
 // classes
-router.route('/plans/:planId/classes').get(classController.index);
-router.route('/plans/:planId/classes').post(classController.store);
-router.route('/classes/:classId').get(classController.show);
-router.route('/classes/:classId').put(classController.update);
-router.route('/classes/:classId').delete(classController.destroy);
+router.route('/plans/:planId/classes').get(ClassController.index);
+router.route('/plans/:planId/classes').post(ClassController.store);
+router.route('/classes/:classId').get(ClassController.show);
+router.route('/classes/:classId').put(ClassController.update);
+router.route('/classes/:classId').delete(ClassController.destroy);
 // classworks
-router.route('/classes/:classId/classworks').post(classworkController.store);
-router
-  .route('/classes/:classId/classworks/:classworkId')
-  .delete(classworkController.destroy);
-// enrolled
-router.route('/enrollments').get(enrollmentController.index);
-router.route('/enrollments').post(enrollmentController.store);
-router.route('/enrollments').delete(enrollmentController.destroy);
+router.route('/classes/:classId/classworks').post(ClassworkController.store);
+router.route('/classes/:classId/classworks/:classworkId').delete(ClassworkController.destroy);
+// enrolment
+router.route('/enrollments').get(EnrolmentController.index);
+router.route('/enrollments').post(EnrolmentController.store);
+router.route('/enrollments').delete(EnrolmentController.destroy);
+// progress
+router.route('/classes/:classId/classworks/:classworkId').post(ProgressController.markAsComplete);
 
 module.exports = router;

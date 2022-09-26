@@ -10,26 +10,22 @@ export interface ClassInterface {
   createdAt: Date;
 }
 
-export class ClassModel implements ClassInterface {
-  _id: mongodb.ObjectId;
-  name: string;
-  description: string;
-  completed: boolean;
+class ClassModel implements ClassInterface {
+  _id;
+  name;
+  description;
+  completed;
   classworks: ClassworkInterface[];
-  createdAt: Date;
+  createdAt;
 
-  constructor(
-    name = '',
-    description = '',
-    completed = false,
-    classworks = [],
-    createdAt = new Date(),
-  ) {
+  constructor(name = '', description = '') {
     this._id = new mongodb.ObjectId();
     this.name = name;
     this.description = description;
-    this.completed = completed;
-    this.classworks = classworks;
-    this.createdAt = createdAt;
+    this.completed = false;
+    this.classworks = [];
+    this.createdAt = new Date();
   }
 }
+
+export default ClassModel;

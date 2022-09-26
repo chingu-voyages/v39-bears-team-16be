@@ -11,9 +11,7 @@ function ForgotPasswordController() {
       const user = await userDao.find(email);
 
       if (!user) {
-        return res
-          .status(400)
-          .send({ errors: [{ msg: 'Email not found.', value: 'email' }] });
+        return res.status(400).send({ errors: [{ msg: 'Email not found.', value: 'email' }] });
       }
 
       // check if token already existed

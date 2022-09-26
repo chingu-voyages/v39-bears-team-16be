@@ -1,11 +1,12 @@
 import * as mongodb from 'mongodb';
+import { defaultProfilePicture } from '../../config/defaultVars.config';
 
 enum Sexes {
   MALE = 'male',
   FEMALE = 'female',
 }
 
-class UserModel {
+interface UserInterface {
   _id: mongodb.ObjectId;
   name: string;
   email: string;
@@ -15,20 +16,34 @@ class UserModel {
   location: string;
   sex: Sexes | null;
   isAdmin: boolean;
-  enrolledIn: string[];
+  enrolledIn: mongodb.ObjectId[];
   createdAt: Date;
+}
+
+class UserModel implements UserInterface {
+  _id;
+  name;
+  email;
+  hash;
+  salt;
+  profilePicture;
+  location;
+  sex;
+  isAdmin;
+  enrolledIn;
+  createdAt;
 
   constructor(
     name = '',
     email = '',
     hash = '',
     salt = '',
-    profilePicture = '',
+    profilePicture = defaultProfilePicture,
     location = '',
-    sex = null,
+    sex: Sexes | null = null,
     isAdmin = false,
-    enrolledIn = [],
-    createdAt = new Date(),
+    enrolledIn: mongodb.ObjectId[] = [],
+    createdAt = new Date()
   ) {
     this._id = new mongodb.ObjectId();
     this.name = name;

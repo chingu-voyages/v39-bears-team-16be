@@ -1,17 +1,18 @@
+import UserDao from '../app/dao/userDao';
+
 require('dotenv').config();
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const GitHubStrategy = require('passport-github2').Strategy;
-const userDao = require('../app/dao/user.dao');
 const { hashPassword } = require('../utilities/password.util');
 
 passport.use(
   new LocalStrategy(
     { usernameField: 'email' },
-    async (username, password, cb) => {
+    async (username: string, password: string, cb: (...params: any) => any) => {
       try {
-        const user = await userDao.find(username);
+        const user = await UserDao.find(username);
 
         if (!user) {
           return cb(null, false, {
@@ -31,8 +32,8 @@ passport.use(
       } catch (err) {
         return cb(err);
       }
-    },
-  ),
+    }
+  )
 );
 
 passport.use(
@@ -42,7 +43,7 @@ passport.use(
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       callbackURL: 'https://bears-team-16be.herokuapp.com/auth/github/callback',
     },
-    async (accessToken, refreshToken, profile, cb) => {
+    async (accessToken: string, refreshToken: string, profile: any, cb: (...params: any) => any) => {
       const { displayName } = profile;
       const email = profile.emails[0].value.toLowerCase();
 
@@ -53,7 +54,7 @@ passport.use(
       }
 
       try {
-        const result = await userDao.findOrCreate({
+        const result = await UserDao.findOrCreate({
           name: displayName,
           email,
         });
@@ -61,20 +62,20 @@ passport.use(
       } catch (err) {
         return cb(err);
       }
-    },
-  ),
+    }
+  )
 );
 
-passport.serializeUser((user, cb) => {
+passport.serializeUser((user: any, cb: (...params: any) => any) => {
   process.nextTick(() => {
     cb(null, user.email);
   });
 });
 
-passport.deserializeUser(async (email, cb) => {
+passport.deserializeUser(async (email: string, cb: (...params: any) => any) => {
   process.nextTick(async () => {
     try {
-      const user = await userDao.find(email);
+      const user = await UserDao.find(email);
       return cb(null, user);
     } catch (err) {
       console.error(err);
@@ -83,4 +84,4 @@ passport.deserializeUser(async (email, cb) => {
   });
 });
 
-module.exports = passport;
+export default passport;

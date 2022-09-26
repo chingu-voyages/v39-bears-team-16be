@@ -1,33 +1,39 @@
-/* eslint-disable object-curly-newline */
 /* eslint-disable no-underscore-dangle */
-const classDao = require('../../dao/class.dao');
+import ClassDao from '../../dao/classDao';
+import { Request, Response, NextFunction } from 'express';
+import * as mongodb from 'mongodb';
+
 const planDao = require('../../dao/plan.dao');
 const { userDao } = require('./auth');
 
-function ClassController() {
-  this.index = async (req, res, next) => {
+class ClassController {
+  static async index(req: Request, res: Response, next: NextFunction) {
+    if (!req.user) {
+      return res.status(403);
+    }
+
     const { planId } = req.params;
     const { email } = req.user;
 
     try {
-      const values = await Promise.allSettled([
+      const values: any = await Promise.allSettled([
         planDao.allClasses(planId),
         userDao.findPlan({ email, planId }),
       ]);
 
-      let planResult = values[0].value;
-      const userResult = values[1].value;
+      let { value: planResult } = values[0].value;
+      const { value: userResult } = values[1].value;
 
       if (userResult) {
         const classProgresses = userResult[0].classes.reduce(
-          (acc, item) => ({
+          (acc: {}, item: any) => ({
             ...acc,
             [item.classId]: item.progress,
           }),
-          {},
+          {}
         );
 
-        planResult.classes = planResult.classes.map((item) => ({
+        planResult.classes = planResult.classes.map((item: any) => ({
           ...item,
           progress: classProgresses[item._id.toString()],
         }));
@@ -43,13 +49,13 @@ function ClassController() {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  this.store = async (req, res, next) => {
+  static async store(req: Request, res: Response, next: NextFunction) {
     const { planId } = req.params;
     const { name, description } = req.body;
     try {
-      const classId = await classDao.create({ name, description });
+      const classId = await ClassDao.create({ name, description });
       const addClass = await planDao.addClass({ planId, classId });
 
       return res.status(201).json({ msg: 'success!', data: addClass });
@@ -57,26 +63,27 @@ function ClassController() {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  this.show = async (req, res, next) => {
+  static async show(req: Request, res: Response, next: NextFunction) {
     const { classId } = req.params;
+
     try {
-      const result = await classDao.find(classId);
+      const result = await ClassDao.find(new mongodb.ObjectId(classId));
       return res.status(200).json(result);
     } catch (err) {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  this.update = async (req, res, next) => {
+  static async update(req: Request, res: Response, next: NextFunction) {
     const { classId } = req.params;
     const { name, description, classworks, completed } = req.body;
 
     try {
-      const result = await classDao.update({
-        _id: classId,
+      const result = await ClassDao.update({
+        _id: new mongodb.ObjectId(classId),
         name,
         description,
         classworks,
@@ -87,23 +94,19 @@ function ClassController() {
       console.error(err);
       return next(err);
     }
-  };
+  }
 
-  this.destroy = async (req, res, next) => {
+  static async destroy(req: Request, res: Response, next: NextFunction) {
     const { classId } = req.params;
 
     try {
-      const result = await classDao.delete(classId);
+      const result = await ClassDao.delete(new mongodb.ObjectId());
       return res.status(200).json(result);
     } catch (err) {
       console.error(err);
       return next(err);
     }
-  };
+  }
 }
 
-const classController = new ClassController();
-
-Object.freeze(classController);
-
-module.exports = classController;
+export default ClassController;
