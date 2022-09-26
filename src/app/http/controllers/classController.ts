@@ -1,10 +1,10 @@
 /* eslint-disable no-underscore-dangle */
 import ClassDao from '../../dao/classDao';
+import UserDao from '../../dao/userDao';
 import { Request, Response, NextFunction } from 'express';
 import * as mongodb from 'mongodb';
 
 const planDao = require('../../dao/plan.dao');
-const { userDao } = require('./auth');
 
 class ClassController {
   static async index(req: Request, res: Response, next: NextFunction) {
@@ -18,11 +18,11 @@ class ClassController {
     try {
       const values: any = await Promise.allSettled([
         planDao.allClasses(planId),
-        userDao.findPlan({ email, planId }),
+        UserDao.findPlan({ email, planId }),
       ]);
 
-      let { value: planResult } = values[0].value;
-      const { value: userResult } = values[1].value;
+      let { value: planResult } = values[0];
+      const { value: userResult } = values[1];
 
       if (userResult) {
         const classProgresses = userResult[0].classes.reduce(
@@ -52,9 +52,21 @@ class ClassController {
   }
 
   static async store(req: Request, res: Response, next: NextFunction) {
+    if (!req.user) {
+      return res.sendStatus(403);
+    }
+
     const { planId } = req.params;
     const { name, description } = req.body;
+    const { email } = req.user;
+
     try {
+      const plan = await planDao.find(planId);
+
+      if (plan.createdBy !== email) {
+        return res.sendStatus(403);
+      }
+
       const classId = await ClassDao.create({ name, description });
       const addClass = await planDao.addClass({ planId, classId });
 

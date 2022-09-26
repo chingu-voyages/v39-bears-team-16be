@@ -58,25 +58,48 @@ class ProgressDao {
     }
 
     try {
-      const result = await this.progressCollection.updateOne(
+      await this.progressCollection.updateOne(
         {
-          userEmail: `${email}`,
+          user: email,
           planId: new mongodb.ObjectId(planId),
         },
         {
           $set: {
-            'classes.$[class].classworks.$[classwork].progress': val,
+            'classes.$[class].classworks.$[classwork].classworkProgress': val,
           },
         },
         {
           arrayFilters: [
-            { 'class._id': new mongodb.ObjectId(classId) },
-            { 'classwork._id': new mongodb.ObjectId(classworkId) },
+            { 'class.classId': new mongodb.ObjectId(classId) },
+            { 'classwork.classworkId': new mongodb.ObjectId(classworkId) },
           ],
         }
       );
 
-      return result;
+      const totalClassworkProgress = await this.progressCollection.aggregate([
+        {
+          $match: {
+            user: `${email}`,
+            planId: `${new mongodb.ObjectId(planId)}`,
+          },
+        },
+        // {
+        //   $match: {
+        //     'classes.classId': `${new mongodb.ObjectId(classId)}`,
+        //   },
+        // },
+        // {
+        //   $project: {
+        //     totalClassworkProgress: {
+        //       $sum: '$classworks.classworkProgress',
+        //     },
+        //   },
+        // },
+      ]);
+
+      console.log('classwork progress', await totalClassworkProgress.toArray());
+
+      return await totalClassworkProgress.toArray();
     } catch (err) {
       console.error(err);
     }

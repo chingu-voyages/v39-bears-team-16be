@@ -68,5 +68,8 @@ router.route('/enrollments').post(EnrolmentController.store);
 router.route('/enrollments').delete(EnrolmentController.destroy);
 // progress
 router.route('/classes/:classId/classworks/:classworkId').post(ProgressController.markAsComplete);
+router
+  .route('/classes/:classId/classworks/:classworkId')
+  .delete(ProgressController.markAsIncomplete);
 
 module.exports = router;

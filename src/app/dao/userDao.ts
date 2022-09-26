@@ -1,5 +1,5 @@
 import * as mongodb from 'mongodb';
-import { ProgressClassInterface } from '../models/ProgressModel';
+import { ProgressClassInterface, ProgressClassworkInterface } from '../models/ProgressModel';
 import planDao = require('./plan.dao');
 import ProgressDao from './progressDao';
 
@@ -264,7 +264,7 @@ class UserDao {
     }
 
     try {
-      const alreadyEnroled = await this.userCollection
+      const alreadyEnrolled = await this.userCollection
         .aggregate([
           {
             $match: {
@@ -276,8 +276,8 @@ class UserDao {
         ])
         .toArray();
 
-      if (alreadyEnroled.length >= 0) {
-        throw new Error('already enroled');
+      if (alreadyEnrolled.length > 0) {
+        throw new Error('already enrolled');
       }
 
       await this.userCollection.updateOne(
@@ -289,15 +289,17 @@ class UserDao {
 
       const { classes } = await planDao.allClasses(planId);
 
-      const classProgress: ProgressClassInterface[] = classes.map((classItem: any) => {
-        const classworkProgress = classItem.classworks.map((classwork: any) => ({
-          _id: classwork._id,
-          progress: 0,
-        }));
+      const classProgress = classes.map((classItem: any): ProgressClassInterface => {
+        const classworkProgress = classItem.classworks.map(
+          (classwork: any): ProgressClassworkInterface => ({
+            classworkId: classwork._id,
+            classworkProgress: 0,
+          })
+        );
 
         return {
-          _id: classItem._id,
-          progresses: 0,
+          classId: classItem._id,
+          classProgress: 0,
           classworks: classworkProgress,
         };
       });
