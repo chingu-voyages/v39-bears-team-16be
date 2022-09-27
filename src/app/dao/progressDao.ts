@@ -58,11 +58,13 @@ class ProgressDao {
     }
 
     try {
+      const filter = {
+        user: email,
+        planId: new mongodb.ObjectId(planId),
+      };
+
       await this.progressCollection.updateOne(
-        {
-          user: email,
-          planId: new mongodb.ObjectId(planId),
-        },
+        filter,
         {
           $set: {
             'classes.$[class].classworks.$[classwork].classworkProgress': val,
@@ -76,30 +78,85 @@ class ProgressDao {
         }
       );
 
-      const totalClassworkProgress = await this.progressCollection.aggregate([
+      const aggregationFilter = {
+        $match: {
+          user: `${email}`,
+          planId: new mongodb.ObjectId(planId),
+        },
+      };
+
+      const classworkProgressResult = await this.progressCollection
+        .aggregate([
+          aggregationFilter,
+          {
+            $unwind: '$classes',
+          },
+          {
+            $match: {
+              'classes.classId': new mongodb.ObjectId(classId),
+            },
+          },
+          {
+            $replaceRoot: {
+              newRoot: '$classes',
+            },
+          },
+          {
+            $project: {
+              numOfCompletedClassworks: {
+                $sum: '$classworks.classworkProgress',
+              },
+              numOfClassworks: {
+                $size: '$classworks',
+              },
+            },
+          },
+        ])
+        .toArray();
+
+      const { numOfCompletedClassworks, numOfClassworks } = classworkProgressResult[0];
+
+      const classProgress = Number((numOfCompletedClassworks / numOfClassworks).toFixed(2));
+
+      await this.progressCollection.updateOne(
+        filter,
         {
-          $match: {
-            user: `${email}`,
-            planId: `${new mongodb.ObjectId(planId)}`,
+          $set: {
+            'classes.$[class].classProgress': classProgress,
           },
         },
-        // {
-        //   $match: {
-        //     'classes.classId': `${new mongodb.ObjectId(classId)}`,
-        //   },
-        // },
-        // {
-        //   $project: {
-        //     totalClassworkProgress: {
-        //       $sum: '$classworks.classworkProgress',
-        //     },
-        //   },
-        // },
-      ]);
+        {
+          arrayFilters: [{ 'class.classId': new mongodb.ObjectId(classId) }],
+        }
+      );
 
-      console.log('classwork progress', await totalClassworkProgress.toArray());
+      const classProgressResult = await this.progressCollection
+        .aggregate([
+          aggregationFilter,
+          {
+            $project: {
+              numOfCompletedClasses: {
+                $sum: '$classes.classProgress',
+              },
+              numOfClasses: {
+                $size: '$classes',
+              },
+            },
+          },
+        ])
+        .toArray();
 
-      return await totalClassworkProgress.toArray();
+      const { numOfCompletedClasses, numOfClasses } = classProgressResult[0];
+
+      const planProgress = Number(numOfCompletedClasses / numOfClasses).toFixed(2);
+
+      await this.progressCollection.updateOne(filter, {
+        $set: {
+          planProgress,
+        },
+      });
+
+      return true;
     } catch (err) {
       console.error(err);
     }

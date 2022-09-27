@@ -1,5 +1,6 @@
 import * as mongodb from 'mongodb';
 import { ProgressClassInterface, ProgressClassworkInterface } from '../models/ProgressModel';
+import bson = require('bson');
 import planDao = require('./plan.dao');
 import ProgressDao from './progressDao';
 
@@ -264,19 +265,27 @@ class UserDao {
     }
 
     try {
-      const alreadyEnrolled = await this.userCollection
+      const enrolledInResult = await this.userCollection
         .aggregate([
           {
             $match: {
-              enrolledIn: {
-                $in: [`${planId}`],
+              email: `${email}`,
+            },
+          },
+          {
+            $project: {
+              alreadyEnrolled: {
+                $in: [new mongodb.ObjectId(planId), '$enrolledIn'],
               },
+              _id: 0,
             },
           },
         ])
         .toArray();
 
-      if (alreadyEnrolled.length > 0) {
+      const { alreadyEnrolled } = enrolledInResult[0];
+
+      if (alreadyEnrolled) {
         throw new Error('already enrolled');
       }
 
