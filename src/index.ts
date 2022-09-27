@@ -60,7 +60,7 @@ function onListening() {
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr?.port;
 
   debug('sailbe:server')('Listening on ' + bind);
-  console.log('Listening on ' + bind);
+  console.log('Listening on ' + bind)
 }
 
 async function main() {
