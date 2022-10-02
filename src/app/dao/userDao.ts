@@ -172,36 +172,11 @@ class UserDao {
           },
         },
         {
-          $unwind: '$enrolledIn',
-        },
-        {
           $lookup: {
             from: 'plans',
-            let: {
-              planId: '$enrolledIn',
-            },
-            pipeline: [
-              {
-                $match: { $expr: { $eq: ['$_id', '$$planId'] } },
-              },
-              {
-                $project: {
-                  planId: 0,
-                },
-              },
-            ],
+            localField: 'enrolledIn',
+            foreignField: '_id',
             as: 'plans',
-          },
-        },
-        {
-          $group: {
-            _id: '$_id',
-            plans: { $push: { $first: '$plans' } },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
           },
         },
       ]);
@@ -328,7 +303,7 @@ class UserDao {
           email,
         },
         {
-          $pull: { enrolledIn: { planId: new mongodb.ObjectId(planId) } },
+          $pull: { enrolledIn: new mongodb.ObjectId(planId) },
         }
       );
 
