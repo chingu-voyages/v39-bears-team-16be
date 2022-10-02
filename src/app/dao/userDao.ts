@@ -163,6 +163,7 @@ class UserDao {
     if (!this.userCollection) {
       return;
     }
+
     try {
       const cursor = await this.userCollection.aggregate([
         {
@@ -177,20 +178,11 @@ class UserDao {
           $lookup: {
             from: 'plans',
             let: {
-              planId: '$enrolledIn.planId',
-              plans: '$enrolledIn',
-              progress: '$enrolledIn.progress',
+              planId: '$enrolledIn',
             },
             pipeline: [
               {
                 $match: { $expr: { $eq: ['$_id', '$$planId'] } },
-              },
-              {
-                $replaceRoot: {
-                  newRoot: {
-                    $mergeObjects: ['$$plans', '$$ROOT'],
-                  },
-                },
               },
               {
                 $project: {
