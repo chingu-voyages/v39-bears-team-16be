@@ -16,12 +16,11 @@ export class LogModel implements LogInterface {
 
   constructor(
     user = '',
-    action = '',
-    createdAt = new Date(),
+    action = ''
   ) {
     this._id = new mongodb.ObjectId();
     this.user = user;
     this.action = action;
-    this.createdAt = createdAt;
+    this.createdAt = new Date();
   }
 }

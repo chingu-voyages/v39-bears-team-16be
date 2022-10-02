@@ -1,4 +1,4 @@
-const { passport, logDao } = require('./index');
+const { passport, logDao } = require('./index'); //this needs update since migration
 
 function SignInController() {
   this.store = (req, res, next) => {
