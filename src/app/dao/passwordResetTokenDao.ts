@@ -18,8 +18,11 @@ class PasswordResetTokenDao {
   };
 
   static async find (email:string) {
+    if (!this.passwordResetTokenCollection) {
+        throw new Error(`Password-reset-token collection hasn't been initialized`);
+    }
     try {
-        const passwordResetToken = await this.passwordResetTokenCollection?.findOne({ email }); //note optional chaining
+        const passwordResetToken = await this.passwordResetTokenCollection.findOne({ email }); 
         return passwordResetToken;
     } catch (err) {
       console.error(err);
@@ -28,7 +31,6 @@ class PasswordResetTokenDao {
   };
 
   static async create(email:string, token:string) {
-    //when this vs when would optional chaining be acceptable?
     if (!this.passwordResetTokenCollection) {
         throw new Error(`Password-reset-token collection hasn't been initialized`);
     }

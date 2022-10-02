@@ -17,10 +17,10 @@ class LogDao {
     }
 
     static async login(email: string) {
+        if (!this.logCollection){
+            throw new Error(`Log collection hasn't been initialized`);
+        }
         try {
-            if (!this.logCollection){
-                throw new Error(`Log collection hasn't been initialized`);
-            }
             const newLog = new LogModel(email, 'login');
             const result = await this.logCollection.insertOne(newLog);
           return result;
@@ -31,9 +31,12 @@ class LogDao {
     }
 
     static async logout(email: string) {
+        if (!this.logCollection){
+            throw new Error(`Log collection hasn't been initialized`);
+        }
         try {
             const newLogOut = new LogModel(email, 'logout');
-            const result = await this.logCollection?.insertOne(newLogOut); //alternate for optional chaining?
+            const result = await this.logCollection.insertOne(newLogOut); 
             return result;
         } catch (err) {
             console.error(err);
