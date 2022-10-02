@@ -297,6 +297,8 @@ class UserDao {
       return;
     }
 
+    console.log('removePlan', planId);
+
     try {
       const result = await this.userCollection.updateOne(
         {
