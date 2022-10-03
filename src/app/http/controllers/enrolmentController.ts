@@ -23,7 +23,7 @@ class EnrolmentController {
     }
 
     const { email } = req.user;
-    const { planId } = req.body;
+    const { planId } = req.params;
     try {
       const result = await UserDao.addPlan({ email, planId });
       return res.status(200).json({ result });
@@ -39,7 +39,7 @@ class EnrolmentController {
     }
 
     const { email } = req.user;
-    const { planId } = req.body;
+    const { planId } = req.params;
     try {
       const result = await UserDao.removePlan({ email, planId });
       return res.status(200).json({ result });

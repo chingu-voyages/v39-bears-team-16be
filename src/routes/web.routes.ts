@@ -63,9 +63,9 @@ router.route('/classes/:classId').delete(ClassController.destroy);
 router.route('/classes/:classId/classworks').post(ClassworkController.store);
 router.route('/classes/:classId/classworks/:classworkId').delete(ClassworkController.destroy);
 // enrolment
-router.route('/enrollments').get(EnrolmentController.index);
-router.route('/enrollments').post(EnrolmentController.store);
-router.route('/enrollments').delete(EnrolmentController.destroy);
+router.route('/enrolments').get(EnrolmentController.index);
+router.route('/enrolments/:planId').post(EnrolmentController.store);
+router.route('/enrolments/:planId').delete(EnrolmentController.destroy);
 // progress
 router.route('/classes/:classId/classworks/:classworkId').post(ProgressController.markAsComplete);
 router
