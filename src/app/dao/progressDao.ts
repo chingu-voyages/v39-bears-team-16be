@@ -1,5 +1,5 @@
 import * as mongodb from 'mongodb';
-import ProgressModel, { ProgressClassInterface, ProgressInterface } from '../models/ProgressModel';
+import ProgressModel, { ProgressClassInterface } from '../models/ProgressModel';
 
 class ProgressDao {
   static progressCollection: mongodb.Collection | undefined;
@@ -157,6 +157,23 @@ class ProgressDao {
       });
 
       return true;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  static async findOne(email: string, planId: string) {
+    try {
+      if (!this.progressCollection) {
+        throw new Error(`Progress collection hasn't been initialized`);
+      }
+
+      const result = await this.progressCollection.findOne({
+        user: email,
+        planId: new mongodb.ObjectId(planId),
+      });
+
+      return result;
     } catch (err) {
       console.error(err);
     }

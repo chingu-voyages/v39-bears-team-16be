@@ -3,6 +3,9 @@ import ClassDao from '../../dao/classDao';
 import UserDao from '../../dao/userDao';
 import { Request, Response, NextFunction } from 'express';
 import * as mongodb from 'mongodb';
+import ProgressDao from '../../dao/progressDao';
+import { ClassInterface } from '../../models/ClassModel';
+import { ProgressClassInterface, ProgressInterface } from '../../models/ProgressModel';
 
 const planDao = require('../../dao/plan.dao');
 
@@ -16,35 +19,37 @@ class ClassController {
     const { email } = req.user;
 
     try {
-      const values: any = await Promise.allSettled([
-        planDao.allClasses(planId),
-        UserDao.findPlan({ email, planId }),
-      ]);
+      const plan = await planDao.allClasses(planId);
+      const progress = await ProgressDao.findOne(email, planId);
 
-      let { value: planResult } = values[0];
-      const { value: userResult } = values[1];
-
-      if (userResult) {
-        const classProgresses = userResult[0].classes.reduce(
-          (acc: {}, item: any) => ({
-            ...acc,
-            [item.classId]: item.progress,
-          }),
-          {}
-        );
-
-        planResult.classes = planResult.classes.map((item: any) => ({
-          ...item,
-          progress: classProgresses[item._id.toString()],
-        }));
-
-        planResult = {
-          ...planResult,
-          progress: userResult[0].progress,
-        };
+      if (!progress) {
+        throw new Error('failed to fetch progress');
       }
 
-      return res.status(200).json({ plan: planResult });
+      plan.planProgress = progress.planProgress;
+
+      plan.classes = [...plan.classes].map((planClass) => {
+        const progressClass = [...progress.classes].find(
+          (progressClass) => progressClass.classId.toString() === planClass._id.toString()
+        );
+
+        return {
+          ...planClass,
+          classProgress: progressClass.classProgress,
+          classworks: [...planClass.classworks].map((planClass) => {
+            const progressClasswork = [...progressClass.classworks].find(
+              (progressClass) => progressClass.classworkId.toString() === planClass._id.toString()
+            );
+
+            return {
+              ...planClass,
+              classworkProgress: progressClasswork.classworkProgress,
+            };
+          }),
+        };
+      });
+
+      return res.status(200).json({ plan });
     } catch (err) {
       console.error(err);
       return next(err);
@@ -112,7 +117,7 @@ class ClassController {
     const { classId } = req.params;
 
     try {
-      const result = await ClassDao.delete(new mongodb.ObjectId());
+      const result = await ClassDao.delete(new mongodb.ObjectId(classId));
       return res.status(200).json(result);
     } catch (err) {
       console.error(err);
