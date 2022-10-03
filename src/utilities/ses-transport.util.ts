@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-import aws = require('@aws-sdk/client-ses');
+import * as aws from '@aws-sdk/client-ses';
 
 const ses = new aws.SES({
   region: 'us-east-1',

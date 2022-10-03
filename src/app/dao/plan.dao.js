@@ -1,5 +1,5 @@
 const { ObjectId } = require('mongodb');
-const { defaultProfilePicture } = require('../../config/defaultVars.config').default;
+import defaultProfilePicture from '../../config/defaultVars.config';
 
 function PlanDao() {
   let planCollection;
