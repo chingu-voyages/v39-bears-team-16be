@@ -26,7 +26,7 @@ class ClassController {
         throw new Error('failed to fetch progress');
       }
 
-      plan.planProgress = progress.planProgress;
+      plan.planProgress = Number(progress.planProgress);
 
       plan.classes = [...plan.classes].map((planClass) => {
         const progressClass = [...progress.classes].find(
