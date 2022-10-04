@@ -1,11 +1,11 @@
 import * as mongodb from 'mongodb';
 
 //the following are pending PR 67 and planDao update
-// import LikeDao from './likeDao';
+import LikeDao from './likeDao';
 // import PlanDao from './planDao';
 
 //to repl with above
-import likeDao = require('./like.dao');
+// import likeDao = require('./like.dao');
 import planDao = require('./plan.dao');
 
 class Transaction {
@@ -19,11 +19,11 @@ class Transaction {
     this.client = clientInstance;
   };
 
-  static async addLikeTransaction (email:string, planId: /*string or objid?*/) {
+  static async addLikeTransaction (email:string, planId:string) {
     const session = this.client.startSession();
     try {
       const result = await session.withTransaction(async () => {
-        const createLikeResult = await likeDao.create({
+        const createLikeResult = await LikeDao.create({
           email,
           planId,
           session,
@@ -45,18 +45,18 @@ class Transaction {
     }
   };
 
-  static async removeLikeTransaction (email:string, planId: /*tbc */) {
+  static async removeLikeTransaction (email:string, planId: string) {
     const session = this.client.startSession();
     try {
       const result = await session.withTransaction(async () => {
-        const createLikeResult = await likeDao.delete({
+        const createLikeResult = await LikeDao.delete({
           email,
           planId,
           session,
         });
         const updateLikeResult = await planDao.updateLike({
           planId,
-          email,
+        //   email,  //this is not part of the params for plan.dao 
           val: -1,
           session,
         });
