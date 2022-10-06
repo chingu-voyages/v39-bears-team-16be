@@ -1,9 +1,10 @@
 require('dotenv').config();
 
 const { passwordResetTokenDao, userDao, hashPassword } = require('./index');
+import { Request, Response, NextFunction } from 'express';
 
-function ResetPasswordController() {
-  this.store = async (req, res, next) => {
+class ResetPasswordController {
+  static store = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, token } = req.body;
 
     try {
