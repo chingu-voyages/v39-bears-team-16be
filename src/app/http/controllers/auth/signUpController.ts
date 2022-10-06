@@ -1,7 +1,8 @@
 const { userDao, hashPassword } = require('./index');
+import { Request, Response, NextFunction } from 'express';
 
-function SignUpControlle() {
-  this.store = async (req, res, next) => {
+class SignUpControlle {
+  static store = async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, password } = req.body;
     const { hash, salt } = hashPassword(password);
 
