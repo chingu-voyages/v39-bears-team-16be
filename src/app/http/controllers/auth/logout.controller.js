@@ -1,4 +1,4 @@
-const { logDao } = require('./index');
+const { logDao } = require('./index'); //modify after migration?
 
 function LogoutController() {
   this.store = async (req, res, next) => {
