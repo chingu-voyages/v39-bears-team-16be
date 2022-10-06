@@ -9,13 +9,13 @@ class LogoutController {
 
     try {
       await logDao.logout(req.user.email);
-      req.logout();
+      req.logout({}, () => {});
       return res.status(200).send({ message: 'Success' });
     } catch (err) {
       console.error(err);
       return next(err);
     }
-  };
+  }
 }
 
 export default LogoutController;

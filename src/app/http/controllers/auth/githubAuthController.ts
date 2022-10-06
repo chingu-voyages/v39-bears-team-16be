@@ -5,10 +5,10 @@ const logDao = require('../../../dao/log.dao');
 class GithubAuth {
   static index(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
-  };
+  }
 
   static store(req: Request, res: Response, next: NextFunction) {
-    passport.authenticate('github', async (err, user, info) => {
+    passport.authenticate('github', async (err: any, user: any, info: any) => {
       if (err) {
         return next(err);
       }
@@ -27,7 +27,7 @@ class GithubAuth {
         return res.redirect(`${process.env.FRONTEND_URL}/admin/cohorts`);
       });
     })(req, res, next);
-  };
+  }
 }
 
 export default GithubAuth;
