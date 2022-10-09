@@ -1,4 +1,6 @@
-const isAuth = (req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+
+const isAuth = (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated()) {
     next();
   } else {
@@ -6,7 +8,7 @@ const isAuth = (req, res, next) => {
   }
 };
 
-const isAdmin = (req, res, next) => {
+const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   if (req.isAuthenticated() && req.user.isAdmin) {
     next();
   } else {
