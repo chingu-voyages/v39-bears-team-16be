@@ -1,12 +1,14 @@
-const { passport, logDao } = require('./index');
+import { Request, Response, NextFunction } from 'express';
+import passport from '../../../../config/passport.config';
+const logDao = require('../../../dao/log.dao');
 
-function GithubAuth() {
-  this.index = (req, res, next) => {
+class GithubAuth {
+  static index(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('github', { scope: ['user:email'] })(req, res, next);
-  };
+  }
 
-  this.store = (req, res, next) => {
-    passport.authenticate('github', async (err, user, info) => {
+  static store(req: Request, res: Response, next: NextFunction) {
+    passport.authenticate('github', async (err: any, user: any, info: any) => {
       if (err) {
         return next(err);
       }
@@ -25,11 +27,7 @@ function GithubAuth() {
         return res.redirect(`${process.env.FRONTEND_URL}/admin/cohorts`);
       });
     })(req, res, next);
-  };
+  }
 }
 
-const githubAuth = new GithubAuth();
-
-Object.freeze(githubAuth);
-
-module.exports = githubAuth;
+export default GithubAuth;

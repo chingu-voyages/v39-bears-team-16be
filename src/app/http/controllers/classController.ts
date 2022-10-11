@@ -1,11 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import ClassDao from '../../dao/classDao';
-import UserDao from '../../dao/userDao';
 import { Request, Response, NextFunction } from 'express';
 import * as mongodb from 'mongodb';
 import ProgressDao from '../../dao/progressDao';
-import { ClassInterface } from '../../models/ClassModel';
-import { ProgressClassInterface, ProgressInterface } from '../../models/ProgressModel';
 
 const planDao = require('../../dao/plan.dao');
 

@@ -1,9 +1,11 @@
+import { Request, Response, NextFunction } from 'express';
+
 require('dotenv').config();
 
 const { transporter, userDao, passwordResetTokenDao } = require('./index');
 
-function ForgotPasswordController() {
-  this.store = async (req, res, next) => {
+class ForgotPasswordController {
+  static async store(req: Request, res: Response, next: NextFunction) {
     const { email } = req.body;
 
     try {
@@ -39,8 +41,4 @@ function ForgotPasswordController() {
   };
 }
 
-const forgotPasswordController = new ForgotPasswordController();
-
-Object.freeze(forgotPasswordController);
-
-module.exports = forgotPasswordController;
+export default ForgotPasswordController;

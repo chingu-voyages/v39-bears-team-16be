@@ -1,9 +1,10 @@
 const { passport, logDao } = require('./index');
+import { Request, Response, NextFunction } from 'express';
 
-function SignInController() {
-  this.store = (req, res, next) => {
+class SignInController {
+  static store(req: Request, res: Response, next: NextFunction) {
     // eslint-disable-next-line no-unused-vars
-    passport.authenticate('local', async (err, user, info, status) => {
+    passport.authenticate('local', async (err: any, user: any, info: any, status: number) => {
       if (err) {
         return next(err);
       }
@@ -21,7 +22,7 @@ function SignInController() {
         return res.status(200).send(user);
       });
     })(req, res, next);
-  };
+  }
 }
 
 const signInController = new SignInController();
