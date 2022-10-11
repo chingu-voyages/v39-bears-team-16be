@@ -8,18 +8,18 @@ export interface LikeInterface {
 }
 
 export class LikeModel implements LikeInterface {
- _id: mongodb.ObjectId;
- email: string;
- planId: mongodb.ObjectId; 
- createdAt: Date;
+  _id: mongodb.ObjectId;
+  email: string;
+  planId: mongodb.ObjectId; 
+  createdAt: Date;
 
-constructor(
-  email = '',
-  planId = '' 
-) {
-  this._id = new mongodb.ObjectId();
-  this.email = email;
-  this.planId = new mongodb.ObjectId(planId);
-  this.createdAt = new Date()
-}
+  constructor(
+    email = '',
+    planId = '' 
+  ) {
+    this._id = new mongodb.ObjectId();
+    this.email = email;
+    this.planId = new mongodb.ObjectId(planId);
+    this.createdAt = new Date()
+  }
 }
